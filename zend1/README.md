@@ -7,6 +7,8 @@ This is a simple application using the ZF2 MVC layer and module
 systems. This application is meant to be used as a starting place for those
 looking to get their feet wet with ZF2.
 
+Zend2 framework: http://framework.zend.com/manual/1.12/en/learning.quickstart.html
+
 Doctrine ODM: http://doctrine-mongodb-odm.readthedocs.org/en/latest/
 
 MongoDB: http://www.mongodb.org/
