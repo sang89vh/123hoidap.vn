@@ -1,0 +1,102 @@
+
+<meta charset="utf-8">
+<?php
+use FAQ\FAQCommon\Appcfg;
+    $link = $this->link;
+    $type = $this->type;
+    $src = "/tmp/avatar-default.jpg";
+    if($link){
+        $src = "/user/avatar?link=" . $link . "&type=" . $type;
+    }else{
+        $link = "public".$src;
+    }
+?>
+<style>
+    body{
+    	width:800px;
+    	height:400px;
+    }
+</style>
+<script src="/js/jquery-2.0.3.js" ></script>
+<script src="/js/jquery.imgareaselect.js" ></script>
+<script src="/js/bootstrap.js" ></script>
+<script src="/js/bootbox.js"></script>
+<link rel="stylesheet" type="text/css" href="/css/avatar-crop/imgareaselect-default.css">
+<form class="form-horizontal" id="change-avatar-form" action="/user/avatar" role="form" enctype="multipart/form-data" method="post" >
+     <div class="border:1px grey solid">
+        <input name="avatar" id="avatar-input" type="file" accept="image/*" style="border: 1px #F3F3F3 solid;padding: 4px;width: 500px;border-radius: 20px 0px 20px;" onchange="changeFileSelected(this)"  />
+     </div>
+</form>
+<div class="container demo">
+  <div class="frame" style="margin: 0 0.3em; width: 600px; height: 400px; float:left">
+      <img id="avatar" src="<?php echo $src;?>" link="<?php echo $link;?>" width="600px" height="400px">
+    </div>
+  </div>
+  <div style="float: right;">
+    <div class="frame" style="margin: 0 1em; width: 150px; height: 150px;">
+      <div id="preview" style="width: 150px; height: 150px; overflow: hidden; border:3px rgb(211, 211, 211) dotted">
+        <img src="<?php echo $src; ?>" style="width: 150px; height: 150px; margin-left: -15px; margin-top: -16px;">
+      </div>
+      <button id="change-avatar-submit" onclick="saveAvatar();" style="white-space:nowrap;cursor:pointer" >Đặt làm avatar</button>
+    </div>
+  </div>
+</div>
+<script type="text/javascript">
+function preview(img, selection) {
+    if (!selection.width || !selection.height)
+        return;
+
+    var scaleX = 150 / selection.width;
+    var scaleY = 150 / selection.height;
+
+    $('#preview img').css({
+        width: Math.round(scaleX * 600),
+        height: Math.round(scaleY * 400),
+        marginLeft: -Math.round(scaleX * selection.x1),
+        marginTop: -Math.round(scaleY * selection.y1)
+    });
+}
+var avatar_opt;
+$(function () {
+	    $('#avatar').imgAreaSelect({
+        x1: 0,
+        y1:0,
+        x2: 100,
+        y2: 120,
+        handles: true,
+        fadeSpeed: 200,
+        onSelectChange: preview ,
+        onSelectEnd: function(evt, opt){
+        	avatar_opt = opt;
+        }
+    });
+});
+
+function saveAvatar(){
+	// update
+	$.ajax({
+		url: '/user/change-avatar',
+		type: 'post',
+		data: {option:avatar_opt, link: $('#avatar').attr('link'), width_avatar: 600, height_avatar: 400, width_preview: 150, height_preview:150}
+	}).done(function(data){
+	   if(data.toString().trim()=='saved'){
+		   $('#change-avatar-submit').attr('disabled',true);
+		   $('body').css('opacity','0.3');
+		   window.parent.document.location.href = "/user/about";
+	   }
+	});
+
+}
+
+function changeFileSelected(file){
+    if(file.value.indexOf('.png')>0 || file.value.indexOf('.gif')>0 || file.value.indexOf('.jpg')>0){
+        if(file.files[0].size><?php echo Appcfg::$img_avatar_size?>){
+        	$("#change-avatar-form").append('<span style="color:red;">' + 'Kích thước file quá lớn !' + '</span>');
+        	file.value=null;
+        	return;
+        }
+        document.getElementById('change-avatar-form').submit();
+    }
+}
+</script>
+

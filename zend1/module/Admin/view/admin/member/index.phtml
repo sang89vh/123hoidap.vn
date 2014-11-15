@@ -1,0 +1,244 @@
+<script src="/js/jquery.fancybox.js" ></script>
+<script src="/js/faq_fancybox.js"></script>
+<script src="/js/jquery/jquery.dataTables.min.js"></script>
+<link rel="stylesheet" type="text/css" href="/css/fancybox/jquery.fancybox.css" />
+<link rel="stylesheet" type="text/css" href="/css/admin/jqueryui/jquery.dataTables_themeroller.css" />
+
+
+
+<table style="overflow: scroll;" cellpadding="0" cellspacing="0" border="0" class="display"
+	id="faq_data_grid_user">
+	<thead>
+		<tr>
+<!-- 			<th class="id" width="5%">Xóa</th> -->
+			<th class="id" width="5%">Xóa</th>
+			<th class="id" width="5%">Khóa tài khoản</th>
+			<th class="id" width="5%">ID</th>
+			<th class="first_name" width="15%">First Name</th>
+			<th class="last_name" width="18%">Last Name</th>
+			<th class="status" width="5%">Trạng thái</th>
+			<th class="avatar" width="5%">Avartar</th>
+			<th class="birthday" width="10%">Ngày sinh</th>
+			<th class="date_created" width="4%">Ngày tạo</th>
+			<th class="date_updated" width="4%">Ngày cập nhật</th>
+			<th class="email" width="4%">email</th>
+			<th class="opendid" width="4%">opendid</th>
+			<th class="Role" width="5%">Role</th>
+			<th class="sex" width="5%">sex</th>
+			<th class="total_answer" width="5%">total_answer</th>
+			<th class="total_answer_best" width="2%">total_answer_best</th>
+			<th class="total_answer_dislike" width="2%">total_answer_dislike</th>
+			<th class="total_answer_like" width="2%">total_answer_like</th>
+			<th class="total_closed_question" width="2%">total_closed_question</th>
+			<th class="total_money_point" width="2%">total_money_point</th>
+			<th class="total_new_message" width="2%">total_new_message</th>
+			<th class="total_new_notify" width="2%">total_new_notify</th>
+			<th class="total_open_question" width="2%">total_open_question</th>
+			<th class="total_question" width="2%">total_question</th>
+			<th class="total_rank_point" width="2%">total_rank_point</th>
+			<th class="total_spam_user" width="2%">total_spam_user</th>
+			<th class="total_spam_question" width="2%">total_spam_question</th>
+			<th class="total_user_follow" width="2%">total_user_follow</th>
+		</tr>
+	</thead>
+	<tbody>
+
+	</tbody>
+	<tfoot>
+
+	</tfoot>
+</table>
+<style>
+table{
+	overflow: scroll;
+/* 	width: 1000px; */
+}
+th,td{
+	white-space:nowrap;
+	overflow: hidden;
+}
+.dataTables_scroll{
+	overflow: scroll;
+}
+table.dataTable td.right {
+text-align: right;
+}
+table.dataTable td.left {
+text-align: left;
+}
+</style>
+<script type="text/javascript">
+
+$(document).ready(function() {
+    $('#faq_data_grid_user').dataTable( {
+        	"sScrollX": "100%",
+            "sScrollXInner": "500%",
+            "bScrollCollapse": true,
+    		"iDisplayLength":10,
+    		 "bJQueryUI": true,
+		    "bInfo":true,
+		    "bPaginate":true,
+		    "bLengthChange":true,
+			"sPaginationType":'full_numbers',
+			"bProcessing": true,
+			"bServerSide": true,
+			"sServerMethod": "GET",
+			"bStateSave": true,
+            "sAjaxSource": '/admin/member/list-user',
+            "aoColumns":[
+                           { 'bVisible':    true,'sClass': 'left','fnRender': function (oObj) {
+                               var statusDelete='Xóa';
+                          	  var btn_delete='<button status="'+oObj.aData[5]+'" class="faq_btn_delete_user btn btn-danger btn-xs" user="'+oObj.aData[2]+'" type="button" >'+statusDelete+'</button>';
+                            	  return btn_delete;
+			    			} },
+                           { 'bVisible':    true,'sClass': 'left','fnRender': function (oObj) {
+                       	    var action='SPAM';
+                       	    var label_btn='Đang mở';
+                       	    console.log("===>"+oObj.aData[5]);
+                                if(oObj.aData[5]==11){
+                                	action='UNSPAM';
+                                	label_btn='Đã khóa';
+                               }
+                            	  var btn_app='<button action="'+action+'" class="faq_btn_spam_user btn btn-info btn-xs" user="'+oObj.aData[2]+'" type="button" >'+label_btn+'</button>';
+                            	  return btn_app;
+  			    			}},
+                           { 'bVisible':    true,'sClass': 'left'},
+                           { 'bVisible':    true,'sClass': 'left','fnRender': function (oObj) {
+				    			var title=oObj.aData[3];
+				    			var url='<a class="fancybox fancybox.iframe" href="/member/profile/'+oObj.aData[2]+'">'+title+'</a>';
+				    			return url;
+			    			} },
+                           { 'bVisible':    true,'sClass': 'left'},
+                           { 'bVisible':    true,'sClass': 'left'},
+                           { 'bVisible':    true,'sClass': 'left','fnRender': function (oObj) {
+				    			var id=oObj.aData[6];
+				    			var url='<img class="img-circle" width="50px" height="50" style="-webkit-user-select: none" src="/media/get-image/images/'+id+'">';
+
+				    			return url;
+			    			} },
+                           { 'bVisible':    true,'sClass': 'left'},//date created
+                           { 'bVisible':    true,'sClass': 'left'},
+                           { 'bVisible':    true,'sClass': 'left'},
+                           { 'bVisible':    true,'sClass': 'left'},
+                           { 'bVisible':    true,'sClass': 'left'},
+                           { 'bVisible':    true,'sClass': 'left'},
+                           { 'bVisible':    false,'sClass': 'left'},
+                           { 'bVisible':    false,'sClass': 'left'},
+                           { 'bVisible':    false,'sClass': 'left'},
+                           { 'bVisible':    false,'sClass': 'left'},
+                           { 'bVisible':    false,'sClass': 'left'},
+                           { 'bVisible':    false,'sClass': 'left'},
+                           { 'bVisible':    false,'sClass': 'left'},
+                           { 'bVisible':    false,'sClass': 'left'},
+                           { 'bVisible':    false,'sClass': 'left'},
+                           { 'bVisible':    false,'sClass': 'left'},
+                           { 'bVisible':    false,'sClass': 'left'},
+                           { 'bVisible':    false,'sClass': 'left'},
+                           { 'bVisible':    false,'sClass': 'left'},
+                           { 'bVisible':    false,'sClass': 'left'},
+                           { 'bVisible':    false,'sClass': 'left'},
+//                            { 'bVisible':    false,'sClass': 'left'},
+                           { 'bVisible':    false,'sClass': 'left'}
+                         ]
+    } );//end datatable
+
+    //mark spam user
+    $(document).on('click','.faq_btn_spam_user',function(){
+        var context=this;
+    	bootbox.confirm("Bạn có muốn duyệt và khóa tài khoản này không?", function(result) {
+    		  if(result){
+    			 var userID=$(context).attr('user');
+    			 var action=$(context).attr('action');
+    			 console.log(action);
+    			  if(action=="UNSPAM"){
+  					console.log("bao k vi pham");
+  					$(context).text("Đang lưu...");
+  					$.ajax({
+  				         url: basePath+"/admin/member/active",
+  				         type: "POST",
+  				         dataType:"json",
+  				         data: "user=" + userID, //The data your sending to page
+  				         success: function(data){
+  				        	 if(data.status==1){
+  				        		 bootbox.alert('thành công!');
+   				        		$(context).text("Đã khóa");
+  				        	 }
+  				         },
+  				         error:function(){
+  				        	 $(context).text("Lỗi!");
+  				        	 bootbox.alert('không thành công!');
+   				        	$(context).text("Đang mở");
+  				             console.log("AJAX request was a failure");
+  				         }
+  				       });
+
+  				}else if(action=="SPAM"){
+  					console.log("bao vi phạm");
+  					$(context).text("Đang lưu...");
+  					$.ajax({
+  				         url: basePath+"/admin/member/deactive",
+  				         type: "POST",
+  				         dataType:"json",
+  				         data: "user=" + userID, //The data your sending to page
+  				         success: function(data){
+  				        	 if(data.status==1){
+  				        		 bootbox.alert('thành công!');
+   				        		$(context).text("Đang mở");
+  				        	 }
+  				         },
+  				         error:function(){
+  				        	 bootbox.alert('không thành công!');
+   				        	$(context).text("Đã khóa");
+  				             console.log("AJAX request was a failure");
+  				         }
+  				       });
+  				}
+    		  }
+
+    		});
+    });
+    //delete user
+    $(document).on('click','.faq_btn_delete_user',function(){
+        var context=this;
+        if($(context).attr('status')!='-1'){
+    	bootbox.confirm("Admin ơi! có thực sự muốn xóa không?", function(result) {
+    		  if(result){
+    			  $(context).text("Đang xóa...");
+    			  var userID=$(context).attr('user');
+    		  $.ajax({
+    		         url: basePath+"/user/delete",
+    		         type: "POST",
+    		         dataType:"json",
+    		         data: {user:userID},
+    		         success: function(data){
+    		        	 if(data.status==1){
+    		        		 $(context).text("Đã xóa");
+    		        		 $(context).attr('status','-1');
+    		        		 console.log("sucess delete user");
+    		        		 bootbox.alert('Xóa thành công!');
+    		        	 }
+
+    		         },
+    		         error:function(){
+    		        	 bootbox.alert('Không xóa được =((');
+    		        	 $(context).text("Xóa?");
+    		             console.log("AJAX request was a failure");
+    		         }
+    		       });
+    		  }
+
+
+    		});
+        }else{
+        	bootbox.alert('Xóa rồi thê, sao mà xóa được nữa =))');
+    	}
+    });
+
+
+
+
+
+} );// end document ready
+
+
+</script>

@@ -1,0 +1,272 @@
+
+<style>
+.faq_btn_hangout {
+	margin-top: 10px;
+}
+
+#faq_content_overview_member {
+	height: auto;
+	border: 1px dotted  #269abc ;
+}
+.fb_iframe_widget{
+	margin-top: 20px;
+}
+#faq_wrap_follow_box {
+	height: 30px;
+}
+
+.faq_info_overview {
+	padding-bottom: 35px;
+	margin-left: 15px;
+	margin-right: 15px;
+}
+
+.faq_img_overview_member {
+	margin-left: 15px;
+}
+</style>
+<script src="https://apis.google.com/js/platform.js"></script>
+
+
+<div class="faq_wrap_content">
+<?php
+use FAQ\FAQCommon\Util;
+use FAQ\FAQCommon\FAQParaConfig;
+$this->headLink ()->prependStylesheet ( $this->basePath () . '/css/member_overview.css' );
+
+echo $this->partial ( "/web/member/nav.phtml" );
+/* @var $user \FAQ\FAQEntity\User */
+$user = $this->user;
+$birthday = $user->getBirthday ();
+if ($birthday) {
+	$birthday = 1+$birthday->format ( 'd' ) . '-' . $birthday->format ( 'm' ) . '-' . $birthday->format ( 'Y' );
+}
+$locations = $user->getLocation ();
+$skills = $user->getSkill ();
+$avatar = $user->getAvatar ();
+$imageID = $avatar->getId ();
+$name = Util::getUserName ( $user );
+$contentType = $avatar->getContentType ();
+
+$extentionFile = Util::getTypeFile ( $contentType );
+$titleFileSeo = Util::convertUrlFileName ( $name, $extentionFile );
+
+$userID = $user->getId ();
+
+$this->headtitle ( $name . " | " . $user->getDateCreated ()->getTimestamp () );
+// setting meta description
+$this->placeholder ( 'description' )->append ( "thông tin cá nhân của " . $name );
+$rank = Util::getUserRankText ( $user );
+$totalUserFollow = $user->getTotalUserFollow ();
+
+$appellation = Util::getUserAppellationText ( $user );
+
+$statusFollowCode = 1;
+$currentStatusFollow = FAQParaConfig::statusUnfollow;
+/* @var $userFollows \Doctrine\Common\Collections\ArrayCollection */
+$userFollows = $user->getFollowMe ();
+
+if ($userFollows->contains ( Util::getCurrentUser () )) {
+	$statusFollowCode = 2;
+}
+if ($statusFollowCode == 1) {
+	$statusAction = FAQParaConfig::actionFollow;
+} else {
+	$statusAction = FAQParaConfig::actionUnfollow;
+	$currentStatusFollow = FAQParaConfig::statusFollow;
+}
+$totalRankPoint = $user->getTotalRankPoint ();
+$totalMoneyPoint = $user->getTotalMoneyPoint ();
+$isVerified = $user->getIsVerified ();
+?>
+
+<div class="col-lg-8 col-md-8 col-sm-12 col-xs-12">
+		<table class="table">
+			<tr>
+				<td>Tên</td>
+				<td><?php echo $user->getFirstName().' '.$user->getLastName();?></td>
+			</tr>
+			<tr>
+				<td>Địa chỉ email</td>
+				<td><?php echo "*****".mb_substr($user->getEmail(), 3,'UTF-8');?></td>
+			</tr>
+			<tr>
+				<td>Ngày sinh</td>
+				<td><?php echo $birthday; ?></td>
+			</tr>
+			<tr>
+				<td>Giới tính</td>
+				<td><?php echo $user->getSex();?></td>
+			</tr>
+			<tr>
+				<td>Quốc tịch</td>
+				<td><?php ?></td>
+			</tr>
+			<tr>
+				<td>Nơi ở</td>
+				<td></td>
+			</tr>
+			<tr>
+				<td>Nơi học tập công tác</td>
+				<td><?php if($locations) foreach($locations as $k=>$v){?>
+                    <a
+					href="/home/search?q=<?php echo $v->getName(); ?>"><span>#<?php echo $v->getName();?></span></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <?php }?>
+            </td>
+			</tr>
+			<tr>
+				<td>Kỹ năng cá nhân</td>
+				<td><?php if($skills) foreach($skills as $k=>$v){?>
+                   <a href="/home/search?q=<?php echo $v->getName();?>"><span>#<?php echo $v->getName();?></span></a>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <?php }?>
+            </td>
+			</tr>
+			<tr>
+				<td>Tổng điểm câu hỏi</td>
+				<td><?php echo $totalRankPoint;?></td>
+			</tr>
+
+			<tr>
+				<td>Tổng điểm thưởng</td>
+				<td><?php echo $totalMoneyPoint;?></td>
+			</tr>
+		</table>
+
+	</div>
+	<div id="faq_content_overview_member" class="col-lg-4 col-md-4 col-sm-12 col-xs-12">
+		<!--  thong tin thanh vien -->
+
+		<div >
+			<div class="col-md-12">
+				<div class="col-md-12">
+					<img class="faq_img_overview_member"
+						style="-webkit-user-select: none"
+						src="<?php echo $this->basepath("/media/get-image/images/$imageID/$titleFileSeo")?>">
+				</div>
+				<div class="col-md-12">
+               <?php if($isVerified==FAQParaConfig::VERIFIED){?>
+				<div class="corner"
+						title="Hệ thống đã xác thực lượng kiến thức của thành viên này">
+						<span>Xác thực</span>
+					</div>
+				<?php };?>
+
+
+			<div class="faq_info_overview">
+		<?php
+		$this->viewmodel ()->varUser = $user;
+		echo $this->partial ( "/web/member/rank-info.phtml" );
+		?>
+		</div>
+				</div>
+			</div>
+			<div class="faq_info_overview">
+				<span><?php echo $appellation; ?></span>
+			</div>
+			<div class="faq_info_overview">
+				<i><?php echo $this->totalUserFollow==null?0:$this->totalUserFollow;?> theo dõi</i>
+			</div>
+			<b class="faq_fullname_member"><?php echo $name;?></b>
+			<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 faq_padding_left_none faq_padding_right_none" id="faq_wrap_follow_box">
+				<div class="dropdown faq_member_action ">
+					<a
+						class="dropdown-toggle btn <?php if($statusFollowCode==2){ echo "btn-success";}else{echo "btn-info";}?>"
+						id="dLabel" role="button" data-toggle="dropdown" data-target="#"
+						><?php echo $currentStatusFollow;?><b
+						class="caret"></b> </a>
+					<ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+						<li role="presentation"
+							class="<?php echo $userID==Util::getIDCurrentUser()?"disabled":"";?>"><a
+							role="menuitem" tabindex="-1" user="<?php echo $userID;?>"
+							action=<?php echo $statusFollowCode;?>><?php echo $statusAction;?></a></li>
+					</ul>
+				</div>
+
+			</div>
+			<br>
+			<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 faq_padding_left_none faq_padding_right_none">
+					<div class="fb-like" data-width="100" data-layout="button_count"
+						data-action="like" data-show-faces="true" data-share="true"></div>
+			</div>
+			<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 faq_padding_left_none faq_padding_right_none faq_btn_hangout">
+
+					<div id="faq_div_hangout"></div>
+
+			</div>
+		</div>
+		<!-- end overview -->
+		<div class="col-md-12" id="faq_member_profile_action">
+			<button type="button" class="btn btn-sm pull-left"
+				id="faq_btn_ask_now">Hỏi người này</button>
+			<button type="button" class="btn btn-sm pull-right"
+				id="faq_btn_send_message">Gửi tin nhắn</button>
+			<a id="faq_link_link_send_message" class="fancybox fancybox.iframe "
+				style="display: none;" href="/message/send?ajax=true&touser=">Gửi
+				message</a>
+		</div>
+
+	</div>
+</div>
+
+<script>
+$(function() {
+	  $('.dropdown-toggle').dropdown();
+});
+$("#faq_btn_send_message").click(function(){
+	  console.log("send messs");
+	  var user_id = '<?php echo $user->getId();?>';
+	  // create box and show message.
+	  chat_utils.socket.get('/chat/createRoom', {userid: user_id}, function(res){
+			if(res){
+			console.log(res);
+				chat_utils.user_id = res.user;
+				if(res.room_id){
+					var room_id = res.room_id;
+					var another_user = [user_id];
+					var name = res.room_name;
+					var type = res.type;
+
+
+					chat_utils.socket.get('/chat/getListRoom',{room_id: room_id}, function(res){
+						console.log('load all room:');
+						for(i=0;i<res.lstRoom.length;i++){
+
+							var nametext = '<span class=name>' + res.lstRoom[i].room_name + '</span><span class=unread></span>';
+							if(i==0){
+								$($('.room-1th')[0]).attr('room_id', res.lstRoom[i].room_id);
+								$($('.room-1th')[0]).html(nametext);
+								continue;
+							}
+							if(i==1){
+								$($('.room-2th')[0]).attr('room_id', res.lstRoom[i].room_id);
+								$($('.room-2th')[0]).html(nametext);
+								continue;
+							}
+							if(i==2){
+								$($('.room-3th')[0]).attr('room_id', res.lstRoom[i].room_id);
+								$($('.room-3th')[0]).html(nametext);
+								continue;
+							}
+							$('#chat-box .room-list').append('<li room_id="' + res.lstRoom[i].room_id + '"><a href=javascript:><span class=name>' + res.lstRoom[i].room_name + '</span><span class=unread></span></a></li>');
+						}
+						// refresh UI
+					    $('.dropdown-toggle').dropdown();
+					    // read messages.
+					    $('.room-th[room_id="' + room_id + '"]').click();
+					    $('ul.room-list li[room_id="' + room_id + '"]').click();
+					    // change status if need (invisible -> min);
+					    	$('#chat-box').attr('status','normal');
+					});
+
+				}
+			}
+		});
+
+
+	  //$('#chat-box').attr('status', 'normal');
+});
+gapi.hangout.render('faq_div_hangout', {
+  'render': 'createhangout',
+  'initial_apps': [{'AIzaSyCY8RzkmG2wL4fxBh1NDf_n7Pgy-toMfqw' : '184219133185', 'start_data' : 'dQw4w9WgXcQ', 'app_type' : 'ROOM_APP' }]
+});
+  </script>

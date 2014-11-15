@@ -1,0 +1,66 @@
+<?php
+use FAQ\FAQCommon\FAQParaConfig;
+use FAQ\FAQCommon\Util;
+
+$subjectID = $subject->getId();
+$titleSubject = $subject->getTitle();
+$totalThread = $subject->getTotalQuestion();
+$totalUserFollow = $subject->getTotalUserFollow();
+$avatar = $subject->getAvatar();
+if($avatar){
+	$imageID = $avatar->getId();
+
+	$contentType = $avatar->getContentType();
+
+	$extentionFile = Util::getTypeFile($contentType);
+	$titleFileSeo = Util::convertUrlFileName($titleSubject,$extentionFile);
+}
+
+$statusFollowCode = 1;
+$currentStatusFollow = FAQParaConfig::statusUnfollow;
+/* @var $userFollows \Doctrine\Common\Collections\ArrayCollection */
+$userFollows = $subject->getUserFollow();
+
+if ($userFollows->contains(Util::getCurrentUser())) {
+    $statusFollowCode = 2;
+}
+if ($statusFollowCode == 1) {
+    $statusAction = FAQParaConfig::actionFollow;
+} else {
+    $statusAction = FAQParaConfig::actionUnfollow;
+    $currentStatusFollow = FAQParaConfig::statusFollow;
+}
+?>
+ <link href="/css/member_overview.css" media="screen" rel="stylesheet" type="text/css">
+<div id="faq_content_overview_member" style="width:350px;">
+<table>
+	<tr>
+	<td>
+	<img class="faq_img_overview_subject"
+		subject="<?php echo $subjectID;?>" alt="<?php echo $title;?>"
+		src="<?php echo $this->basepath("/media/get-image/images/$imageID/$titleFileSeo")?>" />
+		<a style="text-decoration: none">
+			<b><?php echo $titleSubject;?></b>&nbsp;&nbsp;&nbsp;
+			<b><?php echo $totalThread." câu hỏi";?></b>
+		</a>
+	</td>
+	<td>
+		<div>
+			<p><?php echo $totalUserFollow." người quan tâm";?></p>
+		</div>
+		<p>
+
+
+		<div class="dropdown faq_subject_action">
+			<button  title='Click để "<?php echo $statusAction;?>"' type="button" class="faq_btn_follow_subject btn btn-xs <?php if($statusFollowCode==2){ echo "btn-warning";}else{echo "btn-default";}?>"
+							subject="<?php echo $subjectID?>"
+							action=<?php echo $statusFollowCode;?>
+						><?php echo $currentStatusFollow;?>
+						</button>
+		</div>
+
+		</p>
+	</td>
+	</tr>
+</table>
+</div>

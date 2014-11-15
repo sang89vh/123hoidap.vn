@@ -1,0 +1,13 @@
+<?php $active = $this->viewmodel()->active; ?>
+
+<div id="faq_wrap_home_detail_header">
+        <div id="faq_home_detail_header">
+    		<ul class="nav nav-tabs pull-left" id="faq_home_index_nav">
+    			<li <?php if($active=='about'){?>class="active"<?php }?>><a href="/user/about">Thông tin</a></li>
+		<li  <?php if($active=='change_password'){?>class="active"<?php }?>><a href="/user/change-password">Cài đặt đăng nhập</a></li>
+		<li <?php if($active=='rank'){?>class="active"<?php }?>><a href="/user/rank">Điểm số && cấp bậc</a></li>
+    		</ul>
+		</div>
+
+</div>
+<link rel="stylesheet" type="text/css" href="/css/user/all.css" />

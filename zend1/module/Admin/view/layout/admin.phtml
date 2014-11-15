@@ -1,0 +1,123 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head><meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <meta charset="utf-8">
+        <?php  echo $this->headTitle($this->translate('Hỏi đáp | Hướng dẫn | QApolo'))->setSeparator(' | ')->setAutoEscape(false)?>
+
+        <!-- Le styles -->
+        <?php
+
+        echo $this->headLink(array(
+            'rel' => 'shortcut icon',
+            'type' => 'image/vnd.microsoft.icon',
+            'href' => $this->basePath() . '/img/qapolo_logo_mini.ico'
+        ))
+            ->prependStylesheet($this->basePath() . '/css/admin/jqueryui/jquery-ui-1.10.3.custom.min.css')
+            ->prependStylesheet($this->basePath() . '/css/admin/jqueryui/menu-bar.css')
+            ->prependStylesheet($this->basePath() . '/css/bootstrap.css')
+            ->prependStylesheet($this->basePath() . '/css/common.css')
+            ->prependStylesheet($this->basePath() . '/css/fancybox/jquery.fancybox.css')
+
+
+
+        ?>
+
+        <!-- Scripts -->
+        <?php
+
+        echo $this->headScript()
+            ->prependFile($this->basePath() . '/js/html5.js', 'text/javascript', array(
+            'conditional' => 'lt IE 9'
+        ))
+			->prependFile($this->basePath() . '/js/page.js')
+			->prependFile($this->basePath() . '/js/common.js')
+			->prependFile($this->basePath() . '/js/fixto.min.js')
+            ->prependFile($this->basePath() . '/js/moment2.2.1.js')
+            ->prependFile($this->basePath() . '/js/jqBootstrapValidation.js')
+            ->prependFile($this->basePath() . '/js/bootstrap.js')
+            ->prependFile($this->basePath() . '/js/admin.js')
+            ->prependFile($this->basePath() . '/js/bootbox.js')
+            ->prependFile($this->basePath() . '/js/jquery/jquery.ui.menubar.js')
+            ->prependFile($this->basePath() . '/js/jquery-ui-1.10.3.custom.min.js')
+             ->prependFile($this->basePath() . '/js/jquery-2.0.3.js')
+             ->appendFile($this->basePath() . '/js/jquery.fancybox.js')
+             ->appendFile($this->basePath() . '/js/faq_fancybox.js');
+        ?>
+        <script>
+            moment.lang('vi-vn');
+            var basePath='<?php echo $this->basePath();?>';
+            var baseUrl='<?php echo $this->url();?>';
+            var domain= '123hoidap.vn';
+            var imgAjaxLoad="<div class='container'><center><img  src='<?php echo $this->basePath("/images/ajax-loader.gif")?>'> </center></div>";
+          $(document).ready(function(){
+        	  $('#qapolo-admin-menu').menubar({
+        			menuIcon: true
+        			,autoExpand: true
+     		   });
+          });
+        </script>
+        <style>
+            #qapolo-admin-menu{
+            	border:0px;
+            	background:none;
+            	width:100%;
+
+            }
+            #qapolo-admin-menu a{
+            	border:0px;
+            	cusor:pointer;
+            }
+            #qapolo-admin-menu li.ui-menubar-item{
+            	width:25%;
+            }
+            body{
+            	background-color:white;
+            }
+        </style>
+  </head>
+
+  <body>
+    <ul id="qapolo-admin-menu">
+    	<li>
+    		<a>Cài đặt</a>
+    		<ul>
+    			<li><a href="/">Vể trang Chủ</a></li>
+    			<li><a href="/user/logout">Đăng xuất</a></li>
+    		</ul>
+    	</li>
+    	<li>
+    		<a>Quản lý danh mục</a>
+    		<ul>
+    		    <li><a href="/admin/catalog/subject">Chủ đề</a></li>
+    			<li><a>Địa danh hành chính</a></li>
+    		</ul>
+    	</li>
+    	<li>
+    		<a>Ứng dụng</a>
+    		<ul>
+    			<li><a href="/admin/question/index">Quản lý câu hỏi</a></li>
+    			<li><a href="/admin/news/index">Quản lý tin, bài hướng dẫn</a></li>
+    			<li><a href="/admin/member/index">Quản lý user</a></li>
+    		</ul>
+    	</li>
+    	<li>
+    		<a>Job</a>
+    		<ul>
+    			<li class="active">
+                    <a id="menu-faq-keyword" class="faq-menu-admin" href="/admin/phpjob/">Từ khóa</a>
+                </li>
+    		</ul>
+    	</li>
+    </ul>
+    <div class="container">
+       <?php
+		 echo $this->content;
+		?>
+    </div>
+  </body>
+</html>

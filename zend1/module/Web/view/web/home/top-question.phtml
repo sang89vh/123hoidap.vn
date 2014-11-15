@@ -1,0 +1,68 @@
+<?php
+use FAQ\FAQCommon\Util;
+	?>
+<div class="pull-left">
+	<div class="col-md-12 col-lg-12 col-sm-12 col-xs-12">
+
+		<div class="pull-left col-md-8 col-lg-8 col-sm-12 col-xs-12" id="faq_slide_higlight">
+			<div id="carousel-faq-captions" class="carousel slide" data-ride="carousel" style="width: 100%;">
+
+        <div class="carousel-inner">
+        <?php
+        $n=0;
+        foreach ($highlight_questions as $key => $highlight_question) {
+            $questionID=$highlight_question["_id"];
+        	$img=$highlight_question["first_image"][0];
+        	$title=$highlight_question["title"];
+        	$titleSeo=Util::convertUrlSeo($title);
+
+        ?>
+          <div class="item <?php echo $n==0?"active":"";?>">
+          <a href="<?php echo $this->basepath("/question/detail/$questionID/$titleSeo"); ?>" >
+            <?php echo $img;?>
+            </a>
+            <div class="carousel-caption">
+              <p><?php echo $title;?></p>
+            </div>
+          </div>
+<?php $n++;}?>
+        </div>
+        <a class="left carousel-control" href="#carousel-faq-captions" data-slide="prev">
+          <span class=""></span>
+        </a>
+        <a class="right carousel-control" href="#carousel-faq-captions" data-slide="next">
+          <span class=""></span>
+        </a>
+      </div>
+		</div>
+		<div id="faq_show_top" class="pull-left col-md-4 col-lg-4 col-sm-12 col-xs-12">
+			<div class="pull-right" style="width: 100%;overflow: hidden;">
+				<h6>
+					<b style="padding-left: 5px;">TIÊU ĐIỂM</b>
+				</h6>
+				<div class="faq_top_question_question_subject">
+				<?php foreach ($hot_questions as $key => $hot_question) :
+				$questionID=$hot_question["_id"];
+				$title=$hot_question["title"];
+				$titleSeo=Util::convertUrlSeo($title);
+
+			?>
+					<span title="<?php echo $title;?>"> <i class="faq_top_header_qa_icon glyphicon glyphicon-chevron-right"></i>
+						<a href="<?php echo $this->basepath("/question/detail/$questionID/$titleSeo"); ?>" >
+						<?php echo strtolower(mb_substr($title, 0,80,'UTF-8'))."...";?></a>
+					</span>
+					<?php endforeach;?>
+				</div>
+
+			</div>
+    </div>
+	</div>
+	<div class="col-md-12 col-lg-12 col-sm-12 col-xs-12 pull-left" style="margin-top: 10px;font-size: 11px;">
+		<ul class="nav nav-pills" id="faq_type_search">
+        <li class="active" id="faq_type_search_follow"><a  >Có thể bạn quan tâm</a></li>
+        <li id="faq_type_search_bonus"><a  >Điểm thưởng cao nhất</a></li>
+        <li id="faq_type_search_need_answer"><a  >Chưa có câu trả lời</a></li>
+        <li id="faq_type_search_vote"><a  >Vote</a></li>
+      </ul>
+	</div>
+</div>

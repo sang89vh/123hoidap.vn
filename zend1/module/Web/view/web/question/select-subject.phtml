@@ -1,0 +1,69 @@
+ <?php
+use FAQ\FAQCommon\Util;
+
+$this->headScript()
+->appendFile($this->basePath() . '/js/bsa.js');
+?>
+<script type="text/javascript" src="/js/question/select_subject.js"></script>
+
+<script type="text/javascript">
+var faq_url_paging="<?php echo $this->basepath("/subject/list-subject")?>";
+var totalLoad=0;
+var step=12;
+var faq_from_paging=totalLoad*step;
+var faq_to_paging=(totalLoad+1)*step;
+
+var totalSubject=<?php echo $totalSubject?>;
+var type_search=0;
+var faq_action="<?php echo $actionName;?>";
+var faq_data_paging={
+		keyword:"",
+		from:faq_from_paging,
+		to:faq_to_paging,
+		actionRequest:faq_action};
+
+
+
+</script>
+
+
+
+<div class="faq_content">
+	<div>
+		<div class="form-inline pull-left faq_search_subject" role="form">
+			<div class="form-group faq_imp_search_subject">
+				<label class="sr-only" for="faq_lbl_search_subject">Tìm kiếm chủ đề</label>
+				<input type="text" class="form-control" id="faq_txt_search_subject"
+					placeholder="Tìm kiếm chủ đề" name="search_subject">
+			</div>
+			<button class="btn btn-default" id="faq_btn_search_subject">Tìm</button>
+		</div>
+	</div>
+	<div class="faq_header_subject">
+		<h4>Chọn chủ đề của câu hỏi
+		  <small
+    		  class="faq_select_subject_tooltip"
+    		  data-toggle="tooltip"
+    		  title=""
+    		  data-original-title="Click vào ảnh của chủ đề để chọn chủ đề tương ứng">
+		      (hướng dẫn)
+		  </small>
+		</h4>
+	</div>
+    <div id="faq_postswrapper">
+    <?php echo $this->partial('/web/subject/list-subject.phtml');?>
+    </div>
+</div>
+<div id="faq_loadmoreajaxloader" style="display: none;">
+	<div class='faq_container'>
+		<center><img
+			src='<?php echo $this->basePath("/images/ajax-loader.gif")?>'>
+
+	</div>
+</div>
+<script type="text/javascript">
+$(".faq_select_subject_tooltip").tooltip({
+	'html' : 'true',
+	'placement':'bottom'
+});
+</script>

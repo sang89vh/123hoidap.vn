@@ -1,0 +1,32 @@
+<?php
+use FAQ\FAQCommon\Util;
+?>
+<div class="panel-heading">
+<h4 class="panel-title">Chủ đề quan tâm</h4>
+</div>
+<div id="faq_top_subject">
+<?php
+foreach ($subjects as $subject) {
+    $subjectID = $subject->getId();
+    $titleSubject=$subject->getTitle();
+    $avatar=$subject->getAvatar();
+    if($avatar){
+    $imageID = $avatar ->getId();
+
+    $contentType = $avatar->getContentType();
+
+    $extentionFile = Util::getTypeFile($contentType);
+    $titleFileSeo = Util::convertUrlFileName($titleSubject,$extentionFile);
+    }
+    ?>
+<a href="<?php echo $this->basepath("/subject/detail/question/".$subjectID); ?>/<?php echo Util::convertUrlSeo($titleSubject);?>">
+ <img class="faq_img_top_subject subjectavatar" title=" "
+		subject="<?php echo $subjectID; ?>" style="-webkit-user-select: none"
+		src="<?php echo $this->basepath("/media/get-image/images/$imageID/$titleFileSeo")?>">
+
+	</a>
+
+<?php
+}
+?>
+</div>

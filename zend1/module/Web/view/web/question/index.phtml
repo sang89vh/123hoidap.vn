@@ -1,0 +1,43 @@
+ <?php
+	use FAQ\FAQCommon\Util;
+
+	$this->headScript ()->prependFile ( $this->basePath () . '/js/question/index.js' )->prependFile ( $this->basePath () . '/js/question/common_question.js' )->prependFile ( $this->basePath () . '/js/question/list_question.js' )->appendFile ( $this->basePath () . '/js/bsa.js' )->appendFile ( $this->basePath () . '/js/bsa_script.js' );
+	$this->headLink ()->prependStylesheet ( $this->basePath () . '/css/question/index.css' );
+	$currentUser = Util::getCurrentUser ();
+	$currentUserName = Util::getUserName ( $currentUser );
+	// add titile
+	$this->headtitle ( "Câu hỏi của " . $currentUserName . " | " . $currentUser->getDateCreated ()->getTimestamp () );
+	// setting meta description
+	$this->placeholder ( 'description' )->append ( "Danh sách câu hỏi đang hỏi, bản nháp, đã đóng, vi phạm, quan tâm và người khác hỏi của " . $currentUserName );
+	?>
+<script type="text/javascript">
+var subject_select=null;
+</script>
+<div id="faq_wrap_home_detail_header">
+	<div id="faq_home_detail_header">
+		<ul class="nav nav-tabs pull-left" id="faq_question_index_nav">
+			<li value="overview" class="active"><a href="#overview">Tổng quan</a></li>
+			<li value="open-list"><a href="#open-list">Đang hỏi</a></li>
+			<li value="draft"><a href="#draft">Bản nháp</a></li>
+			<li value="closed-list"><a href="#closed-list">Đã đóng</a></li>
+			<li value="spam-list"><a href="#spam-list">Vi phạm</a></li>
+			<li value="follow-list"><a href="#follow-list">Quan tâm</a></li>
+			<li value="askme-list"><a href="#askme-list">Người khác hỏi</a></li>
+		</ul>
+	</div>
+	<div class="dropdown pull-right" id="faq_wrap_home_detail_option">
+		<a id="dLabel" role="button" data-toggle="dropdown" data-target="#"
+			href="#"> Chọn chủ đề <span class="caret"></span>
+		</a>
+		<ul id="faq_question_index_options" class="dropdown-menu" role="menu"
+			aria-labelledby="dLabel">
+
+			<li value="-1"><a href="#">Tất cả các chủ đề</a></li>
+                                   <?php foreach ($list_subject as $sub):?>
+                    <li value='<?php echo $sub['_id']->__toString(); ?>'><a
+					href='# <?php echo $sub['title']; ?>'><b><?php echo $sub['title']; ?></b></a></li>
+                    <?php endforeach;?>
+                              </ul>
+	</div>
+</div>
+<div id="faq_question_index_content"></div>

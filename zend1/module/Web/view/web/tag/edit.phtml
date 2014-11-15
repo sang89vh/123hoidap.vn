@@ -1,0 +1,102 @@
+<?php
+use FAQ\FAQCommon\Util;
+$this->headScript ()->appendFile ( $this->basePath () . '/js/typeahead.min.js' )->appendFile ( $this->basePath () . '/js/tag/index.js' )?>
+<script type="text/javascript">
+
+var tags="";
+</script>
+
+<style>
+
+.faq_img_tag {
+	width: 85px;
+	height: 85px;
+}
+</style>
+<?php echo $error;?>
+<?php
+/* @var $tag /FAQ/FAQEntity/Tag */
+if (! empty ( $tag )) {
+$type=$tag->getType();
+$avatar = $tag->getAvatar ();
+$title=$tag->getTagName();
+if (! empty ( $avatar )) {
+	$imageID = $avatar->getId ();
+	$contentType = $avatar->getContentType ();
+	$extentionFile = Util::getTypeFile ( $contentType );
+	$titleFileSeo = Util::convertUrlFileName ( $title, $extentionFile );
+}
+	?>
+<div class="faq_content col-lg-12 col-md-12 col-sm-12 col-xs-12">
+	<form role="form" method="post" action="/tag/edit/<?php echo $tagID;?>"
+		enctype="multipart/form-data">
+		<div class="form-group">
+			<label for="faq_InputEmail1">Tên Tags</label> <input name="tag_name"
+				type="text" class="form-control" id="faq_tag_name"
+				value="<?php echo $tag->getTagName();?>"
+				placeholder="Tên của tag nhỏ hơn 25 ký tự, nếu có 2 từ nên sử dụng dấu gạch ngang '-' nối lại. VD: may-tinh">
+		</div>
+		<div class="form-group">
+			<label for="faq_tag_relationship">Tag liên quan</label> <input
+				name="tag_relationship" type="text" class="form-control"
+				id="faq_tag_relationship"
+				placeholder="Những tag đồng nghĩa với tag trên">
+			<div id="faq_data_tag">
+			<?php
+			$tagRes=$tag->getRelationshipTag();
+			foreach ($tagRes as $key => $tagRe) {
+				$tagReName=$tagRe->getTagName();
+				$tagReID=$tagRe->getId();
+
+				?>
+				<span id="<?php echo $tagReID; ?>" class="tag label label-info"><?php echo $tagReName;?><span class="faq_tag_remove glyphicon glyphicon-remove" id="<?php echo $tagReID; ?>" ></span></span>
+				<?php
+			}
+
+			?>
+
+
+			</div>
+		</div>
+
+		<div class="form-group">
+			<label for="faq_desc">Mô tả chi tiết</label>
+			<textarea id="faq_tag_desc" name="tag_desc" class="form-control"
+				rows="3"><?php echo $tag->getDesc();?></textarea>
+			<p class="help-block">Mô tả chi tiết và tag trên giúp thành viên khác
+				dễ dàng hiểu hơn.</p>
+		</div>
+		<div class="form-group">
+			<label for="faq_avatar">Phân loại</label> <select name="type"
+				class="form-control" style="width: 300px">
+
+				<option <?php echo $type=="popular"?'selected="selected"':'';?> value="popular">Thông thường</option>
+				<option <?php echo $type=="location"?'selected="selected"':'';?> value="location">Nơi công tác, học tập</option>
+				<option <?php echo $type=="member"?'selected="selected"':'';?> value="member">Thành viên</option>
+				<option <?php echo $type=="skill"?'selected="selected"':'';?> value="skill">Kỹ năng cá nhân</option>
+			</select>
+		</div>
+		<div class="form-group">
+			<label for="faq_avatar">Ảnh đại diện</label> <input name="tag_avatar"
+				type="file" id="tag_avatar">
+			<p class="help-block">ví dụ: win8 sử dụng logo của win8 làm ảnh đại
+				diện.</p>
+				<?php
+				if (! empty ( $avatar )) {
+		?>
+		<img class="faq_img_tag media-object img-thumbnail"
+			alt="<?php echo $title;?>"
+			src="<?php echo $this->basepath("/media/get-image/images/$imageID/$titleFileSeo")?>" />
+		<?php
+
+}?>
+		</div>
+		<button id="faq_btn_submit_create_tag" type="submit"
+			class="btn btn-primary">Sửa</button>
+	</form>
+</div>
+<?php }else{?>
+<center>
+	<h4>Không tìm thấy tag cần sửa!</h4>
+</center>
+<?php }?>

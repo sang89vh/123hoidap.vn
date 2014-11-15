@@ -1,0 +1,147 @@
+<?php
+
+echo $this->doctype(); ?>
+<?php  echo $this->headTitle('Quản lý lưu trữ - 123hoidap.vn'); ?>
+<html lang="vi_VN">
+<head><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<?php
+        echo $this->headMeta('description', $this->placeholder('description').$this->headMetaDesc)
+//                  ->appendHttpEquiv('Content-Type',
+//                                    'text/html; charset=UTF-8')
+                 ->appendHttpEquiv('Content-Language', 'vi-VN');
+            // 1633
+
+            echo $this->headLink(array(
+            'rel' => 'shortcut icon',
+            'type' => 'image/vnd.microsoft.icon',
+            'href' => $this->basePath() . '/img/qapolo_logo_mini.ico'
+        ))
+            ->prependStylesheet($this->basePath() . '/css/media.css')
+//             ->prependStylesheet($this->basePath() . '/css/bootstrap-responsive.min.css')
+            ->prependStylesheet($this->basePath() . '/css/style.css')
+            ->prependStylesheet($this->basePath() . '/css/bootstrap.css')
+            ->prependStylesheet($this->basePath() . '/css/footer.css')?>
+
+        <!-- Scripts -->
+        <?php
+
+            echo $this->headScript()
+            ->prependFile($this->basePath() . '/js/html5.js', 'text/javascript', array(
+            'conditional' => 'lt IE 9'
+        ))
+            ->prependFile($this->basePath() . '/js/media.js')
+            ->prependFile($this->basePath() . '/js/jquery.cookie.js')
+            ->prependFile($this->basePath() . '/js/page.js')
+            ->prependFile($this->basePath() . '/js/bootbox.js')
+            ->prependFile($this->basePath() . '/js/bootstrap.js')
+            ->prependFile($this->basePath() . '/js/jquery-2.0.3.js')
+            ->appendFile($this->basePath() . '/js/jquery.anchor.js')
+            ->prependFile($this->basePath() . 'https://www.youtube.com/iframe_api')
+            ->appendFile($this->basePath() . '/js/fixto.min.js')
+            ->appendFile($this->basePath() . '/js/moment2.2.1.js');
+            echo $this->partial("/util/init-jsvariable.phtml");
+            ?>
+    </head>
+    <script>
+            var DOMAIN = '<?php echo $this->basepath();?>';
+    </script>
+
+<body>
+
+	<!-- Part 1: Wrap all page content here -->
+
+	<div id="wrap">
+	<div id="faq_wrap_breadcrumb">
+	    <ol class="breadcrumb">
+	       <li><a href="/media<?php if($action) echo "/".$action;?>">Home</a></li>
+         <?php for($i=0;$i<count($nav);$i++){?>
+            <li><a href="/media/<?php if($action) echo $action."/"; ?><?php echo $nav[$i]->id;?>"><?php echo $nav[$i]->name;?></a></li>
+         <?php }?>
+        </ol>
+    </div>
+		<div class="container">
+		    <div id="faq_media_type" class="pull-left"  >
+		       <?php
+		       $them_text = "";
+		       if($action=="index") $them_text = "Thư mục";
+		       if($action=="image-link") $them_text = "Link Ảnh";
+		       if($action=="video-link") $them_text = "Link Youtube";
+		       if($action=="image-file") $them_text = "File Ảnh";
+		       if($action=="video-file") $them_text = "File Video";
+		       if($action=="media-file") $them_text = "File";
+		       /*@ $media_nav \Zend\View\Helper\Navigation */
+		       $media_nav = $this->navigation('media_nav')->menu();
+		       echo $media_nav;
+		       ?>
+		       <img src="/images/add_128x128.png" style="cursor:pointer" action="<?php echo $action;?>" id="media-add"   dir_id="<?php echo  $dirID;?>" />
+		        <br/>  <span style="font-size:11px; font-style:italic">(*Thêm <?php echo $them_text; ?>)</span>
+		       <br/>
+		       <img src="/images/check_128x128.png" style="cursor:pointer" action="<?php echo $action;?>" id="media-select"   dir_id="<?php echo  $dirID;?>" />
+
+		    </div>
+		    <script>
+		         $('document').ready(function(){
+			         $('.faq-menu-link').each(function(idx,val){
+				         this.href = this.href + '<?php if($dirID) echo '/'.$dirID; ?>';
+			         });
+
+		         });
+		    </script>
+		    <div id="faq_media_content" >
+			     <?php echo $this->content; ?>
+			</div>
+		</div>
+		<div id="push"></div>
+	</div>
+	<div id="media-edit" class="col-lg-2" >
+	    <button name="edit"  class="form-control"  class="btn btn-default" onclick="editMedia()">Sửa</button>
+	    <button name="delete"  class="form-control"  class="btn btn-default" onclick="deleteMedia()">Xóa</button>
+	</div>
+	<div style="display:none" >
+	  <form class="form-horizontal" id="media-dir-add-form" role="form">
+              <div class="form-group">
+                    <label  class="col-lg-3 control-label">Tên thư mục</label>
+                    <div class="col-lg-5">
+                    <input name="name"  class="form-control"  placeholder="Tên thư mục" valid_type="require" valid_label="Tên thư mục" >
+                    </div>
+            </div>
+       </form>
+       <form class="form-horizontal" id="media-image-link-add-form" role="form">
+              <div class="form-group">
+                    <label  class="col-lg-4 control-label">Tên ảnh</label>
+                    <div class="col-lg-12">
+                    <input name="name"  class="form-control"  placeholder="Tên ảnh" valid_type="require" valid_label="Tên ảnh" >
+                    </div>
+             </div>
+             <div class="form-group">
+                    <label  class="col-lg-4 control-label">Đường dẫn ảnh</label>
+                    <div class="col-lg-12">
+                    <input name="link"  class="form-control"  placeholder="vd:http://google.com/images/ex.png" valid_type="require" valid_label="Đường dẫn ảnh"
+                        onblur="$('#media-image-link-add-form img').attr('src',this.value);" />
+                    </div>
+                    <img src="" width="150px" height="150px" style="margin-left:40%;margint-top:5px" alt="???" />
+             </div>
+       </form>
+        <form class="form-horizontal" id="media-video-link-add-form" role="form">
+              <div class="form-group">
+                    <label  class="col-lg-4 control-label">Tên Video</label>
+                    <div class="col-lg-12">
+                    <input name="name"  class="form-control"  placeholder="Tên video" valid_type="require" valid_label="Tên video" >
+                    </div>
+             </div>
+             <div class="form-group">
+                    <label  class="col-lg-6 control-label">Đường dẫn video từ youtube</label>
+                    <div class="col-lg-12">
+                    <input name="link"  class="form-control"  placeholder="vd:http://www.youtube.com/watch?v=DBNYwxDZ_pA" valid_type="require" valid_label="Đường dẫn ảnh"
+                        onblur="changeVideoLink(this.value);" />
+                    </div>
+             </div>
+             <div id="player"></div>
+       </form>
+
+	</div>
+	<script>
+</script>
+</body>
+</html>

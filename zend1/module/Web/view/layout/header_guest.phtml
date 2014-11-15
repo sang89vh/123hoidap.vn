@@ -1,0 +1,50 @@
+<header role="banner">
+
+	<nav class="navbar navbar-default " role="navigation">
+		<div id="faq_searchbar_left" class="col-md-6 col-lg-6 col-sm-5 col-xs-12">
+			<div class="col-md-2 col-lg-2 col-sm-2 col-xs-2 visible-lg visible-md">
+				<a href="/" title="Hỏi đáp | Hướng dẫn | 123hoidap.vn"> <img
+					id="qapolo_logo_mini"
+					src="<?php echo $this->basePath('/img/qapolo_logo_mini.png');?>" />
+				</a>
+			</div>
+			<div class="col-md-10 col-lg-10 col-sm-12 col-xs-12">
+				<?php
+				echo $this->partial ( '/web/home/search-form.phtml' );
+				?>
+		   </div>
+		</div>
+		<div id="faq_searchbar_right" class="col-md-6 col-lg-6 col-sm-7 col-xs-12 visible-lg visible-md visible-sm">
+		   <div class="col-md-8 col-lg-8 col-sm-6 col-xs-6">
+			<div class="btn-group">
+				<button type="button" class="btn btn-warning pull-left"
+					id="faq_btn_create_question">Đặt câu hỏi</button>
+
+			</div>
+			</div>
+			<div class="col-md-4 col-lg-4 col-sm-6 col-xs-6 ">
+				<p class="navbar-text pull-right">
+					<a href="<?php echo $this->basepath("/user/signup")?>"
+						class="navbar-link faq_link_signup">Đăng ký</a><i class="faq_split_signup_login">|</i>
+					<a
+						class="navbar-link faq_link_login hidden-xs">Đăng nhập</a>
+					<a
+						class="navbar-link faq_link_login_xs visible-xs" href="/user/login">Đăng nhập</a>
+				</p>
+           </div>
+		</div>
+	</nav>
+	<div id="notify_tooltip_container" over_tooltip="no"></div>
+	<?php
+	echo $this->partial ( '/layout/faqnav.phtml' );
+	?>
+	<script>
+                 $('#notify_tooltip_container').mouseenter(function(){
+               	           $(this).attr('over_tooltip','yes');
+                 });
+                 $('#notify_tooltip_container').mouseleave(function(){
+               	           $(this).attr('over_tooltip','no');
+                 });
+
+ </script>
+</header>

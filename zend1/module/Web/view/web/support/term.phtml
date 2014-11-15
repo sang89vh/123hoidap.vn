@@ -1,0 +1,22 @@
+<?php
+
+// add titile
+$this->headtitle("Điều khoản sử dụng");
+// setting meta description
+$this->placeholder('description')->append("Điều khoản sử dụng của hệ thống bài viết hướng dẫn, hỏi đáp trên 123hoidap.vn");
+
+?>
+<div class="faq_content">
+<?php
+/* @var $new \FAQ\FAQEntity\News */
+foreach ($news as $key => $new) {
+  $title=$new->getTitle();
+  $content=$new->getContent();
+?>
+<h1 style="text-align: center;"><?php echo $title;?></h1>
+<p>
+<?php echo $content;?>
+</p>
+<?php }?>
+</div>
+

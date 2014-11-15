@@ -1,0 +1,115 @@
+<?php
+use FAQ\FAQCommon\FAQParaConfig;
+use FAQ\FAQCommon\Util;
+$this->headtitle ( "Danh sách thành viên" );
+?>
+<script type="text/javascript">
+var totalmember=<?php echo $total_member;?>;
+</script>
+<div id="faq_list_user">
+	<div class="row">
+    <?php
+				$i = 6;
+				foreach ( $list_member as $member ) {
+					/* @var $member \FAQ\FAQEntity\User */
+					$memberID = $member->getId ();
+					$nameMember = $member->getFirstName () . " " . $member->getLastName ();
+
+					$avatar = $member->getAvatar ();
+					$imageID = $avatar->getId ();
+
+					$contentType = $avatar->getContentType ();
+					$titleSubject = $avatar->getName ();
+					$extentionFile = Util::getTypeFile ( $contentType );
+					$titleFileSeo = Util::convertUrlFileName ( $titleSubject, $extentionFile );
+
+					$rank = $member->getRank ()->first ();
+					$rankName = $rank->getName ();
+					$totalUserFollow = $member->getTotalUserFollow ();
+					$statusFollowCode = 1;
+					$currentStatusFollow = FAQParaConfig::statusUnfollow;
+					/* @var $memberFollows \Doctrine\Common\Collections\ArrayCollection */
+					$memberFollows = $member->getFollowMe ();
+
+					if ($memberFollows->contains ( Util::getCurrentUser () )) {
+						$statusFollowCode = 2;
+					}
+					if ($statusFollowCode == 1) {
+						$statusAction = FAQParaConfig::actionFollow;
+					} else {
+						$statusAction = FAQParaConfig::actionUnfollow;
+						$currentStatusFollow = FAQParaConfig::statusFollow;
+					}
+					$isVerified=$member->getIsVerified();
+					?>
+
+            <div class="col-md-2 col-lg-2 col-sm-4 col-xs-12">
+			<div class="thumbnail">
+
+				<a
+					href="<?php echo $this->basepath("/member/profile/".$memberID); ?>/<?php echo Util::getUserNameSeo($member);?>">
+					<center>
+						<img class="faq_img_overview_member"
+							title="Click để xem chi tiết thông tin thành viên"
+							style="-webkit-user-select: none"
+							src="<?php echo $this->basepath("/media/get-image/images/$imageID")?>">
+					</center>
+				</a>
+				<?php if($isVerified==FAQParaConfig::VERIFIED){?>
+				<div class="corner" title="Hệ thống đã xác thực lượng kiến thức của thành viên này">
+					<span>Xác thực</span>
+				</div>
+				<?php };?>
+
+				<div class="caption">
+
+					<div class="faq_info_overview">
+						<div style="padding-bottom: 35px;">
+							<!-- <span>Cấp bậc: <?php echo $rankName;?></span> -->
+    						<?php
+					$this->viewModel ()->varUser = $member;
+					echo $this->partial ( "/web/member/rank-info.phtml" );
+					$this->viewModel ()->varUser = null;
+					?>
+    					</div>
+					</div>
+					<div class="faq_info_overview">
+						<span><?php echo Util::getUserAppellationText($member)?></span>
+					</div>
+					<div class="faq_info_overview">
+						<i><?php echo $totalUserFollow;?> theo dõi</i>
+					</div>
+					<b class="faq_fullname_member"><?php echo $nameMember;?></b>
+
+
+					<div class="dropdown faq_member_action">
+						<a
+							class="faq_select_action_label dropdown-toggle btn btn-xs <?php if($statusFollowCode==2){ echo "btn-success";}else{echo "btn-info";}?>"
+							id="dLabel" role="button" data-toggle="dropdown" data-target="#"><?php echo $currentStatusFollow;?><b
+							class="caret"></b> </a>
+						<ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+							<li role="presentation"
+								class="<?php echo $memberID==Util::getIDCurrentUser()?"disabled":"";?>"><a
+								role="menuitem" tabindex="-1" user="<?php echo $memberID;?>"
+								action=<?php echo $statusFollowCode;?>><?php echo $statusAction;?></a></li>
+						</ul>
+					</div>
+
+				</div>
+
+			</div>
+		</div>
+<?php
+					$i ++;
+					if ($i % 6 == 0) {
+						?>
+        </div>
+	<div class="row">
+        <?php }?>
+     <?php
+				}
+				?>
+
+   </div>
+
+</div>

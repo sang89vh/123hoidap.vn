@@ -1,0 +1,107 @@
+1.   social auth
+            // for facebook
+            $facebook = new Facebook(array(
+        		'appId' => Authcfg::$facebook_app_id,
+        		'secret' => Authcfg::$facebook_app_secrete,
+	        ));
+	        $user = $facebook->api("/me","get");
+            return array(
+	            "facebook_login_url" => $facebook->getLoginUrl(array('redirect_uri'=>Authcfg::$facebook_redirect_url,'scope'=>Authcfg::$facebook_scope))
+	        );
+            
+2.
+	 /*@var $json_helper \Zend\View\Helper\Json   */   
+       $json_helper =  $this->getServiceLocator()->get('viewhelpermanager')->get('json');
+       $json_helper->__invoke(array('name'=>1));
+3. 
+	 /*@var $layout \Zend\View\Model\ViewModel */
+        $layout = $this->layout('layout/layout');
+4. disable layout and return json
+ 		$json_helper =  $this->getServiceLocator()->get('viewhelpermanager')->get('json');
+        echo $json_helper->__invoke(array('name'=>'luudatlong'));
+        return $this->getResponse(); // important
+5.
+	$this->getRequest()->getQuery('name');
+	$this->getRequest()->getPost('name')
+6.  Facebook app: 123hoidap.vn 
+	app id: 207763216014035
+	app secrete:  fa794c7f5b8fe7b554825e6caac41271 
+7. test doctrine
+	7.1 Document A chua document B. Document B ko reference hay embed
+		- khong thuc hien duoc
+	7.2 Document A reference toi document B
+		- B co the ko ton tai -> A tham chieu den null
+		- A thuc hien delete.
+		- sua ref, B cung thay doi
+		- xoa ref, B bi xoa, ref ko bi xoa.
+		- Cascade
+			- persist: khi thuc hien ref thi B se duoc insert tu dong
+	7.3 Document A embed document B 
+		- xoa B, A ko bi xoa.
+	7.4 unique
+7. doctrine common
+	- truong ko annotation ko duoc them vao db
+	- nullable=true, khi cap nhat document cung id, truong bi null se duoc truyen null;
+	- embed ko duoc co cascade
+	- query theo ca reference: field('con.name')->equals('abcd')->getQuery()->execute()->getNext();
+8. code snippet
+-- remove element from array
+	 public function removeTag($tag)
+    {
+        if ( ! in_array($tag, $this->tags))
+        {
+            return;
+        }
+        unset($this->tags[array_search($tag, $this->tags)]);
+    }
+-- time insert			
+			$d = new \DateTime('2000-01-01');
+			$doc->setDate($d);
+-- time read
+			$cha_ud = $cha->find($cha->getId(), false);
+            $time = $cha_ud['time']->sec;
+            echo date('d/m/Y', $time); // 01/01/2000
+--  time find
+		$d = new \DateTime('2000-01-11');
+        $cha = new cha($this);
+        $cha->setId("51f2af828bf0d1600f001547");
+        $cha_ud = $cha->findBy(array('time'=>$d),false);
+        var_dump($cha_ud->getNext());
+9. Them many-ref(skill) cho Document
+		+ c1(them moi)
+			- tao mot document
+			- set id la document muon update
+			- thay doi ref
+			- flush
+		+ c2(tu hydrative object)
+			- lay ve object
+			- detach
+			- change ref
+			- persist again
+			- flush
+9.1 issue: sua doctrine nhan ra ref thay doi va co update ngay [?]
+9.2 remove, add one-ref not need (attach then pesist)
+		$sub->setSkill(null);
+9.3 remove many-ref
+		detach
+		persist
+		$sub->getSkills()->removeElement($sub->getSkills()->first());
+10 query builder
+	 $user1 = $user->getQueryBuilder()->where("this.key[0].key_search=='key1'")->getQuery()->execute();
+
+		// no chi tra ve 1 object (ko hieu)
+	  $user1 = $user->getQueryBuilder()->field("key.key_search")->equals("key1")->getQuery()->execute();
+11 $this(view)
+	$this->controller,  $this->controller_class	  
+11.1 form
+	$this->setAttribute('method', 'post');
+	$form->get('submit')->setValue('Add');
+	$form->setData($request->getPost());
+	$form->setAttribute('action', $this->url('album', array('action' => 'add')));
+	$form->getData(); $form->setData($data_arr);
+11.2 request
+	$this->request->isPost();
+12
+	- reference(cascade=remove). user->getSkill()->remove($skill1).
+		=> skill on Skill collection be deleted also
+	- when remove a object. all reference (cascade=remove) also be delete.

@@ -1,0 +1,211 @@
+<?php
+echo $this->headTitle ( 'Đăng ký 123hoidap.vn' );
+$this->headScript ()->prependFile ( $this->basePath () . '/js/page.js' );
+
+use FAQ\FAQCommon\FAQParaConfig;
+use FAQ\FAQCommon\Appcfg;
+$this->headLink ()->prependStylesheet ( $this->basePath () . '/css/signup.css' );
+?>
+
+<?php
+
+$img_link = "update_later";
+
+?>
+<script>
+          $(document).ready(function(){
+        	  $('#signup-form').submit(function(evt){
+
+            	   isValid = validateit('signup-form','top',false,false);
+            	   if($('#signup-form')[0].password.value!= $('#signup-form')[0].password_repeat.value){
+            		   $('#signup-form .notice_text').remove();
+            		   $('#signup-form').prepend("<li style='list-style:none' class='notice_error_text notice_text'>* " + 'Mật khẩu bạn cung cấp không khớp' + '</li>');
+            		   $('#signup-form [name="password"]').addClass('ui-state-error');
+            		   $('#signup-form [name="password_repeat"]').addClass('ui-state-error');
+            		   isValid = false;
+            	   }
+            	   if(!$('#ruleOK').prop('checked')){
+            		   $('#signup-form .notice_text').remove();
+            		   $('#signup-form').prepend("<li style='list-style:none' class='notice_error_text notice_text'>* " + 'Bạn phải đống ý với điều khoản của chúng tôi' + '</li>');
+            		   $('#signup-form [name="ruleOK"]').addClass('ui-state-error');
+            		   isValid = false;
+
+                   }
+           	       var link = <?php echo $this->basepath();?>"/user/signup?";
+         	       link = link + $('#signup-form' ).serialize();
+          	       if(isValid){
+             	       $.ajax({
+                   	       url: link,
+                   	       type: 'post',
+                   	       data: {commit:1}
+               	       }).done(function(data){
+                   	       if(data.trim()=='not_valid') {
+                       	       // $('#signup-form')[0].reset();
+                          	    $('#signup-form .notice_text').remove();
+                           	    $('#signup-form').prepend("<li style='list-style:none' class='notice_error_text notice_text'>* " + 'Đăng ký không thành công. vui lòng thử lại' + '</li>');
+                   	       }
+                   	       if(data.trim()=="email_used"){
+                          	    $('#signup-form .notice_text').remove();
+                           	    $('#signup-form').prepend("<li style='list-style:none' class='notice_error_text notice_text'>* " + 'Email này đã được dùng. Bạn có thể đăng nhập.' + '</li>');
+                              	 $('#signup-form [name="email"]').addClass('ui-state-error');
+                   	       }
+                   	       if(data.trim()=='valid'){
+                       	       document.location.href= '<?php echo Appcfg::$domain; ?>/tour/about';
+                   	       }
+               	       });
+          	        }
+                    evt.preventDefault();
+        	  });
+          })
+</script>
+
+<div class="col-lg-8 col-md-8 visible-lg visible-md">
+	<div class="col-lg-12 col-md-12">
+		<iframe width="640" height="360"
+			src="//www.youtube.com/embed/mWRsgZuwf_8?autohide=1&showinfo=0" frameborder="0"
+			allowfullscreen></iframe>
+	</div>
+	<div class="col-lg-12 col-md-12">
+		<p>Với mong muốn kết nối cộng đồng "Lập trình viên" Việt Nam,
+		chúng tôi xây dựng hệ thống 123hoidap.vn mong muốn mang đến một nơi mà mọi
+		người có thể chia sẻ những kiến thức, khó khăn trong quá trình làm việc của mình.</p>
+		<p>Với khẩu hiệu <b>"Mọi câu hỏi đều có câu trả lời"</b> chúng tôi mong muốn mọi thắc mắc của tất
+		cả mọi người đều được trả lời một cách tốt nhất. Mong rằng đội ngũ "Lập trình viên" tại Việt Nam
+		ngày càng lớn mạnh hơn, chuyên nghiệp hơn.</p>
+
+	</div>
+</div>
+<div id="faq_form_signup" class="col-lg-4 col-md-4 col-sm-12 col-xs-12 faq_padding_left_none faq_padding_right_none">
+	<div class="col-md-12 faq_block_signup" id="faq_logo">
+		<center>
+			<a href="/"><img src="/images/logo/logo_qapolo.png"></a>
+		</center>
+		<center>
+			<a href="/"><h4 class="logo">123hoidap.vn - Mọi câu hỏi đều có câu
+					trả lời.</h4></a>
+		</center>
+	</div>
+	<div class="col-md-12 faq_block_signup">
+		<h4>Đăng ký tài khoản</h4>
+	</div>
+	<form class="form-inline " id="signup-form" role="form">
+		<div class="form-group">
+			<div class="col-lg-8 col-lg-8 col-sm-8 col-xs-12">
+				<input name="firstname" class="form-control"
+					placeholder="Họ và tên đệm" valid_type="length"
+					valid_label="Họ và tên đệm" valid_min=3 valid_max=25>
+			</div>
+			<div class="col-lg-4 col-lg-4 col-sm-4 col-xs-12">
+				<input name="lastname" class="form-control" placeholder="Tên"
+					valid_type="length" valid_label="Tên" valid_min=3 valid_max=25>
+			</div>
+		</div>
+		<div class="form-group">
+			<div class="col-lg-12 col-lg-12 col-sm-12 col-xs-12">
+				<input name="email" class="form-control" placeholder="Địa chỉ email"
+					valid_type="email">
+			</div>
+		</div>
+		<div class="form-group">
+			<div class="col-lg-12 col-lg-12 col-sm-12 col-xs-12">
+				<input type="password" name="password" class="form-control"
+					placeholder="Mật khẩu" valid_type="length" valid_label="Mật khẩu"
+					valid_min="6" valid_max="15">
+			</div>
+
+		</div>
+		<div class="form-group">
+			<div class="col-lg-12 col-lg-12 col-sm-12 col-xs-12">
+				<input type="password" name="password_repeat" class="form-control"
+					placeholder="Mật khẩu">
+			</div>
+
+		</div>
+		<div class="form-group">
+			<div class="col-lg-12 col-lg-12 col-sm-12 col-xs-12">
+				<div
+					class="col-lg-3 col-md-3 col-sm-3 col-xs-12 faq_padding_left_none">
+					<select class="form-control " name="birth_day" valid_type="number"
+						valid_label="Ngáy sinh" valid_min="1" valid_max="31">
+						<option>Ngày</option>
+                        <?php for($i=1;$i<=31;$i++){?>
+                        <option value="<?php echo $i; ?>"><?php echo $i;?></option>
+                        <?php }?>
+                      </select>
+				</div>
+				<div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+					<select class="form-control " name="birth_month"
+						valid_type="number" valid_label="Tháng sinh" valid_min="1"
+						valid_max="12">
+						<option>Tháng</option>
+                        <?php for($i=1;$i<=12;$i++){?>
+                            <option value="<?php echo $i; ?>"><?php echo $i; ?></option>
+                        <?php }?>
+                      </select>
+				</div>
+				<div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+					<input name="birth_year" class="form-control"
+						placeholder="Năm sinh" valid_type="number" valid_label="Năm sinh"
+						valid_min="1800" valid_max="2020">
+				</div>
+			</div>
+		</div>
+		<div class="form-group">
+			<div class="col-lg-4 col-md-4 col-sm-4 col-xs-12">
+				<select class="form-control " name="sex" valid_type="require"
+					valid_label="Giới tính">
+					<option value=''>Giới tính</option>
+					<option value='<?php echo FAQParaConfig::MALE;?>'>Trai</option>
+					<option value='<?php echo FAQParaConfig::FEMALE;?>'>Gái</option>
+					<option value='<?php echo FAQParaConfig::MALEANDFEMALE;?>'>T&G</option>
+				</select>
+			</div>
+		</div>
+		<div class="form-group">
+			<div class="col-lg-12 col-lg-12 col-sm-12 col-xs-12">
+				<div class="pull-left col-lg-1 col-lg-1 col-sm-1 col-xs-1">
+					<input checked id="ruleOK" type="checkbox" />
+				</div>
+				<div class="pull-left col-lg-10 col-lg-10 col-sm-10 col-xs-10">Tôi
+					đống ý với thỏa thuận sử dụng</div>
+			</div>
+		</div>
+		<div class="form-group">
+
+			<div class="col-lg-6">
+				<a role="button" class="btn btn-info pull-left" href="/user/login"><span
+					class="glyphicon glyphicon-chevron-left"></span>Đăng nhập</a>
+			</div>
+			<div class="col-lg-6">
+				<button type="submit" class="btn btn-warning pull-right">
+					Đăng ký<span class="glyphicon glyphicon-chevron-right"></span>
+				</button>
+			</div>
+		</div>
+	</form>
+	<div
+		class="col-lg-12 col-md-12 col-sm-12 col-xs-12 faq_block_signup_top">
+		<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+
+			<h4>Đăng ký thông qua</h4>
+
+		</div>
+		<div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+			<a href="<?php echo $this->facebook_login_url;?>"
+				title="Đăng nhập bằng tài khoản Facebook"><img
+				class="img-circle faq-img-openid"
+				src="/images/logo/logo_facebook.jpg" /></a>
+		</div>
+		<div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+			<a href="<?php echo $this->twitter_login_url;?>"
+				title="Đăng nhập bằng tài khoản Twitter"><img
+				class="img-circle faq-img-openid"
+				src="/images/logo/logo_tiwtter.jpg" /></a>
+		</div>
+		<div class="col-lg-4 col-md-4 col-sm-4 col-xs-4">
+			<a href="#" title="Đăng nhập bằng tài khoản Google+"><img
+				class="img-circle faq-img-openid"
+				src="/images/logo/logo_googleplus.jpg" /></a>
+		</div>
+	</div>
+</div>

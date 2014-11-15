@@ -1,0 +1,160 @@
+<?php
+use FAQ\FAQCommon\FAQParaConfig;
+use FAQ\FAQCommon\Util;
+use FAQ\FAQCommon\Appcfg;
+$typeMedia = $media->getType();
+$width = $this->width;
+$height = $this->height;
+if (empty($width)) {
+    $width = "auto";
+    $height = "auto";
+
+} elseif (empty($height)) {
+    $width = "auto";
+    $height = "auto";
+
+}
+if($typeMedia == FAQParaConfig::MEDIA_TYPE_VIDEO_LINK){
+	$width = "560";
+	$height = "315";
+}
+/* @var $media \FAQ\FAQEntity\Media */
+if ($typeMedia == FAQParaConfig::MEDIA_TYPE_IMAGE) {
+    $imageID = $media->getId();
+    $titleImage = $media->getName();
+
+    $contentType = $media->getContentType();
+    $typeFile = Util::getTypeFile($contentType);
+    $titleFileSeo = Util::convertUrlFileName($titleImage,$typeFile);
+if($typeEditor=="MARDOWN"){
+
+echo Appcfg::$domain."/media/get-media-image/images/".$imageID."/".$titleFileSeo;
+}else {?>
+
+
+<table  border="0" cellpadding="3" cellspacing="0"
+	class="tplCaption" width="1">
+	<tbody>
+		<tr>
+			<td>
+
+			<a class="fancy_grouped_elements" rel="faq_group_fancy" href="<?php echo $this->basepath("/media/get-media-image/images/".$imageID."/".$titleFileSeo)?>">
+			<img style="-webkit-user-select: none"
+				alt="<?php echo $titleImage;?>" title="<?php echo $titleImage;?>"
+				width='<?php echo $width;?>' height='<?php echo $height;?>'
+				src="<?php echo $this->basepath("/media/get-media-image/images/".$imageID."/".$titleFileSeo)?>">
+			</a>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<p class="Image" style="text-align: center;">
+					<?php echo $titleImage;?>
+				</p>
+			</td>
+		</tr>
+	</tbody>
+</table>
+<?php }
+}elseif ($typeMedia==FAQParaConfig::MEDIA_TYPE_IMAGE_LINK){
+
+if($typeEditor=="MARDOWN"){
+ echo $media->getLink();
+}else {?>
+<table  border="0" cellpadding="3" cellspacing="0"
+	class="tplCaption" width="1">
+	<tbody>
+		<tr>
+			<td>
+			<a class="fancy_grouped_elements" rel="faq_group_fancy" href="<?php echo $media->getLink();?>">
+			<img src="<?php echo $media->getLink();?>" <?php if($width) {?>
+				width='<?php echo $height;?>' <?php }?> <?php if($height) {?>
+				height='<?php echo $height;?>' <?php }?>
+				title="<?php echo $media->getName(); ?>"
+				alt="<?php echo $media->getName(); ?>" />
+			</a>
+			</td>
+		</tr>
+		<tr>
+			<td>
+				<p class="Image" style="text-align: center;">
+					<?php echo $media->getName();?>
+				</p>
+			</td>
+		</tr>
+	</tbody>
+</table>
+
+<?php
+}
+} elseif ($typeMedia == FAQParaConfig::MEDIA_TYPE_VIDEO_LINK) {
+    ?>
+<iframe <?php if($width) {?> width='<?php echo $width;?>' <?php }?>
+	<?php if($height) {?> height='<?php echo $height;?>' <?php }?>
+	src="//www.youtube.com/embed/<?php $x= explode('?v=',$media->getLink()); echo $x[1];?>"
+	frameborder="0" allowfullscreen></iframe>
+<?php
+} elseif ($typeMedia == FAQParaConfig::MEDIA_TYPE_FILE) {
+$contentType = $media->getContentType();
+$typeFile = Util::getTypeFile($contentType);
+if(!empty($typeFile)){
+
+
+    $fileID = $media->getId();
+    $length = $media->getLength();
+    $fileSize = round($length / (1048576), 2); // 1024*1024 MB
+
+
+
+    $titleFile = $media->getName();
+    $titleFileSeo = Util::convertUrlFileName($titleFile,$typeFile);
+if($typeEditor=="MARDOWN"){
+    ?>
+
+[Download][1]
+
+
+  [1]: <?php echo $this->basepath(Appcfg::$domain."/media/download-file/".strtolower($typeFile)."/".$fileID."/".$titleFileSeo)?>
+
+<?php }else{?>
+
+<div class="button-download">
+		<a  alt="download free <?php echo $titleFileSeo;?>"
+		    target="_blank"
+		    class="<?php echo strtoupper($typeFile)=="PDF"?"fancybox fancybox.iframe":"";?>"
+			href="<?php echo $this->basepath("/media/download-file/".strtolower($typeFile)."/".$fileID."/".$titleFileSeo)?>" >
+			Download </a>
+</div>
+<?php }?>
+<table border="1px" style="margin-top: 5px; margin-bottom: 5px">
+
+	<tr>
+		<td><b style="white-space:nowrap;">Tên file </b></td>
+		<td>
+			<span style="white-space:nowrap;"><?php echo $titleFile;?></span>
+		</td>
+	</tr>
+	<tr>
+		<td><b style="white-space:nowrap;">Dung lượng</b></td>
+		<td>
+			<span style="white-space:nowrap;"><?php echo $fileSize;?> MB</span>
+		</td>
+	</tr>
+	<tr>
+		<td><b style="white-space:nowrap;">Định dạng file</b></td>
+		<td>
+		<div style="white-space:nowrap;">
+		<img
+			alt="download free file <?php echo $typeFile;?>"
+			src="/img/<?php echo strtoupper($typeFile).".png";?>">
+			<?php echo $typeFile;?>
+			</div>
+
+			</td>
+	</tr>
+</table>
+
+
+<?php
+}
+}?>

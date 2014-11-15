@@ -1,0 +1,46 @@
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<?php
+echo $this->headMeta('description', $this->placeholder('description').$this->headMetaDesc)
+// ->appendHttpEquiv('Content-Type',
+// 		'text/html; charset=UTF-8')
+		->appendHttpEquiv('Content-Language', 'vi-VN');
+echo $this->headLink(array(
+		'rel' => 'shortcut icon',
+		'type' => 'image/vnd.microsoft.icon',
+		'href' => $this->basePath() . '/img/qapolo_logo_mini.ico'))
+->prependStylesheet($this->basePath() . '/css/bootstrap.css')
+->prependStylesheet($this->basePath() . '/css/bootstrap.icon-large.css')
+->prependStylesheet($this->basePath() . '/css/fancybox/jquery.fancybox.css');
+
+echo $this->headScript()
+->prependFile($this->basePath() . '/js/html5.js', 'text/javascript', array(
+		'conditional' => 'lt IE 9'
+))
+->prependFile($this->basePath() . '/js/bootstrap.js')
+->prependFile($this->basePath() . '/js/jquery-2.0.3.js')
+->appendFile($this->basePath() . '/js/fixto.min.js')
+->appendFile($this->basePath() . '/js/jquery.anchor.js')
+->appendFile($this->basePath() . '/js/jquery.fancybox.js')
+->appendFile($this->basePath() . '/js/faq_fancybox.js')
+?>
+<style>
+body{
+	background-color:white;
+}
+#notice-header{
+	width:50%;
+	margin-left:35%;
+	height:150px;
+}
+#notice-content{
+	width:50%;
+	margin-left:25%;
+}
+</style>
+<div id="notice-header">
+
+</div>
+<div style="border-bottom:1px green solid;width:50%; margin-left:25%"><h1>Thông báo từ hệ thống</h1></div>
+<div id="notice-content">
+    <?php echo $this->content; ?>
+</div>

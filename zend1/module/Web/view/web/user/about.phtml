@@ -1,0 +1,449 @@
+<?php
+use FAQ\FAQCommon\Util;
+use FAQ\FAQCommon\FAQParaConfig;
+use FAQ\FAQCommon\ChromePhp;
+ ?>
+<?php
+    $active = "about";
+    $this->viewmodel()->active = $active;
+    echo $this->partial("/web/user/setting-menu.phtml");
+?>
+<?php
+    /*@var $user \FAQ\FAQEntity\User */
+    $member = $this->user;
+    $userID = $member->getId();
+    $avatar=$member->getAvatar();
+    $user_avatarID =$avatar ->getId();
+
+    $contentType = $avatar->getContentType();
+
+    $extentionFile = Util::getTypeFile($contentType);
+    $memberName=Util::getUserName($member);
+    $titleFileSeo = Util::convertUrlFileName($memberName,$extentionFile);
+
+
+    $this->headTitle($memberName.' | Cài đặt người dùng - 123hoidap.vn'." | ".$member->getDateCreated()->getTimestamp());
+    $date = $member->getBirthday();
+    $skills = $member->getSkill();
+    $arrSkill = array();
+    foreach($skills as $k=>$v){
+        /*@var $v \FAQ\FAQEntity\Skill */
+        $skillId = $v->getId();
+        $skillName = $v->getName();
+        $arrSkill[$skillId] = $skillName;
+    }
+    $locations = $member->getLocation();
+    $arrLocation = array();
+    foreach ($locations as $k=>$v){
+        /*@var $v \FAQ\FAQEntity\Location */
+        $locationId = $v->getId();
+        $locationName = $v->getName();
+        $locationType = $v->getType();
+        $loc = null; $loc->id = $locationId; $loc->name = $locationName; $loc->type = $locationType;
+        $arrLocation[] = $loc;
+    }
+?>
+<script type="text/javascript" src="/js/typeahead.min.js"></script>
+<script type="text/javascript" src="/js/bootbox.js"></script>
+<script type="text/javascript" src="/js/page.js"></script>
+<link rel="stylesheet" href="/css/typeahead.css" type="text/css" />
+<style>
+    #ifr-avatar{
+    	width:100%;
+    	height:520px;
+    	border:0px;
+    }
+    .box-avatar .modal-dialog{
+    	width:80%;
+    }
+
+    .box-avatar .modal-content{
+    	height:600px;
+    }
+
+    .form-control, .control-label{
+
+    }
+    .header_title{
+    	font-size:25px;
+    	font-style: italic;
+    	color:#327518;
+    	border-bottom:1px gray solid;
+    	margin-bottom:10px;
+    	width:100%;
+    }
+    li.item{
+    	border:1px gray solid;
+    	width:50px;
+    }
+
+    span.item{
+    	border-radius:9px 0px 9px 0px;
+    	border:1px rgb(231, 243, 245) solid;
+    	margin-top: 3px;
+    	margin-right:10px;
+    	display:inline-table;
+    }
+    span.location, span.skill{
+    	font-style:italic;
+    }
+
+    span.item .close{
+    	float:inherit;
+    	color: red;
+    	opacity: 1;
+    	position: relative;
+        top: -10px;
+        left: 5px;
+    }
+    div.break{
+    	padding-top: 7px;
+		border-top: 1px rgba(226, 226, 226, 0.18) solid;
+    }
+</style>
+<div style="width:100%">
+    <img user="<?php echo $userID ?>" max-width="100px" max-height="100px" width="100px" height="100px" class="pull-left" style="cursor:pointer" id="faq_user_about_avatar"
+         src="/media/get-image/images/<?php echo $user_avatarID."/".$titleFileSeo; ?>" />
+    <div id="faq_user_about" class="pull-left col-lg-10">
+    <form class="form-horizontal" id="update-profile-form" role="form">
+                  <div  class="header_title" width="100%" >Thông tin cơ bản</div>
+                  <div class="form-group">
+                        <label  class="col-lg-3 control-label">Tên</label>
+                        <div class="col-lg-5">
+                          <input name="firstname"  class="form-control" value="<?php echo $member->getFirstName();?>" placeholder="Họ và tên đệm" valid_type="length" valid_label="Họ và tên đệm" valid_min=3 valid_max=25>
+                        </div>
+                        <div class="col-lg-4">
+                          <input name="lastname" class="form-control" value="<?php echo $member->getLastName();?>"  placeholder="Tên" valid_type="length" valid_label="Tên" valid_min=3 valid_max=25 >
+                        </div>
+
+                  </div>
+                  <div class="form-group">
+                        <label  class="col-lg-3 control-label">Địa chỉ Email</label>
+                        <div class="col-lg-9">
+                          <input name="email" value="<?php echo $member->getEmail(); ?>" class="form-control" readonly />
+                        </div>
+                  </div>
+                  <div class="form-group">
+                    <label  class="col-lg-3 control-label">Ngày sinh</label>
+                    <div class="col-lg-3">
+                      <select class="form-control input-sm" name="birth_day" valid_type="number" valid_label="Ngáy sinh" valid_min="1" valid_max="31" >
+                        <option>Ngày</option>
+                        <?php for($i=0;$i<=30;$i++){?>
+                        <option value="<?php echo $i<10?'0'.$i:$i; ?>" <?php echo $date->format('d')==($i<10?'0'.$i:$i)?'selected':'';?> ><?php echo ($i + 1);?></option>
+                        <?php }?>
+                      </select>
+                    </div>
+                    <div class="col-lg-3">
+                      <select class="form-control input-sm" name="birth_month" valid_type="number" valid_label="Tháng sinh" valid_min="1" valid_max="12" value="<?php echo $date->format('m'); ?>">
+                        <option>Tháng</option>
+                        <?php for($i=1;$i<=12;$i++){?>
+                            <option value="<?php echo $i<10?'0'.$i:$i; ?>" <?php echo $date->format('m')==($i<10?'0'.$i:$i)?'selected':''; ?>><?php echo $i; ?></option>
+                        <?php }?>
+                      </select>
+                    </div>
+                     <div class="col-lg-3">
+                      <input  name="birth_year"  class="form-control"  placeholder="Năm sinh" valid_type="number" valid_label="Năm sinh" valid_min="1900" valid_max="2010" value="<?php echo $date->format('Y');?>">
+                    </div>
+                  </div>
+                  <!--############# bo quoc tich
+                  <div class="form-group">
+                    <label  class="col-lg-3 control-label">Quốc tịch</label>
+                    <div class="col-lg-6">
+                      <select class="form-control input-sm" name="quoctich" >
+                        <option value="">Quốc tịch</option>
+                        <?php for($i=1;$i<=31;$i++){?>
+                        <option value="<?php echo $i; ?>"><?php echo $i;?></option>
+                        <?php }?>
+                      </select>
+                    </div>
+                  </div>
+                  ###############-->
+                  <!-- Dia danh - noi o -->
+                  <div class="form-group break">
+                    <label  class="col-lg-3 control-label">Nơi ở</label>
+                    <div class="col-lg-6">
+                                   <input class="location_input"  style="width:300px" loc_type="loc_use_diadanh"  >
+                    </div>
+                    <div class="col-lg-2 col-md-2 col-sm-2 col-xs-4">
+                          <button name="add_location"  class="form-control btn btn-warning" loc_type="loc_use_diadanh" >Thêm</button>
+                    </div>
+                  </div>
+
+                  <div class="form-group">
+                    <div class="col-lg-3"></div>
+                    <div class="col-lg-8 user_list_location"  loc_type="loc_use_diadanh">
+                        <?php foreach ($arrLocation as $loc){
+                        	if(in_array($loc->type, FAQParaConfig::$loc_use_diadanh) ){
+                        ?>
+                        <span class="item">
+                            <span class="location" loc_type="loc_use_diadanh"><?php echo $loc->name;?></span>
+                            <span class="close">x</span>
+                        </span>
+	                        <?php
+	                          }
+							}?>
+                    </div>
+
+                  </div>
+
+                  <!-- Noi Cong tac -->
+                  <div class="form-group break">
+                    <label  class="col-lg-3 control-label">Nơi công tác</label>
+                    <div class="col-lg-6">
+                                   <input class="location_input"  style="width:300px" loc_type="loc_use_noi_ct"  >
+                    </div>
+                    <div class="col-lg-2 col-md-2 col-sm-2 col-xs-4">
+                          <button name="add_location"  class="form-control btn btn-warning" loc_type="loc_use_noi_ct" >Thêm</button>
+                    </div>
+                  </div>
+
+                  <div class="form-group">
+                    <div class="col-lg-3"></div>
+                    <div class="col-lg-8 user_list_location"  loc_type="loc_use_noi_ct">
+                        <?php foreach ($arrLocation as $loc){
+                        	if(in_array($loc->type, FAQParaConfig::$loc_use_noi_ct) ){
+                        ?>
+                        <span class="item">
+                            <span class="location" loc_type="loc_use_noi_ct"><?php echo $loc->name;?></span>
+                            <span class="close">x</span>
+                        </span>
+	                        <?php
+	                          }
+							}?>
+                    </div>
+
+                  </div>
+					<!-- Noi hoc tap -->
+					<div class="form-group break">
+                    <label  class="col-lg-3 control-label">Nơi học tập</label>
+                    <div class="col-lg-6">
+                                   <input class="location_input"  style="width:300px" loc_type="loc_use_noi_ht"  >
+                    </div>
+                    <div class="col-lg-2 col-md-2 col-sm-2 col-xs-4">
+                          <button name="add_location"  class="form-control btn btn-warning" loc_type="loc_use_noi_ht" >Thêm</button>
+                    </div>
+                  </div>
+
+                  <div class="form-group">
+                    <div class="col-lg-3"></div>
+                    <div class="col-lg-8 user_list_location" loc_type="loc_use_noi_ht">
+                        <?php foreach ($arrLocation as $loc){
+                        	if(in_array($loc->type, FAQParaConfig::$loc_use_noi_ht) ){
+                        ?>
+	                        <span class="item">
+	                            <span class="location" loc_type="loc_use_noi_ht"><?php echo $loc->name;?></span>
+	                            <span class="close">x</span>
+	                        </span>
+                        <?php
+							}
+								}?>
+                    </div>
+
+                  </div>
+                 <div class="header_title" style="margin-top:20px">Kỹ năng cá nhân</div>
+                 <div class="form-group">
+                    <label  class="col-lg-3 control-label">Kỹ năng của bạn</label>
+                    <div class="col-lg-6">
+                                   <input id="skill_input"   style="width:300px"  >
+                    </div>
+                    <div class="col-lg-2 col-md-2 col-sm-2 col-xs-4">
+                          <button name="add_skill"  class="form-control btn btn-warning" >Thêm</button>
+                    </div>
+                    <div class="col-lg-3">
+
+                    </div>
+                 </div>
+
+                 <div class="form-group">
+                    <div class="col-lg-3"></div>
+                    <div class="col-lg-8" id="user_list_skill" >
+                        <?php foreach($arrSkill as $id=>$name){?>
+                        <span class="item">
+                            <span class="skill"><?php echo $name;?></span>
+                            <span class="close">x</span>
+                        </span>
+                        <?php }?>
+                    </div>
+
+                  </div>
+                  <div class="form-group">
+                    <div class="col-lg-3"></div>
+                    <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3"  >
+                        <button name="submit" style="opacity:0.2" class="form-control btn btn-warning" >Lưu</button>
+                    </div>
+                   <div class="col-lg-3 col-md-3 col-sm-3 col-xs-3"  >
+                        <button name="reset" style="opacity:0.2" class="form-control btn btn-default" >Hủy bỏ</button>
+                    </div>
+                  </div>
+       </form>
+    </div>
+</div>
+
+<script>
+       function getHashData(){
+    	   var form_data = $('#update-profile-form').serialize();
+           form_data = form_data + $('#user_list_skill').text().trim();
+           $('.user_list_location').each(function(idx,el){
+        	   form_data = form_data + $(el).text().trim();
+           });
+
+           form_data = form_data.toString().hashCode();
+           return form_data;
+       }
+       // init value
+       var form_hascode = getHashData();
+       $('#update-profile-form').change(function(evt){
+           var form_data_changed = getHashData();
+           if(form_hascode==form_data_changed){
+       	        $('#update-profile-form [name="submit"]').css('opacity',0.2);
+          	     $('#update-profile-form [name="reset"]').css('opacity',0.2);
+           }else{
+        	   $('#update-profile-form [name="submit"]').css('opacity',1);
+        	   $('#update-profile-form [name="reset"]').css('opacity',1);
+           }
+       });
+
+       //todo: add location
+       $('#update-profile-form [name="add_location"]').click(function(evt){
+           var isExist = false;
+           var loc_type = $(this).attr('loc_type');
+           var location_input = $('.location_input[loc_type="' + loc_type + '"]:first').val();
+           evt.preventDefault();
+           if(location_input=="") return;
+           $.each($('.user_list_location[loc_type="' + loc_type + '"] .location'),function(idx,val){
+               if($(val).html().trim()==location_input.trim()) isExist = true;
+           });
+           if(isExist) return;
+           $('.user_list_location[loc_type="' + loc_type + '"]').append('\x3Cspan class=\"item\"\x3E\n                            \x3Cspan   class=\"location\"   loc_type=\"' + loc_type + '\"  \x3E' + location_input +   '    \x3C\x2Fspan\x3E\n                            \x3Cspan class=\"close\"\x3Ex\x3C\x2Fspan\x3E');
+           $('#update-profile-form').trigger('change');
+           $('.location_input[loc_type="' + loc_type + '"]:first').val('');
+       });
+       $('.location_input').bind('keypress', function(e) {
+    	   var code = (e.keyCode ? e.keyCode : e.which);
+    	   var loc_type = $(this).attr('loc_type');
+    	   if(code == 13) { //Enter keycode
+    		   $('#update-profile-form [name="add_location"][loc_type="' + loc_type + '"]').click();
+    	   }
+       });
+
+       // todo: add skill
+       $('#update-profile-form [name="add_skill"]').click(function(evt){
+    	   var isExist = false;
+           var skill_input = $('#skill_input').val();
+           evt.preventDefault();
+           if(skill_input=="") return;
+           $.each($('#user_list_skill .skill'),function(idx,val){
+               if($(val).html()==skill_input) isExist = true;
+           });
+           if(isExist) return;
+           $('#user_list_skill').append('\x3Cspan class=\"item\"\x3E\n                            \x3Cspan class=\"skill\"\x3E' + skill_input + '\x3C\x2Fspan\x3E\n                            \x3Cspan class=\"close\"\x3Ex\x3C\x2Fspan\x3E');
+           $('#update-profile-form').trigger('change');
+           $('#skill_input').val('');
+       });
+       $('#skill_input').bind('keypress', function(e) {
+    	   var code = (e.keyCode ? e.keyCode : e.which);
+    	   if(code == 13) { //Enter keycode
+    		   $('#update-profile-form [name="add_skill"]').click();
+    	   }
+       });
+
+       // todo: delete skill, delete location
+       $(document).on("click", "span.item .close",function(evt){
+           $(this).parent().remove();
+           $('#update-profile-form').trigger('change');
+       });
+
+       // todo: submit click
+       $('#update-profile-form [name="submit"]').click(function(evt){
+    	   evt.preventDefault();
+    	   if($(this).css('opacity')=='1')
+    	   bootbox.confirm("Bạn có muốn lưu thông tin?", function(result) {
+    		  if(!result) return;
+    		  // save profile - commit
+    		  url = $('#update-profile-form').serialize();
+    		  var list_skill = new Array();
+    		  $.each($('#user_list_skill span.skill'),function(idx,val){
+        		  list_skill.push($(val).text());
+    		  });
+    		  var list_location = new Array();
+    		  $.each($('.user_list_location span.location'),function(idx,val){
+        		  var locObj = new Object();
+        		  locObj.type = $(this).attr('loc_type');
+        		  locObj.text = $(val).text()
+        		  list_location.push(locObj);
+    		  });
+    		  url = url + "&list_skill=" + JSON.stringify(list_skill) + "&list_location=" + JSON.stringify(list_location);
+    		  $.ajax({
+        		  url: '/user/about?' + url,
+        		  data: {commit:1},
+      			  type: 'post'
+    		  }).done(function(data){
+        		  if(data.toString().trim()=='saved'){
+        			  bootbox.alert("Dữ liệu được lưu thành công", function() {
+        				  document.location.href = "/user/about";
+        			  });
+        		  }else{
+        			  bootbox.alert("<span style='color:red'>Xin lỗi thao tác không được thực hiện, vui lòng thử lại</span>", function() {
+        				  document.location.href = "/user/about";
+        			  });
+        		  }
+    		  });
+    	   });
+
+       });
+
+
+
+       // todo: reset - huy bo
+       $('#update-profile-form [name="reset"]').click(function(evt){
+    	   evt.preventDefault();
+    	   if($(this).css('opacity')=='1')
+    	   bootbox.confirm("Bạn có muốn hủy bỏ thông tin đã nhập?", function(result) {
+    		  if(!result) return;
+    		  document.location.href = "/user/about";
+    	   });
+
+       });
+
+       // todo: auto suggest ky nang
+       $('#skill_input').typeahead([
+        {
+        name: 'skills',
+        limit: 7,
+        remote: '/search/skill-json?q=%QUERY'
+        }
+       ]);
+       $('.location_input[loc_type="loc_use_noi_ct"]').typeahead([
+          {
+          name: 'loc_use_noi_ct',
+          limit: 7,
+          remote: '/search/location-congty-json?q=%QUERY'
+         }
+        ]);
+       $('.location_input[loc_type="loc_use_diadanh"]').typeahead([
+            {
+              name: 'loc_use_diadanh',
+              limit: 7,
+              remote: '/search/location-diadanh-json?q=%QUERY'
+              }
+             ]);
+       $('.location_input[loc_type="loc_use_noi_ht"]').typeahead([
+                                       {
+           name: 'loc_use_noi_ht',
+           limit: 7,
+           remote: '/search/location-hoctap-json?q=%QUERY'
+           }
+  		]);
+       function showAvatarDialog(){
+    	   bootbox.dialog({
+    		   message: "\x3Ciframe src=\"\x2Fuser\x2Favatar\" id=\"ifr-avatar\" \x2F\x3E",
+    		   title: "Thay đổi avatar<span style='color:rgb(202, 198, 198);font-size:13px;font-style:italic;margin-left:5px'>(* Bạn nên chọn ảnh thật của mình)</span>",
+    		   className: 'box-avatar',
+    	   });
+       }
+       // todo: change avatar
+       $('#faq_user_about_avatar').click(function(evt){
+   	     showAvatarDialog();
+       });
+
+</script>

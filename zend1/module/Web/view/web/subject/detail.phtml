@@ -1,0 +1,69 @@
+<?php
+use FAQ\FAQCommon\Appcfg;
+use FAQ\FAQCommon\Util;
+?>
+<div class="faq_content">
+<?php
+$this->headLink()->prependStylesheet($this->basePath() . '/css/subject/detail.css');
+
+$this->headScript()
+    ->appendFile($this->basePath() . '/js/bsa.js')
+    ->appendFile($this->basePath() . '/js/bsa_script.js');
+
+//setting title for page
+$this->headtitle($titleSubject);
+// setting meta description
+$this->placeholder('description')
+->append($titleSubject);
+?>
+<script type="text/javascript">
+var totalLoad=0;
+var step= 16;
+var faq_from_paging=totalLoad*step;
+var faq_to_paging=(totalLoad+1)*step;
+var faq_data_paging={
+		 from:faq_from_paging,
+		 to:faq_to_paging
+		 };
+var subject_select="<?php echo $subjectID;?>";
+var user=null;
+var type_search=0;
+</script>
+<?php
+
+    $this->headScript()
+        ->prependFile($this->basePath() . '/js/question/common_question.js')
+        ->prependFile($this->basePath() . '/js/question/list_question.js')
+        ->appendFile($this->basePath() . '/js/subject/detail_question.js')
+        ->appendFile($this->basePath() . '/js/question/detail.js');
+    $this->headLink()->prependStylesheet($this->basePath() . '/css/question/index.css');
+
+
+    ?>
+<script type="text/javascript">
+var faq_url_paging="<?php echo $this->basepath("/subject/question")?>";
+var totalRow=<?php echo $totalDocument?>;
+
+</script>
+
+<?php
+
+       echo $this->partial("/web/home/top-question.phtml");
+
+    ?>
+
+<div id="faq_postswrapper">
+    <?php
+
+        echo $this->partial('/web/question/question-list.phtml');
+
+    ?>
+</div>
+	<div id="faq_loadmoreajaxloader" style="display: none;">
+		<div class='faq_container'>
+			<center><img
+				src='<?php echo $this->basePath("/images/ajax-loader.gif")?>'>
+
+		</div>
+	</div>
+</div>

@@ -1,0 +1,204 @@
+<?php
+use FAQ\FAQCommon\FAQParaConfig;
+use FAQ\FAQCommon\Util;
+/* @var $question \FAQ\FAQEntity\Question */
+try {
+	$questionIndex ++;
+	$userCreateBy = $question->getCreateBy ();
+	$userID = $userCreateBy->getId ();
+
+	$avatar = $userCreateBy->getAvatar ();
+	$avatarID = $avatar->getId ();
+
+	$contentType = $avatar->getContentType ();
+
+	$extentionFile = Util::getTypeFile ( $contentType );
+	$titleFileSeo = Util::convertUrlFileName ( Util::getUserName ( $userCreateBy ), $extentionFile );
+
+	$questionID = $question->getId ();
+	$questionTitle = $question->getTitle ();
+	// detach xss
+	$questionTitle = $this->escapehtml ( $questionTitle );
+	$questionTitleSeo = Util::convertUrlSeo ( $questionTitle );
+	// var_dump($questionStatus);
+	$questionStatusLabel = $question->getStatusLabel ();
+
+	$subjectQuestion = $question->getSubject ();
+	if (isset ( $subjectQuestion )) {
+		$questionSubjectTitle = $subjectQuestion->getTitle ();
+	}
+	$timeUpdateQuestion = $question->getDateCreated ()->sec * 1000;
+
+	$totalSpam = $question->getTotalSpam ();
+	$totalShare = $question->getTotalShare ();
+	$totalPoint = $question->getTotalLike () - $question->getTotalDislike ();
+	$totalAnswer = $question->getTotalAnswer ();
+	$totalBonus = $question->getBonusPoint ();
+
+	if ($totalAnswer > 999) {
+		$totalAnswer = "999+";
+	}
+
+	if ($totalPoint > 999) {
+		$totalPoint = "999+";
+	}
+
+	if ($totalShare > 999) {
+		$totalShare = "999+";
+	}
+
+	if ($totalSpam > 999) {
+		$totalSpam = "999+";
+	}
+	$content = $question->getContent ();
+	$subContent = $question->getShortContent ();
+
+	$img = "";
+	$imgs = $question->getFirstImage ();
+
+	if ($imgs) {
+
+		foreach ( $imgs as $im ) {
+			$img = $img . "<a class='zoom' rel='group" . $questionIndex . "' >" . $im . "</a>";
+		}
+	}
+
+	// $content=Util::truncate($content,300,$ending = '…', $exact = true, $considerHtml = true);
+
+	?>
+
+<div class="faq_question" id="<?php echo $questionID;?>">
+	<a
+		href="/member/profile/<?php echo $userID; ?>/<?php echo Util::getUserNameSeo($userCreateBy);?>"
+		class="faq_img_top_member" id="faq_question_avatar"> <img
+		class="img-circle faq_avatar avatar" width="50px" height="50px"
+		title=" " user="<?php echo $userID ?>"
+		style="-webkit-user-select: none"
+		src="<?php echo $this->basepath("/media/get-image/images/$avatarID/$titleFileSeo")?>" />
+	</a>
+	<div id="faq_question_info">
+            <?php if($userCreateBy->getId()==Util::getIDCurrentUser()){?>
+            <div class="pull-right faq_option_question">
+			<li class="dropdown list-unstyled"><a href="#"
+				class="dropdown-toggle" data-toggle="dropdown"> <!--         			<b>...</b> -->
+					<span
+					class="faq_option_question_icon  glyphicon glyphicon-chevron-down"></span>
+			</a>
+				<ul class="dropdown-menu" role="menu">
+
+					<li value='<?php echo $questionID;?>' action="DELETE"><a href="#"><b>Xóa</b></a></li>
+        			<li value='<?php echo $questionID;?>'
+						action="EDIT_WIKISTYLE"><a href="#"><b>Sửa</b></a></li>
+        			<li value='<?php echo $questionID;?>'
+						action="CLOSE_QUESTION"><a href="#"><b>Đóng câu hỏi</b></a></li>
+
+				</ul></li>
+		</div>
+             <?php }?>
+                <h4 id="faq_question_info_title">
+			<a target="_blank"
+				href="/question/detail/<?php echo $questionID;?>/<?php echo $questionTitleSeo;?>">
+                <?php
+
+echo $questionTitle;
+	echo "<small class='text-danger faq_status_question' value='" . $questionID . "'>" . $questionStatusLabel . "</small>";
+	?></a>
+		</h4>
+		<br />
+		<br />
+		<div id="faq_question_info_statistic">
+			<div
+				class="col-md-3 col-lg-3 col-sm-12 col-xs-12 pull-left faq_label_subject">
+				<span class="text-muted text-left"><small><?php echo $questionSubjectTitle; ?></small></span>&nbsp;&nbsp;&nbsp;&nbsp;
+
+			</div>
+			<div
+				class="col-md-9 col-lg-9 col-sm-12 col-xs-12 pull-right faq_padding_left_none">
+				<div
+					class="col-md-4 col-lg-4 col-sm-6 col-xs-6 pull-left faq_padding_left_none">
+					<span class="text-muted  faq_post_time"
+						post-time=<?php echo $timeUpdateQuestion; ?>></span>
+				</div>
+				<div
+					class="col-md-8 col-lg-8 col-sm-6 col-xs-6 faq_label_static faq_padding_left_none">
+					<div <?php  if($totalAnswer=="0"){?> title="Trả lời" <?php }?>
+						num="<?php echo $totalAnswer;?>"
+						class="faq_total_comment_question col-md-3 col-lg-3 col-sm-3 col-xs-3"
+						id="<?php echo $questionID;?>">
+						<span class="num" id="faq_total_comment_question"><?php echo $totalAnswer;?></span>
+						<span class="glyphicon glyphicon-comment faq-icon"></span>
+					</div>
+					<div <?php if($totalPoint=="0"){?> title="Votes" <?php }?>
+						num="<?php echo $totalPoint;?>"
+						class="faq_total_follow_question col-md-3 col-lg-3 col-sm-3 col-xs-3"
+						id="<?php echo $questionID;?>">
+						<span class="num" id="faq_total_point_question"><?php echo $totalPoint;?></span><span
+							class="glyphicon glyphicon-heart-empty faq-icon"></span>
+					</div>
+					<div <?php if($totalShare=="0"){?> title="Chia sẻ" <?php }?>
+						num="<?php echo $totalShare;?>"
+						class="faq_total_share_question col-md-3 col-lg-3 col-sm-3 col-xs-3"
+						id="<?php echo $questionID;?>">
+						<span class="num" id="faq_total_share_question"><?php echo $totalShare;?></span><span
+							class="glyphicon glyphicon-share-alt faq-icon"></span>
+					</div>
+					<div <?php if($totalSpam=="0"){?> title="Vi Phạm" <?php }?>
+						num="<?php echo $totalSpam;?>"
+						class="faq_total_spam_question col-md-3 col-lg-3 col-sm-3 col-xs-3"
+						id="<?php echo $questionID;?>">
+						<span class="num" id="faq_total_spam_question"><?php echo $totalSpam;?></span><span
+							class="glyphicon glyphicon-warning-sign faq-icon"></span>
+					</div>
+
+
+
+
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="break_line"></div>
+	<div
+		class="pull-left faq_preview_content_question faq_max_height_preview"
+		question="<?php echo $questionID;?>">
+		<div class="faq-question-img-zoom">
+			<a class="zoom"><?php echo $img; ?></a>
+		</div>
+		<p>
+			<span class="label label-danger"
+				title="thưởng <?php echo " ".$totalBonus." điểm cho câu trả lời hay nhất";?>"><?php echo $totalBonus." điểm thưởng";?></span>
+                     <?php echo $subContent; ?>
+                            <a target="blank" class="question-more"
+				href="/question/detail/<?php echo $questionID;?>/<?php echo $questionTitleSeo;?>">
+				&nbsp;&nbsp;<span>...Chi tiết</span>
+			</a>
+		</p>
+
+	</div>
+	<div
+		class="faq_btn_toggle_preview <?php echo strlen($subContent)<2500?"faq_display_none":"";?>">
+		<a class="faq_read_more_preview" question="<?php echo $questionID;?>"><small>Đọc
+				thêm</small></a> <a class="faq_read_less_preview faq_display_none"
+			question="<?php echo $questionID;?>"
+			href="<?php echo "#".$questionID;?>"><small>Thu gọn</small></a> <a
+			class="faq_go_content_question faq_display_none anchorLink"
+			question="<?php echo $questionID;?>"
+			href="<?php echo "#".$questionID;?>"><small>Tới câu hỏi</small></a>
+	</div>
+
+</div>
+
+<?php
+} catch ( \Exception $e ) {
+	Util::writeLog ( $e->getMessage () );
+}
+
+?>
+<script>
+	$('.faq-question-img-zoom img').each(function(idx,el){
+			$(el).parent().attr('href', $(el).attr('src'));
+	});
+	$('a.zoom').fancybox();
+</script>
+
+

@@ -1,0 +1,285 @@
+<style>
+#qapolo-user-rank .header {
+	font-weight: bold;
+}
+
+#qapolo-rank-tracking td,#qapolo-rank-tracking th {
+	text-align: center;
+}
+
+.faq_rank {
+	/* 	border-top: 1px solid gray; */
+	float: left;
+}
+</style>
+
+<?php
+use FAQ\FAQCommon\Util;
+$active = "rank";
+$this->viewmodel ()->active = $active;
+echo $this->partial ( "/web/user/setting-menu.phtml" );
+?>
+<?php
+/* @var $user \FAQ\DB\Entity\User */
+$user = $this->user;
+$name = Util::getUserName ( $user );
+$this->headTitle ( $name . ' | Điểm số và cấp bậc' . " | " . $user->getDateCreated ()->getTimestamp () );
+// setting meta description
+$this->placeholder ( 'description' )->append ( "Điếm số và cấp bậc của " . $name . " trên hệ thống 123hoidap.vn" );
+$rank = $user->getRank ();
+$appellations = $user->getAppellation ();
+$rankName = "";
+$rankName = $rank->first ()->getName ();
+$functionPoint = $user->getFunctionPoint ();
+$charts = array ();
+// $lastPoint = 0;
+$chartJsons = array ();
+// $functionPoint = array_reverse ( $functionPoint->toArray () );
+/* @var $point /FAQ/FAQEntity/UserFunctionPoint */
+foreach ( $functionPoint as $point ) {
+	$desc = $point->getDesc ();
+	$thoigian = $point->getDateUpdated ();
+	$thoigianISO = $thoigian->format ( DateTime::ISO8601 );
+	$pointBonus = $point->getRankPointBonus ();
+
+	$question = $point->getQuestion ();
+
+	$titleQuestion = "";
+	$questionID = "";
+	$titleQuestionSeo = "";
+	if (! empty ( $question )) {
+		$titleQuestion = $question->getTitle ();
+		$questionID = $question->getId ();
+		$titleQuestionSeo = Util::convertUrlSeo ( $titleQuestion );
+	}
+
+	// $pointBonusAtTime = $pointBonus - $lastPoint;
+	// $lastPoint = $pointBonus;
+	$chart = null;
+	$chart->time = $thoigian;
+	$chart->point = $pointBonus;
+	$chart->desc = $desc;
+	$chart->questionID =$questionID;
+	$chart->titleQuestionSeo =$titleQuestionSeo;
+	$chart->titleQuestion =$titleQuestion;
+	$charts [] = $chart;
+	// json
+	$json = null;
+	$json = array (
+			"dateUpdated" => $thoigian->getTimeStamp () * 1000,
+			"totalQuestion" => $pointBonus,
+			"questionID" => $questionID,
+			"titleQuestionSeo" => $titleQuestionSeo,
+			"titleQuestion" => $titleQuestion
+	);
+	$chartJsons [] = $json;
+}
+
+$chartJsonEncoded = json_encode ( array_reverse ( $chartJsons ) );
+
+?>
+<div id="qapolo-user-rank">
+	<div
+		class=" panel panel-primary">
+		<div class="panel-heading ">
+			<h4 class="panel-title">Tổng quan</h4>
+		</div>
+		<div class=" block">
+			<table class="table table-striped">
+				<thead>
+					<tr>
+						<th></th>
+						<th></th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr>
+						<td>Tổng điểm câu hỏi</td>
+						<td><?php echo $user->getTotalRankPoint();?> đ</td>
+					</tr>
+					<tr>
+						<td>Tổng số điểm thưởng</td>
+						<td><?php echo $user->getTotalMoneyPoint();?> đ</td>
+					</tr>
+					<tr>
+						<td>Điểm số theo lĩnh vực</td>
+						<td>
+							<div class="col-lg-8 faq_rank">
+					            <?php
+																	foreach ( $appellations as $appellation ) {
+																		/* @var $appellation \FAQ\DB\Entity\Appellation */
+																		$subject = $appellation->getSubject ()->getTitle ();
+																		?>
+					            <strong>- <?php echo $subject;?>:</strong> <span><?php echo $appellation->getTotalRankPoint()>0?$appellation->getTotalRankPoint():0;?> đ</span><br>
+					        <?php }?>
+					        </div>
+						</td>
+					</tr>
+					<tr>
+						<td>Cấp bậc</td>
+						<td><?php echo $rankName; ?></td>
+					</tr>
+					<tr>
+						<td>Danh hiệu</td>
+						<td>
+						<div class="col-lg-8 faq_rank">
+						<?php
+						// $firstRank = true;
+						foreach ( $appellations as $appellation ) {
+							/* @var $appellation \FAQ\DB\Entity\Appellation */
+							$subject = $appellation->getSubject ()->getTitle ();
+							?>
+				            <span>- <strong><?php echo $subject;?>:</span></strong> <span><?php echo $appellation->getRank();?></span><br>
+				        <?php }?>
+				        </div>
+                      </td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+		<div
+			class=" panel panel-primary">
+			<div class="panel-heading ">
+				<h4 class="panel-title">Lịch sử thay đổi</h4>
+			</div>
+			<div id="qapolo-rank-tracking"
+				class=" block">
+				<div id="qapolo-rank-chart-table" class="col-lg-12 col-md-12 col-sm-12 col-xs-12"
+					style="height: 300px; background-color: white; overflow-y: auto; padding-left: 0px">
+					<table class="table-bordered" width="100%">
+						<tr>
+							<th>Ngày</th>
+							<th>Điểm câu hỏi</th>
+							<th>Mô tả</th>
+							<th>Liên kết</th>
+						</tr>
+                <?php
+                                                                $charts=array_reverse($charts);
+																foreach ( $charts as $chart ) {
+																	/* @var $point \FAQ\FAQEntity\UserFunctionPoint */
+																	?>
+                <tr>
+							<td><span class="faq_post_time"
+								title="<?php echo $chart->time->format('d/m/Y H:i:s'); ?>"
+								post-time="<?php echo $chart->time->getTimeStamp()*1000; ?>"> </span>
+
+							</td>
+							<td><?php echo $chart->point>0?"+".$chart->point:$chart->point;?></td>
+							<td><?php echo $chart->desc;?></td>
+					<?php if(!empty($chart->questionID)){?>
+					<td style="text-align: left;"><a
+								href="<?php echo $this->basepath("/question/detail/$chart->questionID/$chart->titleQuestionSeo");?>"><?php echo $chart->titleQuestion;?></a></td>
+					<?php }else{?>
+					<td></td>
+					<?php }?>
+				</tr>
+                <?php }?>
+            </table>
+				</div>
+				<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+					<div id="chartPerDayQuestion" style="width: 100%; height: 400px;"></div>
+			    </div>
+			</div>
+		</div>
+	</div>
+
+
+
+
+<?php
+use Zend\Json\Json;
+
+?>
+
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<script src="/js/amcharts/amcharts.js" type="text/javascript"></script>
+
+
+
+
+
+
+	<script>
+var chart;
+
+var chartDataPerDayQuestion = [];
+var totalQuestion=0;
+//add data item to the array
+// chartDataPerDayQuestion.push({
+//     date: newDate,
+//     totalQuestion: totalQuestion
+// });
+
+
+AmCharts.ready(function () {
+	$.each(<?php echo Json::encode($chartJsons);?>, function(key,array) {
+		var  dateUpdated=new Date(array.dateUpdated);
+		totalQuestion=totalQuestion+Number(array.totalQuestion);
+		chartDataPerDayQuestion.push({
+	            date: dateUpdated,
+	            totalQuestion: Number(array.totalQuestion)
+	        });
+
+
+	});
+
+    // SERIAL CHART
+    chart = new AmCharts.AmSerialChart();
+    chart.pathToImages = "/js/amcharts/images/";
+    chart.dataProvider = chartDataPerDayQuestion.sortBy(function(o){ return o.date; });
+    chart.categoryField = "date";
+
+    // data updated event will be fired when chart is first displayed,
+    // also when data will be updated. We'll use it to set some
+    // initial zoom
+    chart.addListener("dataUpdated", zoomChart);
+
+    // AXES
+    // Category
+    var categoryAxis = chart.categoryAxis;
+    categoryAxis.parseDates = true; // in order char to understand dates, we should set parseDates to true
+    categoryAxis.minPeriod = "DD"; // as we have data with minute interval, we have to set "mm" here.
+    categoryAxis.gridAlpha = 0.07;
+    categoryAxis.axisColor = "#DADADA";
+
+    // Value
+    var valueAxis = new AmCharts.ValueAxis();
+    valueAxis.gridAlpha = 0.07;
+    valueAxis.title = "Biểu đồ tăng trưởng điểm câu hỏi";
+    chart.addValueAxis(valueAxis);
+
+    // GRAPH
+    var graph = new AmCharts.AmGraph();
+    graph.type = "line"; // try to change it to "column"
+    graph.title = "red line";
+    graph.valueField = "totalQuestion";
+    graph.lineAlpha = 1;
+    graph.lineColor = "#d1cf2a";
+    graph.fillAlphas = 0.3; // setting fillAlphas to > 0 value makes it area graph
+    chart.addGraph(graph);
+
+    // CURSOR
+    var chartCursor = new AmCharts.ChartCursor();
+    chartCursor.cursorPosition = "mouse";
+    chartCursor.categoryBalloonDateFormat = "DD/MM/YYYY";
+    chart.addChartCursor(chartCursor);
+
+    // SCROLLBAR
+    var chartScrollbar = new AmCharts.ChartScrollbar();
+
+    chart.addChartScrollbar(chartScrollbar);
+
+    // WRITE
+    chart.write("chartPerDayQuestion");
+});
+
+
+
+
+
+// this method is called when chart is first inited as we listen for "dataUpdated" event
+function zoomChart() {
+    // different zoom methods can be used - zoomToIndexes, zoomToDates, zoomToCategoryValues
+    chart.zoomToIndexes(chartDataPerDayQuestion.length - 40, chartDataPerDayQuestion.length - 1);
+}
+</script>

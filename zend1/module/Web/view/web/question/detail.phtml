@@ -1,0 +1,900 @@
+<?php
+use FAQ\FAQCommon\Util;
+use FAQ\FAQCommon\FAQParaConfig;
+use FAQ\FAQCommon\Authcfg;
+$this->headLink()
+->prependStylesheet($this->basePath() . '/css/question/index.css')
+->prependStylesheet($this->basePath() . '/css/question/detail.css')
+->prependStylesheet ( $this->basePath () . '/css/fuelux.css' )
+->prependStylesheet ( $this->basePath () . '/css/fuelux-responsive.css' )
+;
+
+$this->headScript()
+//     ->prependFile($this->basePath() . '/js/question/index.js')
+->prependFile($this->basePath() . '/js/question/detail.js')
+->appendFile($this->basePath() . '/js/tinymce/tinymce.min.js')
+->appendFile($this->basePath() . '/js/tinymce/jquery.tinymce.min.js')
+;
+$currentUser = Util::getCurrentUser ();
+$currentUserID = null;
+$totalMoneyPoint = 0;
+if (isset ( $currentUser )) {
+	$totalMoneyPoint = $currentUser->getTotalMoneyPoint ();
+}
+/* @var $question \FAQ\FAQEntity\Question */
+$isProtected = $question->isContainStatus ( FAQParaConfig::QUESTION_STATUS_PROTECT );
+?>
+<script type="text/javascript">
+var questionID="<?php echo $question->getId();?>";
+var type_editor="<?php echo $type_editor;?>";
+var totalMoneyPoint = <?php echo $totalMoneyPoint;?>;
+var isQuestionClosed=Boolean("<?php echo $isQuestionClosed;?>");
+var isProtected =Boolean("<?php echo $isProtected;?>");
+</script>
+<?php
+
+if (isset ( $currentUser )) {
+    $isSetHighLight=$currentUser->getRoleCode()==Authcfg::ADMIN;
+	$currentUserID = $currentUser->getId ();
+	$avatar = $currentUser->getAvatar ();
+	$currentUserAvatarID = $avatar->getId ();
+
+	$contentType = $avatar->getContentType ();
+
+	$extentionFile = Util::getTypeFile ( $contentType );
+	$titleFileSeoCurrentUser = Util::convertUrlFileName ( Util::getUserName ( $currentUser ), $extentionFile );
+}
+// loop render reply
+function loopReply($reply, $context) {
+	/* @var $reply \FAQ\FAQEntity\Reply */
+	$replyn_id = $reply->getId ();
+	$replyn_content = $reply->getContent ();
+	$replyn_user = $reply->getCreateBy ();
+	$replyn_user_name = $replyn_user->getFirstName () . ' ' . $replyn_user->getLastName ();
+	$replyn_userId = $replyn_user->getId ();
+	$replyn_date = $reply->getDateUpdated ();
+	$avatar = $replyn_user->getAvatar ();
+	$reply_user_avatarId = $avatar->getId ();
+
+	$contentType = $avatar->getContentType ();
+
+	$extentionFile = Util::getTypeFile ( $contentType );
+	$titleFileSeo_replyn_user = Util::convertUrlFileName ( $replyn_user_name, $extentionFile );
+	?>
+
+
+			<li class="faq_feekback  media comment_level3"
+				id="<?php echo $replyn_id;?>">
+				<div class="clearfix">
+					<a
+						href="/member/profile/<?php echo $replyn_userId; ?>/<?php echo Util::getUserNameSeo($replyn_user);?>"
+						class="postActor"> <img
+						class=" avatar img-circle faq_img_top_member"
+						user="<?php echo $replyn_userId; ?>"
+						style="-webkit-user-select: none"
+						src="/media/get-image/images/<?php echo $reply_user_avatarId."/".$titleFileSeo_replyn_user; ?>" />
+
+					</a>
+					<div class="faq_sub_reply media">
+						<div>
+							<a class="profileName   media-heading" target="_blank"><?php echo $replyn_user_name; ?></a>
+							<span class="text-muted  faq_post_time pull-right"
+								post-time=<?php echo $replyn_date->getTimestamp()*1000; ?>></span>
+							<div class=" fsm">
+								<div class="postText  media-body"><?php echo $context->escapehtml($replyn_content); ?> </div>
+								<div class="stat_elem">
+									<div class="action_links fsm"></div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</li>
+			<?php
+}
+?>
+
+
+<?php
+$questionID = $question->getId ();
+
+$questionTitle = $question->getTitle ();
+// detach xss
+$questionTitle = $this->escapehtml ( $questionTitle );
+$questionTitleSeo = Util::convertUrlSeo ( $questionTitle );
+$questionStatusLabel = $question->getStatusLabel ();
+$userCreateBy = $question->getCreateBy ();
+$userID = $userCreateBy->getId ();
+$avatar = $userCreateBy->getAvatar ();
+$avatarID = $avatar->getId ();
+$contentType = $avatar->getContentType ();
+
+$extentionFile = Util::getTypeFile ( $contentType );
+$titleFileSeoUserCreateBy = Util::convertUrlFileName ( Util::getUserName ( $userCreateBy ), $extentionFile );
+
+$comments = $question->getAnswer ();
+$isFollow = $question->getUserFollow ()->contains ( $currentUser );
+$isSpam = $question->getSpam ()->contains ( $currentUser );
+$bestAnswerID = null;
+$bestVoteAnswerID = null;
+$bestVotePointAnswer = 0;
+$subjectQuestion = $question->getSubject ();
+if (isset ( $subjectQuestion )) {
+	$titleSubjectQuestion = $subjectQuestion->getTitle ();
+	$IDSubjectQuestion = $subjectQuestion->getId ();
+}
+$total_comment_question = $question->getTotalAnswer ();
+if ($total_comment_question > 999) {
+	$total_comment_question = "999+";
+}
+
+$total_follow_question = $question->getTotalFollow ();
+if ($total_follow_question > 999) {
+	$total_follow_question = "999+";
+}
+$total_share_question = $question->getTotalShare ();
+if ($total_share_question > 999) {
+	$total_share_question = "999+";
+}
+$totalView = $question->getTotalView();
+if ($totalView > 999) {
+	$totalView = "999+";
+}
+$total_spam_question = $question->getTotalSpam ();
+;
+if ($total_spam_question > 999) {
+	$total_spam_question = "999+";
+}
+
+$total_like = $question->getTotalLike ();
+$total_dislike = $question->getTotalDislike ();
+// setting title for page
+$this->headtitle ( $questionTitle . " | " . $titleSubjectQuestion );
+// setting meta description
+$this->placeholder ( 'description' )->append ( $questionTitle . ", " . $titleSubjectQuestion );
+
+$isLikeQuestion = $question->getLike ()->contains ( $currentUser );
+$isDislikeQuestion = $question->getDislike ()->contains ( $currentUser );
+$dateUpdateBestAnswer = $question->getDate_update_best ();
+$isEditWikiQuestion = $question->isContainStatus ( FAQParaConfig::QUESTION_STATUS_WIKI_POST );
+$isAllowEditQuestion = empty ( $dateUpdateBestAnswer ) && $question->isContainStatus ( FAQParaConfig::QUESTION_STATUS_OPEN ) && ($totalRankPoint >= Authcfg::EDIT_COMMUNITY_WIKI || $isEditWikiQuestion);
+
+$isAllowEditBonus = empty ( $dateUpdateBestAnswer ) && $question->isContainStatus ( FAQParaConfig::QUESTION_STATUS_OPEN );
+
+$isAllowUnprotected = true;
+if ($isProtected) {
+	$protectBy = $question->getProtectBy ();
+	$protectByID = $protectBy->getId ();
+
+	if ($protectByID != Util::getIDCurrentUser ()) {
+		$isAllowUnprotected = false;
+	} else {
+		$isAllowUnprotected = true;
+	}
+}
+
+$questionHistories = $question->getHistoryContent ();
+$isQuestionHighLight = ($question->getIsHighlight () == FAQParaConfig::STATUS_ACTIVE);
+$isQuestionTop = ($question->getIsTop () == FAQParaConfig::STATUS_ACTIVE);
+
+?>
+<div class="faq_content">
+	<div class="faq_content">
+		<div id="faq_question">
+			<a
+				href="/member/profile/<?php echo $userID; ?>/<?php echo Util::getUserNameSeo($userCreateBy);?>"
+				class="hidden-sm hidden-xs" id="faq_question_avatar"> <img
+				class="img-circle faq_avatar avatar" user="<?php echo $userID ?>"
+				style="-webkit-user-select: none"
+				src="<?php echo $this->basepath("/media/get-image/images/$avatarID/$titleFileSeoUserCreateBy")?>" />
+			</a>
+			<div id="faq_question_info">
+		<?php if($userCreateBy->getId()==$currentUserID){?>
+			<div class="col-md-1 pull-right faq_option_question">
+					<li class="dropdown list-unstyled"><a href="#"
+						class="dropdown-toggle" data-toggle="dropdown"> <!--         			<b>...</b> -->
+							<span
+							class="faq_option_question_icon  glyphicon glyphicon-chevron-down"></span>
+					</a>
+						<ul class="dropdown-menu" role="menu">
+
+							<li value='<?php echo $questionID;?>' action="DELETE"><a href="#"><b>Xóa</b></a></li>
+        				<?php if(!$question->isContainStatus(FAQParaConfig::QUESTION_STATUS_OPEN)){?>
+        				<li value='<?php echo $questionID;?>' action="EDIT"><a
+								href="#"><b>Sửa</b></a></li>
+        				<?php }else{ ?>
+        				<li value='<?php echo $questionID;?>'
+								action="EDIT_WIKISTYLE"><a href="#"><b>Sửa</b></a></li>
+        				<?php }?>
+        				<li value='<?php echo $questionID;?>'
+								action="CLOSE_QUESTION"><a href="#"><b>Đóng câu hỏi</b></a></li>
+
+						</ul></li>
+				</div>
+             <?php }?>
+			<h3 id="faq_question_info_title">
+					<a target="_blank"
+						href="/question/detail/<?php echo $questionID;?>/<?php echo $questionTitleSeo;?>">
+                <?php
+
+																echo $questionTitle;
+																echo "<small class='text-danger faq_status_question' value='" . $questionID . "'>" . $questionStatusLabel . "</small>";
+																?></a>
+				</h3>
+				<br /> <br />
+				<div id="faq_question_info_statistic">
+					<div class="col-md-2 pull-left faq_label_subject">
+						<a href="/subject/detail/question/<?php echo $IDSubjectQuestion;?>"
+							/<?php echo Util::convertUrlSeo($titleSubjectQuestion);?>> <span
+							class="text-muted text-left"><small><?php echo $titleSubjectQuestion; ?></small></span>
+						</a>
+					</div>
+					<div class="col-md-10 pull-right">
+						<div class="col-md-3 pull-left">
+							<span class="text-muted  faq_post_time"
+								post-time=<?php echo $question->getDateCreated()->getTimestamp()*1000; ?>></span>
+						</div>
+						<div class="col-md-9" id="faq_static_view">
+							<div id="<?php echo $questionID;?>"
+								<?php  if($total_comment_question=="0"){?> title="Trả lời"
+								<?php }?> num="<?php echo $total_comment_question;?>"
+								class="pull-left faq_total_comment_question col-md-2 col-lg-2 col-sm-2 col-xs-2">
+								<span class="num" id="faq_total_comment_question"><?php echo $total_comment_question;?></span>
+								<span class="glyphicon glyphicon-comment faq-icon"></span>
+							</div>
+
+							<div id="<?php echo $questionID;?>"
+								<?php if($total_follow_question=="0"){?> title="Theo dõi"
+								<?php }?> num="<?php echo $total_follow_question;?>"
+								class="pull-left faq_total_follow_question col-md-2 col-lg-2 col-sm-2 col-xs-2">
+								<span class="num" id="faq_total_follow_question"><?php echo $total_follow_question;?></span><span
+									class="glyphicon glyphicon-star-empty faq-icon"></span>
+							</div>
+
+							<div id="<?php echo $questionID;?>"
+								<?php if($total_share_question=="0"){?> title="Chia sẻ"
+								<?php }?> num="<?php echo $total_share_question;?>"
+								class="hidden-sm hidden-xs pull-left faq_total_share_question col-md-2 col-lg-2 col-sm-2 col-xs-2">
+								<span class="num" id="faq_total_share_question"><?php echo $total_share_question;?></span><span
+									class="glyphicon glyphicon-share-alt faq-icon"></span>
+							</div>
+                             <div title="<?php echo $totalView;?> lượt xem" num="<?php echo $totalView;?>" class="col-md-2 col-lg-2 col-sm-2 col-xs-2" id="<?php echo $questionID;?>">
+        							<span class="num" ><?php echo $totalView;?></span><span
+        								class="glyphicon glyphicon-eye-open faq-icon"></span>
+        					</div>
+							<div id="<?php echo $questionID;?>"
+								<?php if($total_spam_question=="0"){?> title="Vi Phạm" <?php }?>
+								num="<?php echo $total_spam_question;?>"
+								class="hidden-sm hidden-xs pull-left faq_total_spam_question col-md-4 col-lg-4 col-sm-4 col-xs-4">
+								<span class="num" id="faq_total_spam_question"><?php echo $total_spam_question;?></span><span
+									class="glyphicon glyphicon-warning-sign faq-icon"></span>
+							</div>
+
+
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="break_line"></div>
+			<div class="pull-left faq_preview_content_question">
+				<div class="col-md-1 pull-left" id="faq_question_wrap_vote">
+					<div class="col-md-12 " title="câu hỏi hữu ích, dễ hiểu">
+						<span id="faq_like_question"
+							active='<?php echo $isLikeQuestion?1:0?>'
+							class="<?php echo $isLikeQuestion?"faq_active_like_dislike":"";?> faq-lagre-icon glyphicon glyphicon-thumbs-up"></span>
+					</div>
+					<div class="col-md-12"
+						title="Tổng điểm vote là: <?php echo $total_like-$total_dislike; ?>">
+                            <?php if($isEstablishedUser){?>
+                            <span id="faq_total_point_like_question"
+							class="label label-primary">+<?php echo $total_like;?></span> <span
+							id="faq_total_point_dislike_question" class="label label-danger">-<?php echo $total_dislike;?></span>
+                            <?php
+																												} else {
+																													$total_point_question = $total_like - $total_dislike;
+																													?>
+							<span id="faq_total_point_question"
+							class="<?php
+
+																													if ($total_point_question > 0) {
+																														echo "label label-primary";
+																													} elseif ($total_point_question < 0) {
+																														echo "label label-danger";
+																													} else {
+																														echo "label label-default";
+																													}
+
+																													?>">
+                            <?php
+																													echo $total_point_question > 0 ? "+" . $total_point_question : $total_point_question;
+																													?>
+                            </span>
+                            <?php }?>
+                          </div>
+					<div class="col-md-12 " title="câu hỏi không hữu ích, khó hiểu">
+						<span id="faq_dislike_question"
+							active='<?php echo $isDislikeQuestion?1:0?>'
+							class="<?php echo $isDislikeQuestion?"faq_active_like_dislike":"";?> faq-lagre-icon glyphicon glyphicon-thumbs-down"></span>
+					</div>
+					<div class="col-md-12 " title="theo dõi/hủy theo dói">
+						<span title="theo dõi/hủy theo dõi"
+							class="<?php echo $isFollow?"faq_active_follow":"";?>  faq-lagre-icon glyphicon glyphicon-star-empty"
+							id="faq_question_icon_follow"
+							action="<?php echo $isFollow?"UNFOLLOW":"FOLLOW";?>"></span>
+
+					</div>
+
+
+
+				</div>
+				<div id="faq_question_wrap_content" class="col-md-11 pull-left">
+
+
+					<p>
+                    <?php
+
+																				$content = $question->getContent ();
+
+																				echo $content;
+																				?>
+                    </p>
+				</div>
+			</div>
+		</div>
+		<div class="col-md-12">
+			<div class="col-md-12 pull-left ">
+				<div class="col-md-12 pull-left btn-group">
+				<?php if(!$isGuest):?>
+					<button <?php echo $isAllowEditQuestion?"":"disabled";?>
+						title="<?php
+
+						echo $isAllowEditQuestion ? "sửa câu hỏi, làm cho nó dễ hiểu hơn hoặc thêm điểm thưởng" : "Câu hỏi đã có câu trả lời tốt nhất hoặc đã đóng";
+						?>"
+						id="faq_question_wikiedit" type="button"
+						class="btn btn-default btn-xs pull-left">
+						<span class="glyphicon glyphicon-pencil"></span> Sửa
+					</button>
+					<?php endif;?>
+             <?php if($isAllowProtectQuestion){?>
+             <button
+						title="Bảo vệ câu hỏi trước câu trả lời 'thanks', 'cảm ơn!', 'rất hay'... của người dùng mới với những câu hỏi có nhiều người quan tâm.c"
+						id="faq_question_protect_unprotect" type="button"
+						status="<?php echo  $isProtected?"UNPROTECTED":"PROTECTED"?>"
+						<?php echo $isAllowUnprotected?"":"disabled"?>
+						data-loading-text="Đang xử lý..."
+						class="btn btn-default btn-xs pull-left">
+						<span class="glyphicon glyphicon-lock"></span>
+	             <?php echo  ($question->isContainStatus(FAQParaConfig::QUESTION_STATUS_PROTECT)||$question->isContainStatus(FAQParaConfig::QUESTION_STATUS_CLOSE))?"Bỏ bảo vệ":"Bảo vệ"?>
+             </button>
+             <?php }?>
+             <?php
+
+													if ($isCastCloseAndReopenVotes) {
+
+														?>
+             <button title="Click để đóng câu hỏi"
+						id="faq_question_close_reopen" type="button"
+						status="<?php echo  $isQuestionClosed?"REOPEN":"CLOSE"?>"
+						<?php echo $isCastCloseAndReopenVotes?"":"disabled"?>
+						data-loading-text="Đang xử lý..."
+						class="btn btn-default btn-xs pull-left">
+						<span class="glyphicon glyphicon-trash"></span>
+	             <?php echo  $isQuestionClosed?"Mở câu hỏi":"Đóng câu hỏi"?>
+             </button>
+             <?php }?>
+              <?php
+
+														if (! $isGuest) {
+
+															?>
+             <button <?php echo  $isAllowEditBonus?"":"disabled";?>
+						title="Thêm điểm thưởng" id="faq_link_bonus_point" type="button"
+						class="btn btn-default btn-xs pull-left">
+						<span class="glyphicon glyphicon-plus"></span> Điểm thưởng
+					</button>
+              <?php
+														}
+
+														?>
+             <?php if($isSetHighLight){?>
+										<button type="button"
+						<?php echo $isQuestionClosed?"disabled":"";?>
+						title="Chọn câu hỏi nổi bật"
+						class="btn btn-default btn-xs pull-left" id="faq_btn_highlight"
+						data-loading-text="Đang xử lý..."
+						status="<?php echo  $isQuestionHighLight?"UNHIGHLIGHT":"HIGHLIGHT"?>">
+						<span class="glyphicon glyphicon-flash"></span>
+										<?php echo  $isQuestionHighLight?"Bỏ nổi bật":"Nổi bật"?></button>
+
+					<button type="button" <?php echo $isQuestionClosed?"disabled":"";?>
+						title="Chọn câu hỏi tiêu điểm"
+						class="btn btn-default btn-xs pull-left" id="faq_btn_pololar"
+						data-loading-text="Đang xử lý..."
+						status="<?php echo  $isQuestionTop?"UNTOP":"TOP"?>">
+						<span class="glyphicon glyphicon-fire"></span>
+										<?php echo  $isQuestionTop?"Bỏ tiêu điểm":"Tiêu điểm"?></button>
+ 			<?php }?>
+		</div>
+			</div>
+			<div class="col-md-5 pull-right ">
+
+				<a class="text-info text-left pull-right" id="faq_question_follow"
+					action="<?php echo $isFollow?"UNFOLLOW":"FOLLOW";?>">#<?php echo $isFollow?"Hủy theo dõi":"Theo dõi"?></a>
+				<a class="text-info text-left pull-right faq_action_share"
+					id="faq_question_share">#Chia sẻ</a> <a
+					class="text-info text-left pull-right"
+					id="<?php echo $isSpam?"faq_question_unspam":"faq_question_spam";?>"
+					action="<?php echo $isSpam?"UNSPAM":"SPAM";?>">#<?php echo $isSpam?"Đã báo vi phạm":"Báo vi phạm"?></a>
+			</div>
+		</div>
+		<div id="faq_wrap_form_bonus_point" class="col-md-12 pull-left">
+			<div id="faq_form_bonus_point" role="form" style="display: none;">
+				<div class="form-group fuelux">
+					<label class="control-label">Thêm điểm thưởng cho câu trả lời hay
+						nhất <small class="faq_content_question_tooltip"
+						data-toggle="tooltip" title=""
+						data-original-title="&lt;p&gt;&lt;b&gt;Tặng điểm cho câu trả lời hay nhất&lt;/b&gt;
+					&lt;br&gt;- Thêm điểm thưởng cho câu trả lời hay nhất để khuyến khích người trả lời
+					&lt;br&gt;- Nếu bạn muốn có câu trả lời nhanh hơn, tốt hơn hãy click tặng điểm ngay bây giờ
+					&lt;/p&gt;"> (hướng dẫn) </small>
+
+					</label>
+					<div class="col-md-5 pull-left">
+						<div class="spinner">
+							<input type="text" name="bonus_point" id="faq_txt_bonus_point"
+								class="form-control input-mini spinner-input" value="0">
+							<div class="spinner-buttons	btn-group btn-group-vertical">
+								<button type="button" class="btn spinner-up">
+									<i class="icon-chevron-up"></i>
+								</button>
+								<button type="button" class="btn spinner-down">
+									<i class="icon-chevron-down"></i>
+								</button>
+							</div>
+						</div>
+						<span>(Bạn đang có <b id="faq_total_point"><?php echo $totalMoneyPoint;?></b>
+							điển)
+						</span>
+					</div>
+				</div>
+				<button id="faq_btn_bonus_point_save" type="button"
+					class="btn btn-primary btn-sm pull-left"
+					data-loading-text="Đang lưu...">Tặng điểm</button>
+				<button id="faq_btn_bonus_point_cancel" type="button"
+					class="btn btn-default btn-sm pull-left"
+					data-loading-text="Đang lưu...">Bỏ qua</button>
+			</div>
+		</div>
+		<div class="col-md-12 pull-left">
+			<div class="fb-like" data-layout="standard" data-action="like"
+				data-show-faces="true" data-share="true"></div>
+		</div>
+		<div class="col-md-12 pull-left">
+		<?php if(count($questionHistories)>0):?>
+		<div class="col-md-3 pull-left">
+		<a id="faq_show_revision" title="Click để hiện/ẩn lịch sửa đổi"><?php echo count($questionHistories); ?> lần sửa đổi</a>
+		</div>
+		<?php endif;?>
+		<?php
+		$totalHistory = 0;
+		foreach ( $questionHistories as $key => $questionHistory ) {
+			$totalHistory ++;
+			if ($totalHistory > 3) {
+				break;
+			} elseif ($totalHistory == 1) {
+				continue;
+			}
+
+			$dateCreateHistory = $questionHistory->getDateCreated ();
+			$userCreateByHistory = $questionHistory->getCreateBy ();
+			$userIDHistory = $userCreateByHistory->getId ();
+			$avatarHistory = $userCreateByHistory->getAvatar ();
+			$avatarIDHistory = $avatarHistory->getId ();
+			$contentTypeHistory = $avatarHistory->getContentType ();
+
+			$extentionFileHistory = Util::getTypeFile ( $contentTypeHistory );
+			$titleFileSeoUserHistory = Util::convertUrlFileName ( Util::getUserName ( $userCreateByHistory ), $extentionFileHistory );
+
+			?>
+		<div class="col-md-3 pull-right faq_wrap_revision">
+				<a
+					href="/member/profile/<?php echo $userIDHistory; ?>/<?php echo Util::getUserNameSeo($userCreateByHistory);?>"
+					class="hidden-sm hidden-xs" id="faq_question_avatar"> <img
+					class="avatar img-circle faq_img_top_member visible-lg visible-md visible-sm"
+					user="<?php echo $userIDHistory ?>"
+					style="-webkit-user-select: none"
+					src="<?php echo $this->basepath("/media/get-image/images/$avatarIDHistory/$titleFileSeoUserHistory")?>" />
+				</a>
+				<p>
+					<a title="lịch sửa đổi" class="faq_link_revision pull-right"
+						href="<?php echo $this->basepath("/question/revision/$questionID/$questionTitleSeo");?>"><?php echo Util::getUserName($userCreateByHistory);?>
+			</a> <span class="text-muted pull-right">đã sửa</span> <span
+						class="text-muted  faq_post_time pull-right"
+						post-time=<?php echo $dateCreateHistory->getTimestamp()*1000; ?>></span>
+				</p>
+			</div>
+			<?php }?>
+	</div>
+
+		<div id="faq_box_comment_question" class="faq_box_comment">
+			<div class="col-md-12">
+				<span>Tặng <b id="faq_total_bonus_point_question"
+					class="label label-danger"><?php echo $question->getBonusPoint();?> điểm</b>
+					cho câu trả lời hay nhất
+				</span>
+			</div>
+	 <?php if($type_editor=="TINY"){ ?>
+		<div class="pull-left">
+				<a
+					href="/member/profile/<?php echo $userID; ?>/<?php echo Util::getUserNameSeo($userCreateBy);?>"
+					class="hidden-sm hidden-xs" id="faq_question_avatar"> <img
+					class="avatar img-circle faq_img_top_member"
+					user="<?php echo $userID ?>" style="-webkit-user-select: none"
+					src="<?php echo $this->basepath("/media/get-image/images/$avatarID/$titleFileSeoUserCreateBy")?>" />
+				</a>
+			</div>
+			<div class="col-md-10 pull-left">
+				<form class="form-horizontal form-inline" role="form">
+					<div class="form-group col-md-12">
+						<textarea class="form-control faq_txt_content_answer" rows="2"
+							placeholder="Câu trả lời của bạn"></textarea>
+					</div>
+				</form>
+				<div class="form-group col-md-2"
+					style="padding-right: 0px !important; padding-left: 0px !important;">
+					<button
+						class="btn btn-primary btn-xs btn-block faq_btn_send_comment">Phản
+						hồi</button>
+				</div>
+				<div class="form-group col-md-10 pull-right">
+					<div class="checkbox">
+						<label> <input type="checkbox" checked="checked"
+							class="faq_post_to_face"> Đăng Facebook
+						</label>
+					</div>
+				</div>
+			</div>
+		<?php
+		} elseif ($type_editor == "MARKDOWN") {
+			echo $this->partial ( "/util/markdown.phtml" );
+		}
+		?>
+	</div>
+	<?php if($total_comment_question>0):?>
+		<div class="col-md-12">
+
+			<div class="btn-group pull-left">
+				<button type="button" class="btn btn-default btn-xs"
+					id="faq_show_hidden_comment2">Ẩn/Hiện phản hồi cấp 2</button>
+				<button type="button" class="btn btn-default btn-xs"
+					id="faq_show_hidden_comment3">Ẩn/Hiện phản hồi cấp 3</button>
+			</div>
+
+			<div class="btn-group pull-right">
+				<button title="tới câu trả lời tốt nhất" type="button"
+					class="btn <?php echo empty($dateUpdateBestAnswer)?"btn-default":"btn-primary"?> btn-xs"
+					id="faq_show_hidden_comment2">
+					<a id="faq_link_best_answer"
+						class="btn <?php echo empty($dateUpdateBestAnswer)?"btn-default":"btn-primary"?> btn-xs anchorLink"
+						role="button" href="#"> Câu trả lời tốt nhất </a>
+				</button>
+				<!-- 		<button type="button" class="btn btn-default btn-xs" -->
+				<!-- 			id="faq_show_hidden_comment3">Theo trình tự thời gian</button> -->
+			</div>
+		</div>
+	<?php endif;?>
+		<div id="faq_comment_question" class="faq_comment">
+    <?php
+
+				if ($comments)
+					foreach ( $comments as $comment ) :
+						/* @var $comment \FAQ\FAQEntity\Answer */
+						$ans_id = $comment->getId ();
+						$isLike = $comment->getLike ()->contains ( $currentUser );
+						$isDislike = $comment->getDislike ()->contains ( $currentUser );
+						if ($comment->getIsBest ()) {
+							$bestAnswerID = $ans_id;
+						}
+						$ans_content = $comment->getContent ();
+						$ans_user = $comment->getCreateBy ();
+						$ans_userid = $ans_user->getId ();
+
+						$avatar = $ans_user->getAvatar ();
+						$ans_user_avatarid = $avatar->getId ();
+
+						$ans_user_name = $ans_user->getFirstName () . ' ' . $ans_user->getLastName ();
+
+						$contentType = $avatar->getContentType ();
+
+						$extentionFile = Util::getTypeFile ( $contentType );
+						$titleFileSeo_ans_user = Util::convertUrlFileName ( $ans_user_name, $extentionFile );
+
+						// $ans_total_like = $comment->getTotalLike();
+						// $ans_total_dislike = $comment->getTotalDislike();
+						$ans_total_like = $comment->getTotalLike ();
+						$ans_total_dislike = $comment->getTotalDislike ();
+						$ans_total_point = $ans_total_like - $ans_total_dislike;
+						if ($bestVotePointAnswer <= $ans_total_point) {
+							$bestVotePointAnswer = $ans_total_point;
+							$bestVoteAnswerID = $ans_id;
+						}
+						$ans_date = $comment->getDateCreated ();
+						$ans_reply = $comment->getReply ();
+
+						$isShowVoteBest = $comment->getIsBest () || ($userCreateBy->getId () == $currentUserID);
+
+						// revision
+						$historyAnswer = $comment->getHistoryContent ();
+						$totalHistoryAnswer = count ( $historyAnswer );
+						// owner user
+						$isCreateAnswer = ($ans_userid == $currentUserID);
+						// edit wiki
+						$isEditWikiAnswer = $comment->isContainStatus ( FAQParaConfig::QUESTION_STATUS_WIKI_POST );
+						// var_dump($comment->getStatusLabel());
+						?>
+            <ul class="media-list">
+				<!------------------------------ Level 1 (Danh sach comment)-------------------------->
+				<li class="faq_feekback media" id="<?php echo $ans_id;?>">
+					<div class="clearfix">
+						<div
+							class="faq_box_like_dislike_answer pull-left <?php echo $comment->getIsBest()?"faq_box_best_answer":""?>">
+							<div class="col-md-12 " title="câu trả lời dễ hiểu, hữu ích">
+								<span value='<?php echo $ans_id;?>'
+									active='<?php echo $isLike?1:0?>'
+									class="<?php echo $isLike?"faq_active_like_dislike":"";?>  faq_like_answer faq-lagre-icon glyphicon glyphicon-thumbs-up"></span>
+							</div>
+							<div class="col-md-12"
+								title="Tổng điểm vote là: <?php echo $ans_total_point?>">
+                         <?php if($isEstablishedUser){?>
+                            <span value='<?php echo $ans_id;?>'
+									id="faq_total_point_like_answer" class="label label-primary">+<?php echo $ans_total_like;?></span>
+								<span value='<?php echo $ans_id;?>'
+									id="faq_total_point_dislike_answer" class="label label-danger">-<?php echo $ans_total_dislike;?></span>
+                            <?php }else{?>
+
+                            <span value='<?php echo $ans_id;?>'
+									class="faq_total_point_answer label
+                            <?php
+
+							if ($ans_total_point > 0) {
+								echo "label-primary";
+							} elseif ($ans_total_point < 0) {
+								echo "label-danger";
+							} else {
+								echo "label-default";
+							}
+							?>
+
+
+                             "><?php echo $ans_total_point>0?"+".$ans_total_point:$ans_total_point;?></span>
+
+                          <?php }?>
+                          </div>
+							<div class="col-md-12 "
+								title="câu trả lời khó hiểu, không hữ ích">
+								<span value='<?php echo $ans_id;?>'
+									active='<?php echo $isDislike?1:0?>'
+									class="<?php echo $isDislike?"faq_active_like_dislike":"";?> faq_dislike_answer faq-lagre-icon glyphicon glyphicon-thumbs-down"></span>
+							</div>
+							<div class="col-md-12 " title="chọn câu trả lời tốt nhất">
+                         <?php if($isShowVoteBest){?>
+                            <span value='<?php echo $ans_id;?>'
+									class="faq_is_best_answer <?php echo $comment->getIsBest()?"faq_best_answer":""?> faq-lagre-icon glyphicon glyphicon-ok"
+									isbest="<?php echo $comment->getIsBest()?"true":"false";?>"></span>
+                         <?php }?>
+                         </div>
+						</div>
+						<a
+							href="/member/profile/<?php echo $ans_userid; ?>/<?php echo Util::getUserNameSeo($ans_user);?>"
+							class="postActor"> <img
+							class="faq_img_top_member avatar img-circle"
+							user="<?php echo $ans_userid; ?>"
+							style="-webkit-user-select: none"
+							src="/media/get-image/images/<?php echo $ans_user_avatarid."/".$titleFileSeo_ans_user; ?>" />
+						</a>
+						<div class="faq_sub_reply media">
+							<div>
+								<a class="profileName   media-heading" target="_blank"
+									href="/member/profile/<?php echo $ans_userid; ?>/<?php echo Util::convertUrlSeo($ans_user_name);?>"><?php echo $ans_user_name; ?></a>
+							<?php if($isEditWikiAnswer){?>
+							<span class="text-muted"
+									title="câu trả lời có thể được sửa bởi bất cứ thành viên nào">
+									#Cộng đồng Wiki</span>
+							<?php }?>
+							<span class="text-muted  faq_post_time pull-right"
+									post-time=<?php echo $ans_date->getTimestamp()*1000; ?>></span>
+						<?php if($totalHistoryAnswer>0){?>
+							<a
+									href="<?php echo $this->basepath("/answer/revision/$questionID/$ans_id");?>"
+									class="text-muted faq_tooltip pull-right" data-toggle="tooltip"
+									title=""
+									data-original-title="
+							<?php
+							$usernameEditAnswer = "";
+							foreach ( $historyAnswer as $key => $ha ) {
+								$userEditAnswer = $ha->getCreateBy ();
+								$usernameEditAnswer = Util::getUserName ( $userEditAnswer );
+								?>
+								<?php
+								echo $usernameEditAnswer . "<br>";
+							}
+							?>
+
+							<i>
+									(click đểm xem lịch sửa đổi)</i>">
+							<?php echo $totalHistoryAnswer>1?$totalHistoryAnswer." người":$usernameEditAnswer;?> đã sửa-</a>
+                          <?php }?>
+							<div class="fsm">
+									<div class="postText  media-body"><?php echo $ans_content; ?> </div>
+									<div class="stat_elem">
+										<div class="action_links fsm">
+											<a role="button" class="faq_btn_reply_comment"
+												title="Gửi phản hồi cho câu trả lời này"
+												faq-data-comment="<?php echo "COMMENT,".$ans_id?>">Phản hồi</a>
+								<?php if(($isEditWikiAnswer||$isCreateAnswer)&&!$isGuest){?>
+										<a role="button" <?php echo $isQuestionClosed?"disabled":"";?>
+												class="pull-right faq_btn_edit_answer"
+												title="<?php echo $isQuestionClosed?"Câu hỏi đã đóng":"Chỉnh sửa câu trả lời";?>"
+												href="<?php echo $isQuestionClosed?"#":$this->basepath("/answer/edit-wikistyle/$questionID/$ans_id")?>"
+												answer="<?php echo $ans_id?>"> <span
+												class="glyphicon glyphicon-pencil"></span> Sửa
+											</a>
+								 <?php }?>
+								<?php if(!$isGuest):?>
+										<a role="button" <?php echo $isQuestionClosed?"disabled":"";?>
+												title="Báo câu trả lời vi phạm"
+												class="pull-right faq_btn_spam_answer"
+												answer="<?php echo $ans_id?>"> <span
+												class="glyphicon glyphicon-warning-sign"></span> Vi phạm |
+											</a>
+								<?php endif;?>
+
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="postReplies">
+								<div>
+									<ul class="faq_feekback_replies" answer="<?php echo $ans_id?>">
+                				    <?php
+
+						if ($ans_reply)
+							foreach ( $ans_reply as $reply ) {
+
+								/* @var $reply \FAQ\FAQEntity\Reply */
+								$reply_id = $reply->getId ();
+								$reply_user1 = $reply->getCreateBy ();
+								$reply_user_id1 = $reply_user1->getId ();
+
+								$avatar = $reply_user1->getAvatar ();
+								$reply_user_avatar_id1 = $avatar->getId ();
+								$reply_user_name = $reply_user1->getFirstName () . ' ' . $reply_user1->getLastName ();
+								$contentType = $avatar->getContentType ();
+
+								$extentionFile = Util::getTypeFile ( $contentType );
+								$titleFileSeo_reply_user1 = Util::convertUrlFileName ( $reply_user_name, $extentionFile );
+
+								$reply1 = $reply->getChildren ();
+
+								$reply_content1 = $reply->getContent ();
+								$reply_date1 = $reply->getDateUpdated ();
+								?>
+                				    <!------------------------------------- Level 2 (Danh sach reply) -------------------------->
+										<li class="faq_feekback  media comment_level2"
+											id="<?php echo $reply_id;?>">
+											<div class="clearfix">
+												<a
+													href="/member/profile/<?php echo $reply_user_id1; ?>/<?php echo Util::getUserNameSeo($reply_user1);?>"
+													class="postActor"> <img
+													class="faq_img_top_member avatar img-circle"
+													user="<?php echo $reply_user_id1; ?>"
+													style="-webkit-user-select: none"
+													src="/media/get-image/images/<?php echo $reply_user_avatar_id1."/".$titleFileSeo_reply_user1; ?>" />
+												</a>
+												<div class="faq_sub_reply media">
+													<div>
+														<a class="profileName   media-heading" target="_blank"
+															href="/member/profile/<?php echo $reply_user_id1; ?>/<?php echo Util::convertUrlSeo($reply_user_name);?>"><?php echo $reply_user_name; ?></a>
+														<span class="text-muted  faq_post_time pull-right"
+															post-time=<?php echo $reply_date1->getTimestamp()*1000; ?>></span>
+														<div class=" fsm">
+															<div class="postText  media-body"><?php echo $this->escapehtml($reply_content1); ?></div>
+															<div class="stat_elem">
+																<div class="action_links fsm">
+																	<a role="button" class="faq_btn_reply_comment"
+																		faq-data-comment="<?php echo "REPLY1,".$reply_id?>">Phản
+																		hồi</a>
+																</div>
+															</div>
+														</div>
+													</div>
+													<!--------------------------- Level 3 (Danh sach reply ap dung de quy) --------------------------------->
+													<div class="postReplies">
+														<div>
+															<ul class="faq_feekback_replies" answer="<?php echo $reply_id;?>">
+						                				<?php
+														foreach ( $reply1 as $rp ) {
+															loopReply ( $rp, $this );
+														}
+														?>
+															</ul>
+														</div>
+													</div>
+                			                     <!-- end Level 3 ------------------------------------------>
+												</div>
+											</div>
+										</li>
+                					<?php } ?>
+
+                				</ul>
+
+								</div>
+							</div>
+						</div>
+					</div>
+				</li>
+			</ul>
+    <?php endforeach;?>
+</div>
+
+		<a href="#top" id="back2top" title="lên đầu"
+			class="back2top back2top3" style="display: inline;"><span
+			class="glyphicon glyphicon-circle-arrow-up"></span></a> <a
+			id="back2best" title="câu trả lời tốt nhất"
+			class="back2top back2top2" style="display: inline;"><span
+			class="glyphicon glyphicon-chevron-down"></span></a> <a
+			href="#footer" id="back2bottom" title="xuống cuối"
+			class="back2top back2top1 anchorLink" style="display: inline;"><span
+			class="glyphicon glyphicon-circle-arrow-down"></span></a>
+		<!-- <center><button type="button" class="btn btn-link">Xem thêm</button></center> -->
+
+	</div>
+
+
+
+	<div id="faq_box_reply_question" class="faq_box_comment">
+		<div class="faq_box_reply">
+			<div class="pull-left">
+				<a
+					href="/member/profile/<?php echo $currentUserID; ?>/<?php echo Util::getUserNameSeo($currentUser);?>"
+					class="hidden-sm hidden-xs" id="faq_question_avatar"> <img
+					class="avatar img-circle faq_img_top_member"
+					user="<?php echo $currentUserID; ?>"
+					style="-webkit-user-select: none"
+					src="<?php echo $this->basepath("/media/get-image/images/$currentUserAvatarID/$titleFileSeoCurrentUser")?>" />
+				</a>
+			</div>
+			<div class="col-md-10 col-md-10 col-sm-10 col-xs-10 pull-left">
+				<form class="form-horizontal form-inline" role="form">
+					<div class="form-group col-md-12">
+						<textarea id="faq_answer_edittor"
+							class="form-control faq_txt_content_reply" rows="2"
+							placeholder="Câu trả lời của bạn"></textarea>
+					</div>
+				</form>
+				<div class="form-group col-lg-2 col-md-2 col-sm-2 col-xs-2"
+					style="padding-right: 0px !important; padding-left: 0px !important;">
+					<button class="btn btn-primary btn-xs btn-block faq_btn_send_reply">Phản
+						hồi</button>
+				</div>
+				<div class="form-group col-lg-10 col-md-10 col-sm-10 col-xs-10 pull-right">
+					<div class="checkbox">
+						<label> <input type="checkbox" checked="checked"
+							class="faq_post_to_face">Đăng Facebook
+						</label>
+					</div>
+				</div>
+
+
+			</div>
+		</div>
+	</div>
+	</div>
+	<script type="text/javascript">
+
+$(document).ready(function(){
+
+
+	$("#faq_link_best_answer").attr("href","<?php echo empty($bestAnswerID)?"#".$bestVoteAnswerID:"#".$bestAnswerID;?>");
+});
+</script>

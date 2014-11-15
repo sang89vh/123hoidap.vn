@@ -1,0 +1,67 @@
+<?php
+$this->headScript()
+->appendFile($this->basePath() . '/js/question/ask_now.js');
+
+?>
+<div role="form">
+	<div class="form-group">
+		<div class="col-sm-12">
+			<input type="text" class="form-control input-sm" id="faq_input_title"
+				placeholder="Tiêu đề câu hỏi" title="Tiêu đề câu hỏi">
+		</div>
+	</div>
+	<div class="form-group">
+		<div class="col-sm-12">
+      <?php echo $this->partial("/util/markdown_ask_now.phtml");?>
+    </div>
+	</div>
+	<div class="form-group">
+		<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+			<select class="form-control input-sm" id="faq_question_subject" title="Chọn chủ đề của câu hỏi">
+				<option value='-1'>Chọn chủ đề</option>
+			<?php
+			/* @var $subject /FAQ/FAQEntity/Subject */
+			foreach ( $this->list_subject as $subject ) {
+				$subjectID = $subject ['_id'];
+				$titleSubject = $subject ['title'];
+				?>
+				<option value="<?php echo $subjectID;?>"><?php echo $titleSubject;?></option>
+			<?php }?>
+
+			</select>
+		</div>
+
+	</div>
+	<div class="form-group">
+		<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+
+			<input type="text" class="form-control input-sm faq_tooltip"  id="faq_key_word"
+				placeholder="Từ khóa của câu hỏi" data-toggle="tooltip" data-placement="top" title='Từ khóa của câu hỏi, các từ khóa cách nhau bởi dấu phẩy ","'/>
+		</div>
+		
+
+
+	</div>
+	<div class="form-group">
+		<div class="col-lg-3 col-md-3 col-sm-3 col-xs-12">
+			<input type="number" min="0" max="<?php echo $this->totalRankPoint;?>" class="form-control input-sm"
+				id="faq_input_bonus"
+				placeholder="Điểm thưởng cho câu trả lời hay nhất" title="Điểm thưởng cho câu trả lời hay nhất"/>
+		</div>
+		<div class="col-lg-9 col-md-9 col-sm-9 col-xs-12">
+			<input type="range" min="0" max="<?php echo $this->totalRankPoint>100?100:$this->totalRankPoint;?>" value="<?php echo $this->totalRankPoint>0?1:0;?>" id="faq_input_bonus_range" title="Bạn đang có <?php echo $this->totalRankPoint;?> đ"/>
+
+		</div>
+
+	</div>
+
+	<div class="form-group">
+		<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+			<button type="button" id="faq_btn_ask_now_full_submit" data-loading-text="Đang đăng..."
+				class="btn btn-warning btn-sm col-lg-2 col-md-2 col-sm-3 col-xs-12">Hỏi</button>
+			<input id="faq_btn_ask_now_full_cancel" type="reset" value="Bỏ qua"
+				class="btn btn-default btn-sm col-lg-2 col-md-2 col-sm-3 col-xs-12" />
+		</div>
+	</div>
+</div>
+

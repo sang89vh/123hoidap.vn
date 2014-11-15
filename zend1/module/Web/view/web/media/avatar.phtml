@@ -1,0 +1,140 @@
+<?php
+    use FAQ\FAQCommon\Util;
+    $lstAvatar = $this->lstAvatar;
+?>
+<script>
+  var db;
+  $(document).ready(function(evt){
+	  var add_form = $('#qapolo-avata-form').html();
+	  $('#qapolo-avata-form').remove();
+	  $('button[act="them"]').click(function(evt){ console.log('add');
+		  db = bootbox.dialog({
+			  message: add_form,
+			  title: 'Upload Ảnh',
+		  });
+	  });
+
+	  // image selectable
+	  $('.item').click(function(evt){
+		  $(this).toggleClass('media-item-selected');
+	  });
+
+		// hide image-item if is not a iframe
+		if(false)
+		if(!window.parent.document.getElementById('faq_media_file')){
+			$('#image-select').hide();
+		}
+
+		// click select image
+		$('#image-select').click(function(evt){
+			var faq_media_file = window.parent.document.getElementById('faq_media_file');
+			var event = new Event('faq_select_media_file');
+			var media_item_selected_list =  $('.media-item-selected');
+			var media_id_list = new Array();
+			var media_id_list_string = '';
+			if(!faq_media_file){
+				return;
+			}
+			$.each(media_item_selected_list,function(idx,val){
+				media_id_list.push($(this).attr('item_id'));
+			});
+			media_id_list_string = media_id_list.join(';');
+			faq_media_file.value = media_id_list_string;
+			faq_media_file.dispatchEvent(event);
+			//close fancybox
+			parent.$.fancybox.close();
+
+		});
+
+		$('#media-search').bind('keypress', function(e) {
+			if(e.keyCode==13){
+				document.location.href = '<?php echo $this->basepath();?>/media/avatar?keyword=' + $(this).val() + '&page=1';
+			}
+		});
+
+  });
+  // check form valid
+  function check_valid(){
+	  var isValid = validateit('qapolo-avata-form-add','top',false,false);
+	  return isValid;
+  }
+
+  // close add popup
+  function closeModal(){
+	  bootbox.hideAll();
+  }
+</script>
+
+<nav class="navbar navbar-default" role="navigation">
+  <!-- Brand and toggle get grouped for better mobile display -->
+  <div class="navbar-header">
+    <input type="text" class="form-control" id="media-search" placeholder="Search" value="<?php if($this->keyword) echo $this->keyword;?>">
+  </div>
+  <div class="collapse navbar-collapse navbar-right" id="bs-example-navbar-collapse-1">
+      <button act="select" id="image-select" type="submit" class="btn btn-default" style="margin-right:25px;text-align:center; ">Chèn ảnh</button>
+      <button act="them" type="submit" class="btn btn-default">Thêm</button>
+  </div>
+</nav>
+<div class="row">
+        <?php if($lstAvatar){
+            foreach($lstAvatar as $avatar){
+$titleFile=$avatar->getName();
+$contentType = $avatar->getContentType();
+
+$extentionFile = Util::getTypeFile($contentType);
+$titleFileSeo = Util::convertUrlFileName($titleFile,$extentionFile);
+        ?>
+        <div class="col-sm-3 item" height="150px" item_id="<?php echo $avatar->getId();?>" >
+          <a href="#" class="thumbnail">
+            <img src="/media/get-image/images/<?php echo $avatar->getId()."/".$titleFileSeo;?>" style="height:150px"  />
+          </a>
+          <span><?php echo $avatar->getName();?></span>
+        </div>
+        <?php }
+        }
+        ?>
+
+</div>
+<ul class="pager">
+  <li>
+    <?php if($this->page>1){?>
+    <a href="/media/avatar?search=<?php echo $this->search;?>&page=<?php if($this->page>1) echo ($this->page-1); ?>">Previous</a>
+    <?php }else{?>
+        Previous
+    <?php }?>
+    </li>
+  <li>
+    <?php if(!$this->end){?>
+  <a href="/media/avatar?search=<?php echo $this->search;?>&page=<?php if(!$this->end) echo ($this->page+1); ?>">Next</a>
+    <?php }else{?>
+        Next
+    <?php }?>
+  </li>
+  </ul>
+<div style="display:none" id="qapolo-avata-form" >
+    <form class="form-horizontal" id="qapolo-avata-form-add" role="form" onsubmit="return check_valid();" method="post" enctype="multipart/form-data">
+              <div class="form-group">
+                    <label  class="col-lg-2 control-label">Tên Ảnh</label>
+                    <div class="col-lg-9">
+                    <input name="name"  class="form-control"  placeholder="Tên ảnh" valid_type="require" valid_label="Tên ảnh" >
+                    </div>
+             </div>
+             <div class="form-group">
+                    <label  class="col-lg-2 control-label">&nbsp;</label>
+                    <div class="col-lg-9">
+                        <input name="file" type="file" class="form-control"	valid_type="require" valid_label="File"
+    					accept='image/*' />
+    				</div>
+             </div>
+             <div class="form-group">
+                    <label  class="col-lg-2 control-label">&nbsp;</label>
+                    <div class="col-lg-3">
+                        <input name="submit" type="submit" value="Đồng ý" class="form-control"	 />
+    				</div>
+                    <div class="col-lg-3">
+                        <input name="submit" type="button" value="Hủy bỏ" class="form-control" onclick="closeModal();"	 />
+    				</div>
+             </div>
+             <div id="player"></div>
+       </form>
+</div>

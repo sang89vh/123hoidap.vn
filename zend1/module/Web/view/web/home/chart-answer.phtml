@@ -1,0 +1,34 @@
+<?php
+$charAnswer=$this->charAnswer;
+// var_dump($charAnswer);
+?>
+<h4 class="faq_top">Thống kê câu trả lời</h4>
+<div class="block" id="faq_chart_question">
+
+    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+    <script type="text/javascript">
+      google.load("visualization", "1", {packages:["corechart"]});
+      google.setOnLoadCallback(drawChart);
+      function drawChart() {
+        var data = google.visualization.arrayToDataTable([
+          ['Câu trả lời', 'Tổng số'],
+          ['Tổng số câu trả lời',  <?php echo empty($charAnswer['total_answer'])?0:$charAnswer['total_answer'];?>],
+          ['Bình chọn hay',  <?php echo empty($charAnswer['total_answer_like'])?0:$charAnswer['total_answer_like'];?>],
+          ['Bình chọn không hay',  <?php  echo empty($charAnswer['total_answer_dislike'])?0:$charAnswer['total_answer_dislike'];?>],
+          ['Bình chọn tốt nhất',  <?php echo empty($charAnswer['total_answer_best'])?0:$charAnswer['total_answer_best'];?>]
+        ]);
+
+        var options = {
+          hAxis: {slantedTextAngle:45}
+        };
+
+        var chart = new google.visualization.ColumnChart(document.getElementById('chart_div_answer'));
+        chart.draw(data, options);
+
+
+            }
+    </script>
+    <div id="chart_div_answer" style="width: 245px; height: 150px;"></div>
+
+</div>
+<div class="faq_chart_question_toggle text-center" title="thu nhỏ lại, mở rộng ra"><b title="thu nhỏ lại, mở rộng ra" class="caret"></b></div>

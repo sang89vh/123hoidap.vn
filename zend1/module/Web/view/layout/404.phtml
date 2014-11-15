@@ -1,0 +1,81 @@
+<html>
+<head><meta name="viewport" content="width=device-width, initial-scale=1">
+ <?php  echo $this->headTitle("A 404 error occurred")->setSeparator(' | ')->setAutoEscape(false)?>
+        <?php
+        echo $this->headLink(array(
+            'rel' => 'shortcut icon',
+            'type' => 'image/vnd.microsoft.icon',
+            'href' => $this->basePath() . '/img/qapolo_logo_mini.ico'
+        ));
+        ?>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+            <style type="text/css">
+body {
+	margin: 0px;
+	background: #f4f5f6 url(/img/404.jpg)  center repeat;
+	font: 12px arial;
+	width: 1000px;
+	margin: 0px auto;
+	padding: 27px 0px 0px;
+	_padding: 0px;
+	color: white;
+}
+
+user agent stylesheetbody {
+	display: block;
+	margin: 8px;
+}
+.faq_btn_back_qapolo {
+	-moz-box-shadow:inset 0px 1px 0px 0px #bbdaf7;
+	-webkit-box-shadow:inset 0px 1px 0px 0px #bbdaf7;
+	box-shadow:inset 0px 1px 0px 0px #bbdaf7;
+	background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #79bbff), color-stop(1, #378de5) );
+	background:-moz-linear-gradient( center top, #79bbff 5%, #378de5 100% );
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#79bbff', endColorstr='#378de5');
+	background-color:#79bbff;
+	-webkit-border-top-left-radius:6px;
+	-moz-border-radius-topleft:6px;
+	border-top-left-radius:6px;
+	-webkit-border-top-right-radius:6px;
+	-moz-border-radius-topright:6px;
+	border-top-right-radius:6px;
+	-webkit-border-bottom-right-radius:6px;
+	-moz-border-radius-bottomright:6px;
+	border-bottom-right-radius:6px;
+	-webkit-border-bottom-left-radius:6px;
+	-moz-border-radius-bottomleft:6px;
+	border-bottom-left-radius:6px;
+	text-indent:0;
+	display:inline-block;
+	color:#ffffff;
+	font-family:Arial;
+	font-size:23px;
+	font-weight:bold;
+	font-style:normal;
+	height:35px;
+	line-height:35px;
+	width:200px;
+	text-decoration:none;
+	text-align:center;
+	text-shadow:1px 1px 0px #528ecc;
+}
+.faq_btn_back_qapolo:hover {
+	background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #378de5), color-stop(1, #79bbff) );
+	background:-moz-linear-gradient( center top, #378de5 5%, #79bbff 100% );
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#378de5', endColorstr='#79bbff');
+	background-color:#378de5;
+}.faq_btn_back_qapolo:active {
+	position:relative;
+	top:1px;
+}
+</style>
+</head>
+<body >
+
+<?php
+echo $this->content;
+?>
+<a href="/" class="faq_btn_back_qapolo">Trở về trang chủ</a>
+</body>
+<footer> </footer>
+</html>

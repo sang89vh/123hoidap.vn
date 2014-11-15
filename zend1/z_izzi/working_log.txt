@@ -1,0 +1,25 @@
++++++
+	- QuestionMapper chua ro yeu cau cua ham (@sang)
+	- khi thÃªm nhiá»�u reference cÃ³ cÃ¹ng id thÃ¬ sao?
+	- dÃ¹ng document vá»«a Ä‘Æ°á»£c chÃ¨n vÃ o Ä‘á»ƒ lÃ m tham sá»‘ cho remove cÃ³ Ä‘Æ°á»£c ko
++++++
+	- function voi tham so dinh kieu co check loai tham so
+++++
+	- add password to user (md5): perform normally, it will be store with bin md5 data
+	- query with bin md5 pass
+		 $md5_pass =  new MongoBinData('abc', MongoBinData::MD5);
+		 $users = $user->findBy(array('pass'=>$md5_pass), true);
+	- query voi du lieu ref
+	
++++++ pointing, level calculator
+    - registering add - 1
+    	email -1
+    	facebook - 0
+    	twitter - 0
+    - mark article as spam - 1
+    - mark article as unspam - 1
+	- share article - 0
+	- unshare article - 0
+	- follow article - 1
+	- unfollow article - 1
+	- comment article - 1

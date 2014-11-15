@@ -1,0 +1,87 @@
+ <?php
+use FAQ\FAQCommon\Util;
+use FAQ\FAQCommon\Authcfg;
+ $this->headLink()
+    ->prependStylesheet($this->basePath() . '/css/question/create_question.css')
+
+ ;
+
+$this->headScript ()
+
+->appendFile ( $this->basePath () . '/js/tinymce/tinymce.min.js' )
+->appendFile ( $this->basePath () . '/js/tinymce/jquery.tinymce.min.js' )
+->appendFile ( $this->basePath () . '/js/faq_edittor.js' )
+->appendFile ( $this->basePath () . '/js/answer/edit_wikistyle.js' )
+;
+$currentUser=Util::getCurrentUser();
+$totalRankPointUser=$currentUser->getTotalRankPoint();
+?>
+
+<!-- Scripts -->
+
+
+<script type="text/javascript">
+var backUrl = "<?php echo $backUrl;?>";
+var questionID = "<?php echo $questionID;?>";
+var answerID = "<?php echo $answerID;?>";
+var contentAnswer="";
+</script>
+
+<div class="faq_content">
+<?php if($totalRankPointUser < Authcfg::EDIT_QUESTIONS_AND_ANSWERS){?>
+<div class="col-md-12 alert alert-danger fade in">
+        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+        <strong>Lưu ý!</strong> Chỉnh sửa của bạn sẽ được lưu vào danh sách sửa đổi của câu hỏi.
+        Nó sẽ được thực sự áp dụng khi được duyệt!
+</div>
+<?php }?>
+<div class="col-md-12" id="faq_header_btn_create_basic">
+	<button type="button" class="btn btn-warning btn-sm" data-loading-text="Đang lưu..." id="faq_answer_save">Lưu sửa đổi</button>
+	<button type="button" class="btn btn-default btn-sm" data-loading-text="Đang xử lý" id="faq_answer_cancel">Bỏ qua</button>
+</div>
+<div id="left-content"   class="col-md-9  col-lg-9 col-sm-9 col-xs-12 faq_padding_left_none faq_padding_right_none"  >
+<?php echo $error;?>
+<!-- manager media file -->
+	<div class="col-md-12 pull-left" role="form">
+	  <p class="text-danger help-block" id="faq_help_content" style="clear: left;"></p>
+		<div class="form-group">
+
+
+<label>* Nội dung câu trả lời
+
+			<small class="faq_content_answer_tooltip" data-toggle="tooltip"
+				title="" data-original-title='<p><b>Nội dung câu trả lời</b><br>- chứa
+				tối thiểu 10 ký tự<br>- câu trả lời nên được trình bày rõ ràng, sinh
+				động
+				</p>'> (hướng dẫn) </small>
+
+</label>
+		<div class="col-md-12">
+			<p class="text-danger help-block"  id="faq_help_content"></p>
+		</div>
+<textarea rows="" cols="" class="faq_txt_content"><?php echo $content;?></textarea>
+
+
+</div>
+		<div class="form-group">
+			<label class="control-label">* Nội dung sửa đổi
+
+						<small class="faq_content_answer_tooltip" data-toggle="tooltip" title="" data-original-title="&lt;p&gt;&lt;b&gt;Ghi chú sửa đổi&lt;/b&gt;&lt;br&gt;- Lưu lại những
+							sửa đổi của bạn
+							&lt;/p&gt;"> (hướng dẫn) </small>
+
+			</label>
+					<div class="col-md-12">
+						<p class="text-danger help-block" id="faq_help_note_edit"></p>
+					</div>
+
+			            <input type="text" name="note_edit" id="faq_txt_note_edit" class="form-control" placeholder="Tiêu đề câu hỏi" maxlength="500" data-validation-maxlength-message="Miêu tả những thay đổi" value="">
+
+		</div>
+	</div>
+</div>
+
+</div>
+
+
+

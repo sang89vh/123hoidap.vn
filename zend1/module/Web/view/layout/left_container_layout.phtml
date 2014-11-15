@@ -1,0 +1,67 @@
+<?php
+use FAQ\FAQCommon\Util;
+use FAQ\FAQCommon\Authcfg;
+?>
+<div id="faq_user_profile">
+<?php
+/* @var $user /FAQ/FAQEntiy/User */
+$user = Util::getCurrentUser();
+$this->viewModel()->varUser = $user;
+if($user){
+    $userID=$user->getId();
+    $avatar=$user->getAvatar();
+    $imageID = $avatar->getId();
+    $fullName = $user->getFirstName() . " " . $user->getLastName();
+    $userUrlSeo="bai-huong-dan-cua-".Util::convertUrlSeo($fullName);
+    /* @var $userRank \FAQ\FAQCommon\UserRank */
+    $rank = Util::getUserRankText($user);
+    $contentType = $avatar->getContentType();
+    $extentionFile = Util::getTypeFile($contentType);
+    $titleFileSeo = Util::convertUrlFileName($fullName,$extentionFile);
+}
+
+?>
+       <div id="faq_user_avatar">
+		<a href="<?php echo $this->basepath("/member/question/".$userID); ?>/<?php echo $userUrlSeo;?>">
+		<img id="faq_img_user_profile"
+ 			style="-webkit-user-select: none"
+ 			src="<?php echo $this->basepath("/media/get-image/images/".$imageID."/".$titleFileSeo)?>"></a>
+	</div>
+	<div id="faq_user_detail_profile">
+		<div id="faq_user_fullname"><?php echo $fullName;?></div>
+		<div id="faq_user_rank"><?php echo $rank;?></div>
+	</div>
+	<div id="faq_chart_rank">
+	   <?php echo $this->partial("/web/member/rank-info.phtml"); ?>
+	</div>
+</div>
+
+<!-- <div id='cssmenu'> -->
+<div >
+<?php
+// <-- Add menu !!
+echo $this->navigation('navigation')
+    ->menu()
+    ->setMinDepth(0)
+    ->setMaxDepth(0)
+    ->setUlClass('nav nav-pills nav-stacked')->setPartial('/partial/menu.phtml')->render();
+?>
+ </div>
+
+ <div id="faq_wrap_menu_subject">
+
+	<h6>
+		<b style="padding-left: 5px;">TOOL QUẢN LÝ</b>
+	</h6>
+	<ul class="nav nav-pills nav-stacked">
+	 <?php if($this->totalRankPoint > Authcfg::CREATE_TAGS||$this->role==Authcfg::ADMIN):?>
+		<li title="Quản lý tags"><a href="/tag/index"> <span
+				class="glyphicon glyphicon-tag"></span> Quản lý tags
+		</a></li>
+	 <?php endif;?>
+		<li title="Moderator Tools"><a href="/review/"> <span
+				class="glyphicon glyphicon-glass"></span> Mod tools
+		</a></li>
+
+	</ul>
+</div>

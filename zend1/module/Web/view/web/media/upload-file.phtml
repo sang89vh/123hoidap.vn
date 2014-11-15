@@ -1,0 +1,97 @@
+<meta charset="utf-8">
+<?php
+use FAQ\FAQCommon\FAQParaConfig;
+use FAQ\FAQCommon\Appcfg;
+echo $this->headLink(array(
+    'rel' => 'shortcut icon',
+    'type' => 'image/vnd.microsoft.icon',
+    'href' => $this->basePath() . '/img/qapolo_logo_mini.ico'
+))
+    ->prependStylesheet($this->basePath() . '/css/style.css')
+    ->prependStylesheet($this->basePath() . '/css/bootstrap.css')
+    ->prependStylesheet($this->basePath() . '/css/user/all.css')
+?>
+
+<?php
+
+echo $this->headScript()
+    ->prependFile($this->basePath() . '/js/html5.js', 'text/javascript', array(
+    'conditional' => 'lt IE 9'
+))
+    ->prependFile($this->basePath() . '/js/page.js')
+    ->prependFile($this->basePath() . '/js/bootbox.js')
+    ->prependFile($this->basePath() . '/js/bootstrap.js')
+    ->prependFile($this->basePath() . '/js/moment2.2.1.js')
+    ->prependFile($this->basePath() . '/js/jquery-2.0.3.js')?>
+<script>
+     $(document).ready(function(evt){
+  	      $('#media-video-add-form').submit(function(evt){
+    	        var isValid = validateit('media-video-add-form','top',false,false);
+    	        if(!isValid){
+    	        	evt.preventDefault();
+    	        }
+    	        var file = $(this).find('[type="file"]')[0].files[0];
+    	        if(file.size > <?php echo Appcfg::$img_media_size; ?>){
+        	        $(this).prepend("<span class='notice_error_text notice_text'>*Kích thước file quá lớn</span>");
+    	        	evt.preventDefault();
+    	        }
+  	      });
+     });
+</script>
+<style>
+body {
+	background-color: white;
+	width:70%;
+}
+</style>
+<div style="width: 100%; margin-left: 15%">
+	<form class="form-horizontal" id="media-video-add-form" role="form"
+		method="post" enctype="multipart/form-data"
+		action="/media/upload-file">
+		<div class="form-group">
+			<div class="col-lg-12">
+				<input type="hidden" id="media_parent_id" name="media_parent_id"
+					value="<?php echo $this->media_parent_id; ?>" /> <input
+					type="hidden" id="back_link" name="back_link"
+					value="<?php echo $this->back_link; ?>" /> <input type="hidden"
+					id="file_type" name="file_type"
+					value="<?php echo $this->file_type; ?>" /> <input name="name"
+					class="form-control" placeholder="Tên File" valid_type="require"
+					valid_label="Tên File">
+			</div>
+		</div>
+		<div class="form-group">
+			<div class="col-lg-12">
+				<input name="file" type="file" class="form-control"
+					valid_type="require" valid_label="File"
+					<?php if($this->file_type=='video') echo "accept='video/*'"; if($this->file_type=='image') echo "accept='image/*'"; ?> />
+			</div>
+		</div>
+		<div class="form-group">
+			<div class="col-lg-2">
+				<input name="submit" type="submit" class="form-control btn btn-info"
+					value="Tải lên" />
+			</div>
+		</div>
+	</form>
+</div>
+<?php if($this->status=='not_valid'){?>
+<script>
+       bootbox.alert("<span style='color:red'>Dữ liệu không hợp lệ</span>");
+    </script>
+<?php }?>
+<?php if($this->status=='existed'){?>
+<script>
+       bootbox.alert("<span style='color:red'>Tên file đã tồn tại</span>");
+    </script>
+<?php }?>
+<?php if($this->status=='saved'){?>
+<script>
+           window.parent.document.location.href = "<?php echo $this->back_link; ?>";
+    </script>
+<?php }?>
+<script>
+        $('#media_parent_id').val('<?php echo $this->media_parent_id; ?>');
+        $('#back_link').val('<?php echo $this->back_link; ?>');
+        $('#file_type').val('<?php echo $this->file_type; ?>');
+</script>

@@ -1,0 +1,84 @@
+<?php
+use FAQ\FAQCommon\FAQParaConfig;
+use FAQ\FAQCommon\Util;
+?>
+<script type="text/javascript">
+<!--
+var totalSubject=<?php echo $totalSubject?>;
+//-->
+</script>
+<div id="faq_list_subject">
+	<div class="row">
+    <?php
+    $k=6;
+    foreach ($subjects as $subject) {
+        $subjectID = $subject->getId();
+        $titleSubject = $subject->getTitle();
+        $totalThread = $subject->getTotalQuestion();
+        if(empty($totalThread)){
+        	$totalThread=0;
+        }
+        $totalUserFollow = $subject->getTotalUserFollow();
+        $avatar = $subject->getAvatar();
+        $imageID = $avatar->getId();
+
+        $contentType = $avatar->getContentType();
+
+        $extentionFile = Util::getTypeFile($contentType);
+        $titleFileSeo = Util::convertUrlFileName($titleSubject,$extentionFile);
+
+        $statusFollowCode = 1;
+        $currentStatusFollow = FAQParaConfig::statusUnfollow;
+        /* @var $userFollows \Doctrine\Common\Collections\ArrayCollection */
+        $userFollows = $subject->getUserFollow();
+
+        if ($userFollows->contains(Util::getCurrentUser())) {
+            $statusFollowCode = 2;
+        }
+        if ($statusFollowCode == 1) {
+            $statusAction = FAQParaConfig::actionFollow;
+        } else {
+            $statusAction = FAQParaConfig::actionUnfollow;
+            $currentStatusFollow = FAQParaConfig::statusFollow;
+        }
+        ?>
+            <div class="col-md-2 col-lg-2 col-sm-2 col-xs-12 ">
+			<div class="thumbnail">
+				<img class="faq_img_subject" subject="<?php echo $subjectID;?>" title="Click để chọn chủ đề"
+					alt="<?php echo $titleSubject;?>"
+					titlesubject="<?php echo Util::convertUrlSeo($titleSubject);?>"
+					src="<?php echo $this->basepath("/media/get-image/images/$imageID/$titleFileSeo")?>" />
+				<div class="caption">
+					<strong><?php echo $titleSubject;?></strong><br>
+					<span><?php echo $totalThread." câu hỏi";?></span><br>
+					<span><?php echo $totalUserFollow." người quan tâm";?></span>
+					<div>
+
+
+					<div class="dropdown faq_subject_action">
+						 <button  title='Click để "<?php echo $statusAction;?>"' type="button" class="faq_btn_follow_subject btn btn-xs <?php if($statusFollowCode==2){ echo "btn-warning";}else{echo "btn-default";}?>"
+							subject="<?php echo $subjectID?>"
+							action=<?php echo $statusFollowCode;?>
+						><?php echo $currentStatusFollow;?>
+						</button>
+
+					</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+<?php
+$k++;
+if($k%6==0){
+        ?>
+        </div>
+         <div class="row">
+        <?php }?>
+     <?php
+
+    }
+    ?>
+
+   </div>
+</div>

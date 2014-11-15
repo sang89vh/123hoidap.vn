@@ -1,0 +1,59 @@
+<?php
+?>
+<?php
+
+if ($isFlagPosts) {
+
+	?>
+<h4>Báo câu hỏi vi phạm bởi vì</h4>
+<div>
+	<div role="form">
+		<div class="radio">
+			<label> <input type="radio" name="faq_option_spam" id="faq_option_spam1"
+				value="SPAM" checked=""> Có tính chất phá hoại, quảng cáo...
+			</label>
+		</div>
+		<div class="radio">
+			<label> <input type="radio" name="faq_option_spam" id="faq_option_spam2"
+				value="OFFENSIVE">Xúc phạm, lăng mạng hoặc không thích câu hỏi này
+			</label>
+		</div>
+		<div class="radio">
+			<label> <input type="radio" name="faq_option_spam" id="faq_option_spam2"
+				value="DUPLICATE">Trùng lặp
+			</label>
+		</div>
+		<div class="radio">
+			<label> <input type="radio" name="faq_option_spam" id="faq_option_spam2"
+				value="SHOULD_CLOSED">Nên bị đóng vì một số lý do nào đó
+			</label>
+		</div>
+		<div class="radio">
+			<label> <input type="radio" name="faq_option_spam" id="faq_option_spam2"
+				value="LOW_QUALITY">Chất lượng rất thấp
+			</label>
+		</div>
+		<div class="radio">
+			<label> <input type="radio" name="faq_option_spam" id="faq_option_spam2"
+				value="OTHER">Lý do khác
+			</label>
+		</div>
+		<button id="faq_btn_question_spam" class="btn btn-primary">Gửi</button>
+	</div>
+</div>
+<?php }else {?>
+<div class="alert alert-danger">
+	<strong>Điểm câu hỏi!</strong>yêu cầu 15đ để báo vi phạm <br>
+	<a
+		href="http://123hoidap.vn/support/scoring-system">Xen thêm điểm số&cấp
+		bậc</a>
+		<br>
+
+</div>
+<?php if(!$isAllowed){?>
+<h4>Bạn cần đăng nhập trước!</h4>
+<div>
+<a class="btn btn-default btn-sm" href="/user/login" role="button">Đăng nhập</a>
+</div>
+<?php }?>
+<?php }?>

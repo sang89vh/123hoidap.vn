@@ -1,0 +1,28 @@
+<div class="panel-heading">
+<h4 class="panel-title">Thống kê câu hỏi</h4>
+</div>
+<div class="block" id="faq_chart_question">
+
+    <script type="text/javascript" src="https://www.google.com/jsapi"></script>
+    <script type="text/javascript">
+      google.load("visualization", "1", {packages:["corechart"]});
+      google.setOnLoadCallback(drawChart);
+      function drawChart() {
+        var data = google.visualization.arrayToDataTable([
+          ['Câu hỏi', 'Tổng số'],
+          ['Tổng số câu hỏi',  <?php echo $chartData['total_question'];?>],
+          ['Đang hỏi',  <?php echo $chartData['total_open_question'];?>],
+          ['Đã đóng',  <?php echo $chartData['total_close_question'];?>],
+          ['Vi phạm',  <?php echo $chartData['total_spam_question'];?>],
+        ]);
+
+        var options = {
+          hAxis: {slantedTextAngle:90, titleTextStyle: {color: 'red'}}
+        };
+
+        var chart = new google.visualization.ColumnChart(document.getElementById('chart_div'));
+        chart.draw(data, options);
+      }
+    </script>
+    <div id="chart_div" style="width: 245px; height: 150px;"></div>
+</div>

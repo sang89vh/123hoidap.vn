@@ -1,0 +1,165 @@
+<?php
+
+use FAQ\FAQCommon\Authcfg;
+// add titile
+$this->headtitle ( "Mod duyệt và xử lý câu hỏi, bài viết" );
+// setting meta description
+$this->placeholder ( 'description' )->append ( "Mod duyệt và xử lý câu hỏi, bài viết vi phạm, sửa đổi nội dung câu hỏi, bài viết, tag theo wiki" );
+
+?>
+<style>
+.faq_head_info{
+	background-color: gainsboro;
+}
+</style>
+<h4>Câu hỏi</h4>
+<div class="faq_content col-md-12 pull-left">
+	<div class="row">
+		<div class="col-xs-6 col-md-3 faq_head_info">
+
+			<h4>
+				<a href="/review/spam-question">Xử lý báo vi phạm</a>
+			</h4>
+			<p>Yêu cầu điểm câu hỏi <?php echo Authcfg::CAST_CLOSE_AND_REOPEN_VOTES;?>đ</p>
+
+		</div>
+		<div class="col-xs-6 col-md-3 ">
+			<h4>
+				<span class="badge"><?php echo $total_spam_need_access;?></span>
+			</h4>
+			<p>Cần xử lý</p>
+		</div>
+		<div class="col-xs-6 col-md-3 ">
+			<h4>
+				<span class="badge"><?php echo $total_spam_today_access;?></span>
+			</h4>
+			<p>Đã xử lý trong ngày</p>
+		</div>
+		<div class="col-xs-6 col-md-3 ">
+			<h4>
+				<span class="badge"><?php echo $total_spam_recent_access;?></span>
+			</h4>
+			<p>Đã xử lý trước đó</p>
+		</div>
+	</div>
+	<hr>
+	<div class="row">
+		<div class="col-xs-6 col-md-3 faq_head_info">
+
+			<h4>
+				<a href="/review/unspam-question">Bỏ vi phạm</a>
+			</h4>
+			<p>Yêu cầu điểm câu hỏi <?php echo Authcfg::CAST_CLOSE_AND_REOPEN_VOTES;?>đ</p>
+
+		</div>
+		<div class="col-xs-6 col-md-3 ">
+			<h4>
+				<span class="badge"><?php echo $total_unspam_need_access;?></span>
+			</h4>
+			<p>Cần xử lý</p>
+		</div>
+		<div class="col-xs-6 col-md-3 ">
+			<h4>
+				<span class="badge"><?php echo $total_unspam_today_access;?></span>
+			</h4>
+			<p>Đã xử lý trong ngày</p>
+		</div>
+		<div class="col-xs-6 col-md-3 ">
+			<h4>
+				<span class="badge"><?php echo $total_unspam_recent_access?></span>
+			</h4>
+			<p>Đã xử lý trước đó</p>
+		</div>
+	</div>
+	<hr>
+<div class="row">
+		<div class="col-xs-6 col-md-3 faq_head_info">
+
+			<h4>
+				<a href="/review/edit-question">Sửa câu hỏi</a>
+			</h4>
+			<p>Yêu cầu <?php echo Authcfg::EDIT_QUESTIONS_AND_ANSWERS?>đ</p>
+
+		</div>
+		<div class="col-xs-6 col-md-3 ">
+			<h4>
+				<span class="badge"><?php echo $total_edit_question_need_access;?></span>
+			</h4>
+			<p>Cần xử lý</p>
+		</div>
+		<div class="col-xs-6 col-md-3 ">
+			<h4>
+				<span class="badge"><?php echo $total_edit_question_today_access?></span>
+			</h4>
+			<p>Đã xử lý trong ngày</p>
+		</div>
+		<div class="col-xs-6 col-md-3 ">
+			<h4>
+				<span class="badge"><?php echo $total_edit_question_recent_access;?></span>
+			</h4>
+			<p>Đã xử lý trước đó</p>
+		</div>
+	</div>
+	<hr>
+	<div class="row">
+		<div class="col-xs-6 col-md-3 faq_head_info">
+
+			<h4>
+				<a href="/review/edit-answer">Sửa câu trả lời</a>
+			</h4>
+			<p>Yêu cầu <?php echo Authcfg::EDIT_QUESTIONS_AND_ANSWERS?>đ</p>
+
+		</div>
+		<div class="col-xs-6 col-md-3 ">
+			<h4>
+				<span class="badge"><?php echo $total_edit_answer_need_access;?></span>
+			</h4>
+			<p>Cần xử lý</p>
+		</div>
+		<div class="col-xs-6 col-md-3 ">
+			<h4>
+				<span class="badge"><?php echo $total_edit_answer_today_access;?></span>
+			</h4>
+			<p>Đã xử lý trong ngày</p>
+		</div>
+		<div class="col-xs-6 col-md-3 ">
+			<h4>
+				<span class="badge"><?php echo $total_edit_answer_recent_access;?></span>
+			</h4>
+			<p>Đã xử lý trước đó</p>
+		</div>
+	</div>
+	<hr>
+	<div class="row">
+		<div class="col-xs-6 col-md-3 faq_head_info">
+
+			<h4>
+				<a href="/tag/index/1">Cập nhật tag</a>
+			</h4>
+			<p>Điểm câu hỏi yêu cầu <?php echo 50000
+// 			Authcfg::APPROVE_TAG_WIKI_EDITS;
+			?>đ</p>
+
+		</div>
+		<div class="col-xs-6 col-md-3 ">
+			<h4>
+				<span class="badge">42</span>
+			</h4>
+			<p>Cần xử lý</p>
+		</div>
+		<div class="col-xs-6 col-md-3 ">
+			<h4>
+				<span class="badge">2</span>
+			</h4>
+			<p>Đã xử lý trong ngày</p>
+		</div>
+		<div class="col-xs-6 col-md-3 ">
+			<h4>
+				<span class="badge">4</span>
+			</h4>
+			<p>Đã xử lý trước đó</p>
+		</div>
+	</div>
+	<hr>
+</div>
+

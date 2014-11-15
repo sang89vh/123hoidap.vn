@@ -1,0 +1,61 @@
+/* sang o git 2*/
+span.faq-icon {
+	background-size: 16px 16px;
+	height: 15px;
+	margin-right: 4px;
+	width: 17px;
+	background-repeat: no-repeat;
+	display: inline-block;
+	position: relative;
+/*     color: #999999; */
+}
+
+span.faq-lagre-icon {
+	/* 	background-size:30px 30px; */
+	/* 	height: 29px; */
+	/*     margin-right: 4px; */
+	/* 	width:29px; */
+	/* 	background-repeat:no-repeat; */
+	/* 	display:inline-block; */
+	/* 	position:relative; */
+	color: graytext;
+	font-size: 25px;
+	margin-top: 10px;
+	margin-bottom: 10px;
+}
+
+span.faq-icon-rating-best {
+	background-image: url('/images/icon/best-icon.PNG');
+}
+
+span.faq-icon-rating-is-best {
+	background-image: url('/images/icon/is-best-icon.png');
+}
+
+span.faq-icon-rating-good {
+	background-image: url('/images/icon/rating-good-icon.png');
+}
+
+span.faq-icon-rating-bad {
+	background-image: url('/images/icon/rating-bad-icon.png');
+}
+
+span.faq-icon-message {
+	background-image: url('/images/icon/message-icon.png');
+}
+
+span.faq-icon-follow {
+	background-image: url('/images/icon/follow-icon.png');
+}
+
+span.faq-icon-share {
+	background-image: url('/images/icon/share-icon.png');
+}
+
+span.faq-icon-spam {
+	background-image: url('/images/icon/spam-icon.png');
+}
+
+span.faq-icon-rating {
+	background-image: url('/images/icon/rating-icon.png');
+}

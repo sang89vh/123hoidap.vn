@@ -1,0 +1,85 @@
+
+<?php
+use FAQ\FAQCommon\Util;
+use FAQ\FAQCommon\Appcfg;
+// add titile
+$this->headtitle ( "Mod duyệt và xử lý câu hỏi, bài viết" );
+// setting meta description
+$this->placeholder ( 'description' )->append ( "Mod duyệt và xử lý câu hỏi, bài viết vi phạm, sửa đổi nội dung câu hỏi, bài viết, tag theo wiki" );
+
+$this->headScript()
+->prependFile($this->basePath() . '/js/review/question.js')
+->prependFile($this->basePath() . '/js/question/common_question.js')
+->prependFile($this->basePath() . '/js/question/list_question.js')
+->appendFile($this->basePath() . '/js/bsa.js')
+->appendFile($this->basePath() . '/js/bsa_script.js');
+$this->headLink()
+->prependStylesheet($this->basePath() . '/css/question/index.css')
+->prependStylesheet($this->basePath() . '/css/home/index.css');
+;
+
+?>
+
+<script type="text/javascript">
+var subject_select=null;
+var faq_url_paging="<?php echo $this->basepath("/review/spam-question");?>";
+var totalLoad=0;
+var step= <?php echo Appcfg::$question_paging_size; ?>;
+var faq_from_paging=totalLoad*step;
+var faq_to_paging=(totalLoad+1)*step;
+var faq_data_paging={from:faq_from_paging,
+		            to:faq_to_paging};
+
+var totalRow=<?php echo $totalDocument?>;
+var subject_select=null;
+var type_search=<?php echo $type;?>;
+var user=null;
+var faq_url_review='/review/spam-question';
+</script>
+<style>
+.faq_head_info{
+	background-color: gainsboro;
+}
+</style>
+<?php
+
+echo $this->navigation("navigation_review")->breadcrumbs()
+->setPartial('/partial/breadcrumb.phtml');
+?>
+<div class="faq_content">
+<div id="faq_wrap_home_detail_header">
+		<div id="faq_home_detail_header">
+    		<ul class="nav nav-tabs pull-left" id="faq_home_index_nav">
+    			<li class="<?php echo $type==1?"active":"";?>"><a
+    				href="<?php echo $this->basepath("/review/spam-question?type=1");?>">Chưa xử lý</a></li>
+    			<li class="<?php echo $type==2?"active":"";?>"><a
+    				href="<?php echo $this->basepath("/review/spam-question?type=2");?>">Đã xử lý</a></li>
+    		</ul>
+		</div>
+		<div class="dropdown pull-right" id="faq_wrap_home_detail_option">
+          <a id="dLabel" role="button" data-toggle="dropdown" data-target="#" href="#">
+            Chọn chủ đề <span class="caret"></span>
+          </a>
+          <ul id="faq_question_index_options" class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+
+				<li value='-1'><a href="#">Tất cả các chủ đề</a></li>
+                    <?php foreach ($list_subject as $sub):?>
+                <li value='<?php echo $sub['_id']->__toString(); ?>'><a
+					href='# <?php echo $sub['title']; ?>'><?php echo $sub['title']; ?></a></li>
+                    <?php endforeach;?>
+          </ul>
+        </div>
+</div>
+
+
+<div id="faq_postswrapper">
+    <?php echo  $this->partial('/web/question/question-list.phtml');?>
+</div>
+<div id="faq_loadmoreajaxloader" style="display: none;">
+	<div class='faq_container'>
+		<center><img
+			src='<?php echo $this->basePath("/images/ajax-loader.gif")?>'>
+	</div>
+</div>
+</div>
+

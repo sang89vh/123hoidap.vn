@@ -1,0 +1,225 @@
+<?php
+use FAQ\FAQCommon\Util;
+use FAQ\FAQCommon\Authcfg;
+use FAQ\FAQEntity\HistoryContent;
+use FAQ\FAQCommon\FAQParaConfig;
+?>
+
+<script type="text/javascript">
+var question="<?php echo $questionID;?>";
+var answer="<?php echo $answerID;?>";
+var backUrl="<?php echo $backUrl;?>";
+</script>
+<div class="col-md-12 pull-left">
+<br>
+<a href="<?php echo $backUrl;?>" class="btn btn-primary btn-sm active " role="button">Trở lại câu hỏi</a>
+<br>
+<hr>
+<a href="#" class="anchorLink" id="faq_active_version_link">Click để đến phiên bản đang sử dụng</a>
+</div>
+<div class="col-md-12 faq_diff_content">
+<?php
+$activeID="";
+$oldContent = "";
+
+
+// $historyAnswer = array_reverse ( $historyAnswer->toArray () );
+$length = count ( $historyAnswer );
+$k = 1;
+$currentUser=Util::getCurrentUser();
+$rankPointCurentUser=0;
+$roleUserCurrentUser=Authcfg::GUEST;
+if(!empty($currentUser)){
+$rankPointCurentUser=$currentUser->getTotalRankPoint();
+$roleUserCurrentUser=$currentUser->getRoleCode();
+}
+
+/* @var $history /FAQ/FAQEntity/HistoryAnswer */
+foreach ( $historyAnswer as $key => $history ) {
+	$contentHistoryID=$history->getId();
+	$user = $history->getCreateBy ();
+	$noteEdit = $history->getNoteEdit ();
+	$content = $history->getContent ();
+	$dateCreated = $history->getDateCreated ();
+	$isActive = $history->getIsActive () == FAQParaConfig::STATUS_ACTIVE;
+	if($isActive){
+    $activeID=$contentHistoryID;
+}
+
+	// var_dump($history->getIsActive());
+	?>
+
+
+
+	<div id='<?php echo $contentHistoryID;?>' class="col-md-12 faq_header_diff">
+		<div class="col-md-1 pull-left faq_version">
+			<span title="phiên bản sửa đổi số <?php echo $k;?>" class="badge"><?php echo $k;?></span>
+			<?php if (!$isActive&&($userCreateAnswerID==Util::getIDCurrentUser()||$roleUserCurrentUser==Authcfg::ADMIN||$rankPointCurentUser>=Authcfg::EDIT_QUESTIONS_AND_ANSWERS)) {?>
+			 <span
+
+			    title="Click để để sử dụng phiên bản sửa đổi này"
+			    active="0"
+			    version="<?php echo $contentHistoryID;?>"
+				class="faq_active_edit_answer glyphicon glyphicon-ok"></span>
+			<?php }elseif ($isActive){
+			?>
+			<span
+			    title="Phiên bản sửa đổi đang được sử dụng"
+			    active="1"
+				class="glyphicon glyphicon-ok faq_active"></span>
+
+			<?php }?>
+		</div>
+		<div class="col-md-3 pull-left">
+			<div id="faq_user_profile">
+<?php
+	/* @var $user /FAQ/FAQEntiy/User */
+	$userID = $user->getId ();
+	$avatar = $user->getAvatar ();
+	$imageID = $avatar->getId ();
+	$fullName = $user->getFirstName () . " " . $user->getLastName ();
+	$userUrlSeo = "bai-huong-dan-cua-" . Util::convertUrlSeo ( $fullName );
+	/* @var $userRank \FAQ\FAQCommon\UserRank */
+	$rank = Util::getUserRankText ( $user );
+	$contentType = $avatar->getContentType ();
+	$extentionFile = Util::getTypeFile ( $contentType );
+	$titleFileSeo = Util::convertUrlFileName ( $fullName, $extentionFile );
+	$totalRankPoint = $user->getTotalRankPoint();
+	$totalMoneyPoint = $user->getTotalMoneyPoint();
+	?>
+
+	       <div id="faq_user_avatar">
+					<a
+						href="<?php echo $this->basepath("/member/question/".$userID); ?>/<?php echo $userUrlSeo;?>">
+						<img id="faq_img_user_profile" style="-webkit-user-select: none"
+						src="<?php echo $this->basepath("/media/get-image/images/".$imageID."/".$titleFileSeo)?>">
+					</a>
+				</div>
+				<div id="faq_user_detail_profile">
+					<div id="faq_user_fullname"><?php echo $fullName;?></div>
+					<div id="faq_user_rank"><?php echo $rank;?></div>
+				</div>
+				<div class="col-md-12 pull-left">
+					<span><label>Điểm hoạt động:</label> <?php echo $totalRankPoint;?></span>
+					 <span><label>Điểm trả lời câu hỏi:</label> <?php echo $totalMoneyPoint;?></span>
+				</div>
+			</div>
+
+		</div>
+		<div class="col-md-8 pull-left">
+			<h4>Ghi chú sửa đổi: <?php echo $noteEdit;?></h4>
+
+		</div>
+	</div>
+	<div>
+
+		<div class="col-md-12 pull-left">
+			<label>Nội dung: </label>
+		<?php
+
+	echo $k == 1 ? $content : Util::htmlDiff ($oldContent,$content );
+// 	var_dump($content,$oldContent);
+
+	?>
+		</div>
+
+	</div>
+	<?php
+	$k ++;
+
+	$oldContent = $content;
+}
+?>
+	</div>
+<style>
+.faq_diff_content del {
+	color: #A82400;
+	background-color: #E5BDB2;
+}
+
+.faq_diff_content ins {
+	background: #D1E1AD;
+	color: #405A04;
+}
+
+.faq_header_diff {
+	border-top: 2px solid #39b3d7;
+	border-bottom: 2px solid #39b3d7;
+	border-left: 4px solid #39b3d7;
+	border-right: 1px solid #39b3d7;
+	margin-bottom: 5px;
+	float: left;
+}
+
+.faq_version {
+	margin-top: 20px;
+	font-size: 30px;
+}
+
+.faq_version span {
+	font-size: 30px;
+}
+</style>
+<script type="text/javascript">
+$(document).ready(function(){
+
+$("#faq_active_version_link").attr("href","#<?php echo $activeID;?>");
+$(".faq_active_edit_answer").click(function(){
+	var contentHistoryID=$(this).attr("version");
+	$(this).addClass("faq_active");
+	var btn_active=this;
+	$.ajax({
+		// async:false,
+		url : basePath
+				+ "/answer/active-version",
+		type : "POST",
+		dataType : "json",
+		data : {
+			question:question,
+			answer : answer,
+			contentHistory : contentHistoryID
+		}, // The data your
+			// sending
+		// to page
+		success : function(data) {
+			if (data.status === 1) {
+				bootbox
+				.dialog({
+					message : "Cập nhật dữ liệu thành công!",
+					title : "Thông báo",
+					buttons : {
+						success : {
+							label : "Ok",
+							className : "btn-success",
+							callback : function() {
+								window.location.href = backUrl;
+							}
+						}
+
+					}
+				});
+
+				$(".faq_active_edit_answer").removeClass("faq_active");
+				$(btn_active).addClass("faq_active");
+			}else{
+				bootbox.alert("có lỗi xẩy ra!");
+				$(btn_active).removeClass("faq_active");
+
+			}
+
+
+		},
+		error : function() {
+			bootbox
+					.alert("Lưu không thành công!");
+			$(btn_active).removeClass("faq_active");
+			console
+					.log("AJAX request was a failure");
+		}
+	});
+
+});
+}
+);
+
+</script>

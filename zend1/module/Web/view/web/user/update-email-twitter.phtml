@@ -1,0 +1,26 @@
+<?php 
+$form = $this->updateEmailTwitterForm;
+$form->setAttribute('action', $this->url('user', array('controller'=>'User', 'action' => 'submitEmailTwitter')));
+$form->prepare();
+echo $this->form()->openTag($form); 
+echo $this->formrow($form->get('id'));
+echo $this->formRow($form->get('user_id'));
+echo $this->formRow($form->get('email'));
+echo $this->formRow($form->get('name'));
+// echo $this->formRow($form->get('sex'));
+// echo $this->formRow($form->get('location'));
+echo $this->formSubmit($form->get('submit'));
+echo $this->form()->closeTag();
+?>
+<style>
+#Update-Email{
+	width:30%;
+	margin-left:40%;
+}
+#Update-Email label{
+	display:inherit;
+}
+#submit{
+	width:150px;
+}
+</style>

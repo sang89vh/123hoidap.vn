@@ -1,0 +1,288 @@
+<?php
+use FAQ\FAQCommon\Appcfg;
+?>
+<script src="/js/socket/socket.io.js"></script>
+<script src="/js/socket/sails.io.js"></script>
+<script src="/js/socket/app.js"></script>
+
+<iframe id='chat-iframe' onload="initSocket();"
+	src="<?php echo Appcfg::$domain?>:1337" width="0px" height="0px"
+	style="display: none"></iframe>
+<audio id="chatAudio">
+	<source src="/sound/notify.ogg" type="audio/ogg">
+	<source src="/sound/notify.mp3" type="audio/mpeg">
+	<source src="/sound/notify.wav" type="audio/wav">
+
+
+
+
+
+
+
+
+</audio>
+<div id="chat-box" class="col-lg-4" status="invisible">
+	<div class="row chat-box-tabs">
+		<div class="col-lg-10 faq_padding_left_none faq_padding_right_none">
+			<table>
+				<tr>
+					<td class="room-1th room-th" id="room-1th"><span class="name"></span><span
+						class="unread"></span></td>
+					<td class="room-2th room-th" id="room-2th"><span class="name"></span><span
+						class="unread"></span></td>
+					<td class="room-3th room-th" id="room-3th"><span class="name"></span><span
+						class="unread"></span></td>
+					<td class="room-more room-th" id="room-more">
+						<div class="btn-group">
+							<button class="btn btn-xs dropdown-toggle" data-toggle="dropdown">
+								Rooms<span class="caret"></span>
+							</button>
+							<ul class="dropdown-menu room-list">
+							</ul>
+						</div> <span class="chat-more-notify"></span>
+					</td>
+				</tr>
+			</table>
+		</div>
+
+		<div
+			class="btn-group col-lg-2 box-control faq_padding_left_none faq_padding_right_none">
+			<button type="button"
+				class="btn btn-default btn-xs  pull-right control-close glyphicon glyphicon-remove"></button>
+
+			<button type="button"
+				class="btn btn-default btn-xs pull-right control-max glyphicon glyphicon-zoom-in"></button>
+			<button type="button"
+				class="btn btn-default btn-xs pull-right control-min glyphicon glyphicon-minus"></button>
+
+		</div>
+	</div>
+	<div id="chat-box-content" class="col-lg-12 chat-box-content"
+		style="margin: 0px; overflow-y: auto"></div>
+	<div id="chat-box-msg" class="col-lg-12 chat-box-msg"
+		style="padding-left: 0px; padding-right: 0px">
+		<textarea name="msg" cols="40" rows="3"
+			style="width: 100%; resize: none; font-size: 10px; margin-top: 2px; border-radius: 3px"></textarea>
+	</div>
+</div>
+<style>
+#chat-box table {
+	width: 100%;
+}
+
+#chat-box table td.active {
+	color: green;
+	font-weight: bold;
+}
+
+.room-list {
+	text-align: left;
+}
+
+#chat-box-content {
+	height: 70%;
+	border: 1px green solid;
+	text-align: left;
+}
+
+#chat-box-message {
+	border: 1px red solid;
+}
+
+#room-more li span.unread,.chat-more-notify {
+	color: red;
+	margin-left: 5px;
+	font-weight: bold;
+}
+
+#room-1th span.unread,#room-2th span.unread,#room-3th span.unread {
+	color: red;
+	margin-top: -8px;
+	font-size: 11px;
+	font-weight: bold;
+	position: absolute;
+	margin-left: -5px;
+}
+
+#chat-box { // status normal;
+	width: 600px;
+	height: 370px;
+	border: 1px #3cc solid;
+	border-radius: 9px;
+	position: fixed;
+	bottom: 5px;
+	z-index: 9999;
+	right: 50px;
+	margin-top: -14px;
+	margin-right: -45px;
+	text-align: right;
+	background-color: white;
+}
+
+.box-control button {
+	min-height: 21px;
+	height: inherit;
+}
+
+#chat-box[status="max"] {
+	width: 700px;
+	height: 500px;
+}
+
+#chat-box[status="min"] {
+	width: 50px;
+	height: 40px;
+	background-image:
+		url('http://icons.iconarchive.com/icons/wwalczyszyn/android-style-honeycomb/64/Messages-icon.png');
+	background-repeat: round;
+	background-color: transparent;
+	cursor: pointer;
+	background-color: transparent;
+	border: 0px;
+}
+
+#chat-box[status="min"] .chat-box-tabs,#chat-box[status="min"] .chat-box-content,#chat-box[status="min"] .chat-box-msg
+	{
+	display: none;
+}
+
+#chat-box-tabs span.unread {
+	color: red;
+	margin-left: 5px
+}
+
+#chat-box[status="invisible"] {
+	display: none;
+}
+</style>
+<script>
+	$(document).on('click','#chat-box[status="min"]',function(evt){
+		$(this).attr('status','normal');
+	});
+	$(document).on('click','.control-min',function(evt){
+		$('#chat-box').attr('status','min');
+	});
+	$(document).on('click','.control-max',function(evt){
+		if($('#chat-box').attr('status')=='max'){
+			$('#chat-box').attr('status','normal');
+		}else{
+			$('#chat-box').attr('status','max');
+		}
+
+	});
+	$(document).on('click','.control-close',function(evt){
+		$('#chat-box').attr('status','invisible');
+	});
+	$(document).on('click','.room-th',function(evt){
+		$('#chat-box-content').html('');
+		if($(this).attr('room_id')){
+			$('.room-th').removeClass('active');
+			// refresh UI
+			$(this).addClass('active');
+			$(this).attr('unread',0);
+			$(this).find('span.unread').html('');
+			$('#chat-box-content').attr('room_id', $(this).attr('room_id'));
+			// load all message.
+			$('#chat-box-content').attr('num_msg',0);
+			chat_utils.chat_box_scroll_type = 'bottom';
+			chat_utils.readMessage4Page($(this).attr('room_id'),null);
+		}
+	});
+	$(document).on('click','.room-list li',function(evt){
+		var room1_id = $('#room-1th').attr('room_id');
+		var room1_name = $('#room-1th span.name').html();
+		var room1_unread = $('#room-1th span.unread').html();
+		var room1_unread_num = $('#room-1th').attr('unread');
+
+		var room2_id = $('#room-2th').attr('room_id');
+		var room2_name = $('#room-2th span.name').html();
+		var room2_unread = $('#room-2th span.unread').html();
+		var room2_unread_num = $('#room-2th').attr('unread');
+
+		var room3_id = $('#room-3th').attr('room_id');
+		var room3_name = $('#room-3th span.name').html();
+		var room3_unread = $('#room-3th span.unread').html();
+		var room3_unread_num = $('#room-3th').attr('unread');
+
+		var room_id = $(this).attr('room_id');
+		var room_name = $(this).find('span.name').html();
+		var room_unread = $(this).find('span.unread').html();
+		var room_unread_num = $(this).attr('unread');
+		// doi cho 1, 2
+		$('#room-2th').attr('room_id', room1_id);
+		$('#room-2th span.name').html(room1_name);
+		$('#room-2th span.unread').html(room1_unread);
+		$('#room-2th').attr('unread', room1_unread_num);
+
+		// doi cho 2, 3
+		$('#room-3th').attr('room_id', room2_id);
+		$('#room-3th span.name').html(room2_name);
+		$('#room-3th span.unread').html(room2_unread);
+		$('#room-3th').attr('unread', room2_unread_num);
+
+		// doi cho 1, item click
+		$('#room-1th').attr('room_id', room_id);
+		$('#room-1th span.name').html(room_name);
+		$('#room-1th span.unread').html('');
+		$('#room-1th').attr('unread', 0);
+
+		// doi cho 3, item click
+		$(this).attr('room_id', room3_id);
+		$(this).find('span.name').html(room3_name);
+		$(this).find('span.unread').html(room3_unread);
+		$(this).attr('unread', room3_unread_num);
+		$('.dropdown-toggle').dropdown();
+
+		// update more notify : so luong room co tin nhan moi.
+		var sum_room_unread = 0;
+		$('#room-more li').each(function(idx, el){
+			if($(el).attr('unread')){
+				if($(el).attr('unread')!=0){
+					sum_room_unread++;
+				}
+			}
+		});
+		$('#room-more').attr('unread', sum_room_unread);
+		if(sum_room_unread>0){
+			$('#room-more .chat-more-notify').html('(' + sum_room_unread + ')');
+		}else{
+			$('#room-more .chat-more-notify').html('');
+		}
+
+		$('#room-1th').click();
+
+	});
+	$(document).on('keyup','#chat-box-msg textarea',function(evt){
+		var code = evt.which;
+		var text = "";
+		var room_id = "";
+		if(code==13){
+			text = $('#chat-box-msg textarea').val();
+			room_id = $('#chat-box-content').attr('room_id');
+			if(text!=""){
+				chat_utils.socket.get('/chat/send',{room: room_id, text: text},function(res){
+					$('#chat-box-msg textarea').val('');
+				});
+			}
+		}
+	});
+
+	// scroll top handler. load more
+	$('#chat-box-content').scroll(function(evt){
+		console.log('scrollTop:' + evt.target.scrollTop + ', clientHeight:' + evt.target.clientHeight + ', scrollHeight:' + $('#chat-box-content')[0].scrollHeight);
+		if(evt.target.scrollTop ==0){
+			chat_utils.chat_box_scroll_type = 'top';
+			var room_id = $(this).attr('room_id');
+			if(room_id){
+				chat_utils.readMessage4Page(room_id);
+			}
+		}else if($('#chat-box-content')[0].scrollHeight== evt.target.scrollTop + evt.target.clientHeight ){
+			chat_utils.chat_box_scroll_type = 'bottom';
+		} else {
+			var scrollTop = evt.target.scrollTop;
+			if(scrollTop>10){
+				chat_utils.chat_box_scroll_type = 'auto';
+			}
+		}
+	 });
+</script>

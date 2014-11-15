@@ -1,0 +1,34 @@
+<?php
+use FAQ\FAQCommon\Util;
+?>
+
+<div class="panel-heading">
+<h4 class="panel-title">Thành viên đẳng cấp</h4>
+</div>
+<div id="faq_top_member">
+<?php
+foreach ($users as $user) {
+    $userID=$user->getId();
+    $subjectID = $user->getId();
+    $avatar=$user->getAvatar();
+    $imageID = $avatar ->getId();
+    $userName=Util::getUserName($user);
+    $contentType = $avatar->getContentType();
+
+    $extentionFile = Util::getTypeFile($contentType);
+    $titleFileSeo = Util::convertUrlFileName($userName,$extentionFile);
+
+    $userUrlSeo="bai-huong-dan-cua-".Util::convertUrlSeo($userName);
+
+    ?>
+<a href="<?php echo $this->basepath("/member/question/".$userID); ?>/<?php echo $userUrlSeo;?>">
+    <img class=" faq_img_top_member avatar" title=" "
+		user="<?php echo $subjectID; ?>" style="-webkit-user-select: none"
+		src="<?php echo $this->basepath("/media/get-image/images/$imageID/$titleFileSeo")?>">
+
+	</a>
+
+<?php
+}
+?>
+</div>

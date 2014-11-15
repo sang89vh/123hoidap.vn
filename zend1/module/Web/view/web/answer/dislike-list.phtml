@@ -1,0 +1,78 @@
+<?php
+// var_dump($list_question);
+use FAQ\FAQCommon\Util;
+use FAQ\FAQCommon\Appcfg;
+
+$currentUser=Util::getCurrentUser();
+$currentUserName=Util::getUserName($currentUser);
+//add titile
+$this->headtitle("Câu trả lời không tốt của ".$currentUserName." | ".$currentUser->getDateCreated()->getTimestamp());
+// setting meta description
+$this->placeholder('description')->append("Danh sách câu trả lời không tốt của ".$currentUserName);
+
+$this->headScript()
+->prependFile($this->basePath() . '/js/answer/index.js')
+->prependFile($this->basePath() . '/js/question/common_question.js')
+->prependFile($this->basePath() . '/js/question/list_question.js')
+    ->appendFile($this->basePath() . '/js/bsa.js')
+    ->appendFile($this->basePath() . '/js/bsa_script.js');
+ $this->headLink()
+->prependStylesheet($this->basePath() . '/css/question/index.css');
+ ;
+?>
+
+<script type="text/javascript">
+var faq_url_paging="<?php echo $this->basepath("/answer/index");?>";
+var totalLoad=0;
+var step= <?php echo Appcfg::$question_paging_size; ?>;
+var faq_from_paging=totalLoad*step;
+var faq_to_paging=(totalLoad+1)*step;
+var faq_data_paging={from:faq_from_paging,
+		            to:faq_to_paging};
+
+var totalRow=<?php echo $totalDocument?>;
+var subject_select=null;
+var user=null;
+var type_answer='dislike-list';
+var type_search=0;
+</script>
+
+<div class="faq_content">
+<div id="faq_wrap_home_detail_header">
+	<div id="faq_home_detail_header">
+		<ul class="nav nav-tabs pull-left" id="faq_question_index_nav">
+			<li class=""><a
+				href="<?php echo $this->basepath("/answer/index");?>">Tổng Quan</a></li>
+			<li class=""><a
+				href="<?php echo $this->basepath("/answer/like-list");?>">Hay</a></li>
+			<li class="active"><a
+				href="<?php echo $this->basepath("/answer/dislike-list");?>">Không Hay</a></li>
+			<li class=""><a
+				href="<?php echo $this->basepath("/answer/best-list");?>">Tốt Nhất</a></li>
+		</ul>
+	</div>
+	<div class="dropdown pull-right" id="faq_wrap_home_detail_option">
+		<a id="dLabel" role="button" data-toggle="dropdown" data-target="#"
+			href="#"> Chọn chủ đề <span class="caret"></span>
+		</a>
+		<ul id="faq_question_index_options" class="dropdown-menu" role="menu"
+			aria-labelledby="dLabel">
+
+			<li value="-1"><a href="#">Tất cả các chủ đề</a></li>
+                                   <?php foreach ($list_subject as $sub):?>
+                                <li value='<?php echo $sub['_id']->__toString(); ?>'><a
+            					href='# <?php echo $sub['title']; ?>'><b><?php echo $sub['title']; ?></b></a></li>
+                                <?php endforeach;?>
+                              </ul>
+	</div>
+</div>
+<div id="faq_postswrapper">
+    <?php echo  $this->partial('/web/question/question-list.phtml');?>
+</div>
+<div id="faq_loadmoreajaxloader" style="display: none;">
+	<div class='faq_container'>
+		<center><img
+			src='<?php echo $this->basePath("/images/ajax-loader.gif")?>'>
+	</div>
+</div>
+</div>

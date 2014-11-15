@@ -1,0 +1,311 @@
+<?php
+    $lstSubject = $this->lstSubject;
+    $subID = $this->subID;
+?>
+<script src="/js/jquery.fancybox.js" ></script>
+<script src="/js/faq_fancybox.js"></script>
+<script src="/js/bootstrap-tagsinput.js"></script>
+<script src="/js/jquery/jquery.dataTables.min.js"></script>
+
+<link rel="stylesheet" type="text/css" href="/css/bootstrap-tagsinput.css" />
+<link rel="stylesheet" type="text/css" href="/css/fancybox/jquery.fancybox.css" />
+<link rel="stylesheet" type="text/css" href="/css/admin/jqueryui/jquery.dataTables_themeroller.css" />
+
+<style>
+    .row_selected{
+    	font-weight:bold;
+    	color:blue;
+    }
+
+    #qapolo-admin-subject tbody tr{
+    	cursor:pointer;
+    }
+
+</style>
+<script type="text/javascript" charset="utf-8">
+			$(document).ready(function() {
+				var isSelected = false;
+			    // file selected callback
+				$('#faq_media_file').on('faq_select_media_file',function(evt){
+					var mediaID = $('#faq_media_file').val();
+				    $('#mediaID').attr('src', '<?php echo $this->basepath(); ?>/media/get-image/images/' + mediaID);
+				});
+			    // draw datatables
+				oTable = $('#qapolo-admin-subject').dataTable({
+					"sScrollY": "600px",
+					"sScrollX": "100%",
+					"sScrollXInner": "150%",
+					"bScrollCollapse": true,
+					"bJQueryUI": true,
+				        "bPaginate": false,
+				        "bLengthChange": false,
+				        "bFilter": true,
+				        "bSort": true,
+				        "bInfo": false,
+				        "oLanguage": {
+				            "sLengthMenu": "Display _MENU_ records per page",
+				            "sZeroRecords": "Không có dữ liệu",
+				            "sInfo": "Showing _START_ to _END_ of _TOTAL_ records",
+				            "sInfoEmpty": "Showing 0 to 0 of 0 records",
+				            "sInfoFiltered": "(filtered from _MAX_ total records)"
+				        }
+
+				    });
+
+				// menu controls css
+			    var strMenu = $('#qapolo-admin-subject-controls').html();
+			    $('#qapolo-admin-subject-controls').remove();
+				$("#qapolo-admin-subject_filter").append(strMenu);
+
+				// row selectable
+				$("#qapolo-admin-subject tbody tr").click( function( e ) {
+			        if ( $(this).hasClass('row_selected') ) {
+
+			        }
+			        else {
+			            oTable.$('tr.row_selected').removeClass('row_selected');
+			            $(this).addClass('row_selected');
+			            node_avatar = $(this).attr('node_avatar');
+			            if(node_avatar!=undefined && node_avatar!=''){
+			            	$('#subject-avatar').attr('src','<?php echo $this->basepath()?>/media/get-image/images/' + node_avatar);
+			            }else{
+			            	$('#subject-avatar').html('<img width=150 height=150 />');
+			            }
+			        }
+
+			    });
+
+				// subject selected
+			    $.each($('#qapolo-admin-subject tbody tr'),function(idx,el){
+				    if($(el).attr('sub_id')=='<?php echo $subID; ?>'){
+					    el.click();
+					    isSelected = true;
+				    }
+			    });
+			    if(!isSelected){
+			    	$('#qapolo-admin-subject tbody tr:first').click();
+			    }
+
+			    // add, edit, delete action listenner
+			    $('#qapolo-subject-controls-them').click(function(evt){
+			    	resetForm();
+			    	$('#qapolo-admin-subject-form-add [name="act"]').val('them');
+			    	$('#qapolo-admin-subject-form-add').dialog({
+    	    				resizable: false,
+    	    				modal: true,
+    	    				width: 800,
+    	    				height:500,
+    	    				title: 'Thêm một Subject',
+    	    				buttons: {
+    	    					"Hủy bỏ": function() {
+    	    						$( this ).dialog( "destroy" );
+    	    					},
+    	    					"Đồng ý": function() {
+									var isValid = validateit('qapolo-admin-subject-form-add','top',false,false);
+    	    						if(!isValid){
+        	    						return false;
+    	    						}
+    	    						submitForm();
+    	    						$( this ).dialog( "destroy" );
+    	    					}
+    	    				}
+    	    		});
+			    });
+			    $('#qapolo-subject-controls-sua').click(function(evt){
+				    var id = null;
+				    var title = null;
+				    var desc = null;
+				    var avatar ;
+				    var keyword = null;
+				    var row_selected = null;
+				    var row_selected_length = $("#qapolo-admin-subject tbody tr.row_selected").length;
+				    if(row_selected_length>0){
+				    	row_selected = $("#qapolo-admin-subject tbody tr.row_selected")[0];
+				    	id = $("#qapolo-admin-subject tbody tr.row_selected")[0].getAttribute('node_id');
+				    	title = $("#qapolo-admin-subject tbody tr.row_selected")[0].getAttribute('node_title');
+				    	desc = $("#qapolo-admin-subject tbody tr.row_selected")[0].getAttribute('node_desc');
+				    	avatar = $("#qapolo-admin-subject tbody tr.row_selected")[0].getAttribute('node_avatar');
+				    	keyword = $("#qapolo-admin-subject tbody tr.row_selected")[0].getAttribute('node_keyword');
+
+				    }
+				    if(row_selected==null){
+				    	bootbox.alert("<span stle='color:red'>Bạn cần chọn một subject cần sửa</span>");
+				        return ;
+					}
+				    resetForm();
+				    $('#mediaID').attr('src','http://123hoidap.vn/media/get-image/images/' + avatar);
+				    $('#qapolo-admin-subject-form-add [name="title"]').val(title);
+				    $('#qapolo-admin-subject-form-add [name="desc"]').val(desc);
+				    $('#qapolo-admin-subject-form-add [name="mediaID"]').val(avatar);
+				    $('#qapolo-admin-subject-form-add [name="keyword"]').val(keyword);
+				    $('#qapolo-admin-subject-form-add [name="keyword"]').tagsinput('destroy');
+				    $('#qapolo-admin-subject-form-add [name="keyword"]').tagsinput();
+				    $('#qapolo-admin-subject-form-add [name="act"]').val('sua');
+			    	$('#qapolo-admin-subject-form-add').dialog({
+    	    				resizable: false,
+    	    				modal: true,
+    	    				width: 800,
+    	    				height:500,
+    	    				title: 'Sửa subject',
+    	    				buttons: {
+    	    					"Hủy bỏ": function() {
+    	    						$( this ).dialog( "destroy" );
+    	    					},
+    	    					"Đồng ý": function() {
+    	    						$('#qapolo-admin-subject-form-add [name="id"]').val(id);
+    	    						var isValid = validateit('qapolo-admin-subject-form-add','top',false,false);
+
+    	    						if(!isValid){
+        	    						return false;
+    	    						}
+    	    						submitForm();
+    	    						$( this ).dialog( "destroy" );
+    	    					}
+    	    				}
+    	    		});
+			    });
+
+			    $('#qapolo-subject-controls-xoa').click(function(evt){
+				    var id = null;
+				    var title = null;
+				    var desc = null;
+				    var row_selected = null;
+				    var row_selected_length = $("#qapolo-admin-subject tbody tr.row_selected").length;
+				    if(row_selected_length>0){
+				    	row_selected = $("#qapolo-admin-subject tbody tr.row_selected")[0];
+				    	title = $("#qapolo-admin-subject tbody tr.row_selected")[0].getAttribute('node_title');
+				    	desc = $("#qapolo-admin-subject tbody tr.row_selected")[0].getAttribute('node_title');
+				    	id = $("#qapolo-admin-subject tbody tr.row_selected")[0].getAttribute('node_id');
+				    }
+				    // thong bao khi khong chon subject can xoa
+				    if(row_selected==null){
+				    	bootbox.alert("<span stle='color:red'>Bạn cần chọn một subject muốn xóa</span>");
+				        return ;
+					}
+					// thong bao confirm xoa subject
+				    bootbox.dialog({
+	    				  message: "Bạn có muốn xóa chủ đề <b>" + title + "</b> ?",
+	    				  title: "Thông báo",
+	    				  buttons: {
+	    				    ok: {
+	    				      label: "Có",
+	    				      callback: function() {
+	    				    	resetForm();
+	  							$('#qapolo-admin-subject-form-add [name="act"]').val('xoa');
+	  							$('#qapolo-admin-subject-form-add [name="id"]').val(id);
+					    	    submitForm();
+
+	    				      }
+	    				    },
+
+	    				    cancel: {
+	    				      label: "Không",
+	    				      callback: function() {
+
+	    				      }
+	    				    }
+	    				  }
+	    				});
+			    });
+
+
+			    // submit action
+			    function submitForm(){
+			    	params = $('#qapolo-admin-subject-form-add').serialize();
+			    	$.ajax({
+						url: '<?php echo $this->basepath();?>/admin/catalog/update-subject',
+						data: params,
+						type: 'post'
+					}).done(function(data){
+						if(data.indexOf('saved')>=0){
+							bootbox.alert("Cập nhật thành công",function(){
+								document.location.href = '<?php echo $this->basepath()?>/admin/catalog/subject/' + data.split('#')[0];
+							});
+							setTimeout(function(){bootbox.hideAll(function(){
+								document.location.href = '<?php echo $this->basepath()?>/admin/catalog/subject/' + data.split('#')[0];
+							});},1000);
+						}else{
+							bootbox.alert("<span stle='color:red'>Có lỗi xảy ra</span>");
+						}
+					});
+			    }
+
+			    // reset form
+			    function resetForm(){
+					$('#qapolo-admin-subject-form-add [name="act"]').val('');
+					$('#qapolo-admin-subject-form-add [name="id"]').val('');
+					$('#qapolo-admin-subject-form-add [name="mediaID"]').val('');
+					$('#qapolo-admin-subject-form-add [name="title"]').val('');
+					$('#qapolo-admin-subject-form-add [name="desc"]').val('');
+					$('#mediaID').attr('src',''); $('#mediaID').attr('alt','No Image!');
+					$('#qapolo-admin-subject-form-add [name="keyword"]').tagsinput('removeAll');
+
+				}
+
+			    $('#qapolo-admin-subject-form-add [name="keyword"]').tagsinput();
+
+			} );
+</script>
+<div id="qapolo-admin-subject-controls" >
+		<button act="them" id="qapolo-subject-controls-them" >Thêm</button>
+		<button act="sua" id="qapolo-subject-controls-sua" >Sửa</button>
+		<button act="xoa" id="qapolo-subject-controls-xoa" >Xóa</button>
+</div>
+<div style="display:none">
+    <form id="qapolo-admin-subject-form-add" style="display:none; width:100%">
+            <input type="hidden" name="act" />
+            <input type="hidden" name="id" />
+    		<table id="chitiet_edit_hinhanh" >
+    			<tr>
+    			     <th>Tiêu đề</th>
+    			     <td><input type="text" name="title" style="width:400px" valid_type="length" valid_label="Tên chủ đề" valid_min=2 /></td>
+    			</tr>
+    			<tr>
+    			     <th>Mô tả</th>
+    			     <td><textarea rows="3" cols="70" name="desc" valid_type="length" valid_label="Mô tả chủ đề" valid_min=5></textarea></td>
+    			</tr>
+    			<tr>
+    				<th>Từ khóa</th>
+    				<td><input type="text" name="keyword" width="40px" /></td>
+    			</tr>
+    			<tr>
+    			     <td></td>
+    			     <td>
+
+    			          <img id="mediaID"  width="150px" height="150px" />
+
+    			         <a id="faq_link_media_file" style="display:inherit"
+            			class="fancybox fancybox.iframe btn btn-default btn-xs"
+            			href="<?php echo $this->basepath("/media/avatar");?>">Thư viện
+            			Media</a> <input name="mediaID" valid_type="require" valid_label="Ảnh cho chủ đề" valid_min=5 style="display: none" id="faq_media_file" value="" />
+    			     </td>
+    			</tr>
+    		</table>
+    </form>
+</div>
+<table cellpadding="0" cellspacing="0" border="0" class="display" id="qapolo-admin-subject" width="150%" style="overflow: scroll;">
+	<thead>
+		<tr>
+			<th>Tên chủ đề</th>
+			<th>Mô tả</th>
+			<th>Từ khóa</th>
+		</tr>
+	</thead>
+	<tbody>
+		<?php if($lstSubject){
+		  foreach ($lstSubject as $sub){
+        ?>
+            <tr sub_id="<?php echo $sub->getId();?>" node_id="<?php echo $sub->getId();?>" node_title="<?php echo $sub->getTitle();?>" node_desc="<?php echo $sub->getDesc();?>" node_avatar="<?php if($sub->getAvatar()) echo $sub->getAvatar()->getId();?>"
+            	node_keyword="<?php echo join(",",$sub->getKeyWord()); ?>"
+             >
+                <td><?php echo $sub->getTitle();?></td>
+                <td><?php echo $sub->getDesc();?></td>
+                <td><?php echo join(",",$sub->getKeyWord()); ?></td>
+            </tr>
+        <?php
+          }
+		}?>
+	</tbody>
+</table>
+<img id="subject-avatar" width="150px" height="150px" />
+<div></div>

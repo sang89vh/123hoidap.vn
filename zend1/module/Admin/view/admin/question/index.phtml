@@ -1,0 +1,214 @@
+<script src="/js/jquery.fancybox.js" ></script>
+<script src="/js/faq_fancybox.js"></script>
+<script src="/js/jquery/jquery.dataTables.min.js"></script>
+<link rel="stylesheet" type="text/css" href="/css/fancybox/jquery.fancybox.css" />
+<link rel="stylesheet" type="text/css" href="/css/admin/jqueryui/jquery.dataTables_themeroller.css" />
+
+
+<a href="http://123hoidap.vn/admin/report/question">Báo cáo tổng quan</a>
+<br>
+<table style="overflow: scroll;" cellpadding="0" cellspacing="0" border="0" class="display"
+	id="faq_data_grid_question">
+	<thead>
+		<tr>
+			<th class="id" width="5%">Xóa</th>
+			<th class="id" width="5%">Duyệt vi phạm</th>
+			<th class="id" width="5%">ID</th>
+			<th class="title" width="15%">Tiêu đề</th>
+			<th class="content" width="18%">Nội dung</th>
+			<th class="status" width="5%">Trạng thái</th>
+			<th class="subject" width="5%">Chủ đề</th>
+			<th class="date_created" width="10%">Ngày tạo</th>
+			<th class="total_spam" width="4%">Tổng số báo vi phạm</th>
+			<th class="total_share" width="4%">Tổng số chia sẻ</th>
+			<th class="total_like" width="4%">Tổng số thích</th>
+			<th class="total_dislike" width="4%">Tống số không thích</th>
+			<th class="total_answer" width="5%">Tổng số trả lời</th>
+			<th class="create_by" width="5%">Tác giả</th>
+			<th class="is_admin_spam" width="1%">isspam</th>
+		</tr>
+	</thead>
+	<tbody>
+
+	</tbody>
+	<tfoot>
+
+	</tfoot>
+</table>
+<style>
+table{
+	overflow: scroll;
+/* 	width: 1000px; */
+}
+th,td{
+	white-space:nowrap;
+	overflow: hidden;
+}
+.dataTables_scroll{
+	overflow: scroll;
+}
+table.dataTable td.right {
+text-align: right;
+}
+table.dataTable td.left {
+text-align: left;
+}
+</style>
+<script type="text/javascript">
+
+$(document).ready(function() {
+    $('#faq_data_grid_question').dataTable( {
+        	"sScrollX": "100%",
+            "sScrollXInner": "300%",
+            "bScrollCollapse": true,
+    		"iDisplayLength":10,
+    		 "bJQueryUI": true,
+		    "bInfo":true,
+		    "bPaginate":true,
+		    "bLengthChange":true,
+			"sPaginationType":'full_numbers',
+			"bProcessing": true,
+			"bServerSide": true,
+			"sServerMethod": "GET",
+			"bStateSave": true,
+            "sAjaxSource": '/admin/question/list-question',
+            "aoColumns":[
+                           { 'bVisible':    true,'sClass': 'left','sWidth':'5%','fnRender': function (oObj) {
+                               var statusDelete='Xóa';
+                               if(oObj.aData[5]==-1){
+                            	   statusDelete='Đã xóa';
+                               }
+                          	  var btn_delete='<button status="'+oObj.aData[5]+'" class="faq_btn_delete_question btn btn-danger btn-xs" question="'+oObj.aData[2]+'" type="button" >'+statusDelete+'</button>';
+                            	  return btn_delete;
+			    			} },
+                           { 'bVisible':    true,'sClass': 'left','sWidth':'5%','fnRender': function (oObj) {
+                       	    var action='SPAM';
+                       	    var label_btn='Duyệt';
+                       	    console.log(oObj.aData[14]);
+                                if(oObj.aData[14]=='true'){
+                                	action='UNSPAM';
+                                	label_btn='Bỏ duyệt';
+                               }
+                            	  var btn_app='<button action="'+action+'" class="faq_btn_spam_question btn btn-info btn-xs" question="'+oObj.aData[2]+'" type="button" >'+label_btn+'</button>';
+                            	  return btn_app;
+  			    			}},
+                           { 'bVisible':    true,'sClass': 'left','sWidth':'5%'},
+                           { 'bVisible':    true,'sClass': 'left','sWidth':'15%','fnRender': function (oObj) {
+				    			var title=oObj.aData[3];
+				    			var url='<a class="fancybox fancybox.iframe" href="/admin/question/detail/'+oObj.aData[2]+'">'+title+'</a>';
+				    			return url;
+			    			} },
+                           { 'bVisible':    true,'sClass': 'left','sWidth':'17%'},
+                           { 'bVisible':    true,'sClass': 'left','sWidth':'5%'},
+                           { 'bVisible':    true,'sClass': 'left','sWidth':'5%'},
+                           { 'bVisible':    true,'sClass': 'left','sWidth':'10%'},//date created
+                           { 'bVisible':    true,'sClass': 'left','sWidth':'4%'},
+                           { 'bVisible':    true,'sClass': 'left','sWidth':'4%'},
+                           { 'bVisible':    true,'sClass': 'left','sWidth':'4%'},
+                           { 'bVisible':    true,'sClass': 'left','sWidth':'4%'},
+                           { 'bVisible':    true,'sClass': 'left','sWidth':'4%'},
+                           { 'bVisible':    true,'sClass': 'left','sWidth':'5%'},
+                           { 'bVisible':    false,'sClass': 'left','sWidth':'1%'}
+                         ]
+    } );//end datatable
+
+    //mark spam question
+    $(document).on('click','.faq_btn_spam_question',function(){
+        var context=this;
+    	bootbox.confirm("Bạn có muốn duyệt và đánh dấu câu hỏi vi phạm quy định hệ thống?", function(result) {
+    		  if(result){
+    			 var questionID=$(context).attr('question');
+    			 var action=$(context).attr('action');
+    			 console.log(action);
+    			  if(action=="UNSPAM"){
+  					console.log("bao k vi pham");
+  					$(context).text("Đang lưu...");
+  					$.ajax({
+  				         url: basePath+"/question/unspam",
+  				         type: "POST",
+  				         dataType:"json",
+  				         data: "question=" + questionID, //The data your sending to page
+  				         success: function(data){
+  				        	 if(data.status==1){
+  				        		 bootbox.alert('thành công!');
+   				        		$(context).text("Duyệt");
+  				        	 }
+  				         },
+  				         error:function(){
+  				        	 $(context).text("Lỗi!");
+  				        	 bootbox.alert('không thành công!');
+   				        	$(context).text("Duyệt");
+  				             console.log("AJAX request was a failure");
+  				         }
+  				       });
+
+  				}else if(action=="SPAM"){
+  					console.log("bao vi phạm");
+  					$(context).text("Đang lưu...");
+  					$.ajax({
+  				         url: basePath+"/question/spam",
+  				         type: "POST",
+  				         dataType:"json",
+  				         data: "question=" + questionID, //The data your sending to page
+  				         success: function(data){
+  				        	 if(data.status==1){
+  				        		 bootbox.alert('thành công!');
+   				        		$(context).text("Bỏ duyệt");
+  				        	 }
+  				         },
+  				         error:function(){
+  				        	 bootbox.alert('không thành công!');
+   				        	$(context).text("Duyệt");
+  				             console.log("AJAX request was a failure");
+  				         }
+  				       });
+  				}
+    		  }
+
+    		});
+    });
+    //delete question
+    $(document).on('click','.faq_btn_delete_question',function(){
+        var context=this;
+        if($(context).attr('status')!='-1'){
+    	bootbox.confirm("Admin ơi! có thực sự muốn xóa không?", function(result) {
+    		  if(result){
+    			  $(context).text("Đang xóa...");
+    			  var questionID=$(context).attr('question');
+    		  $.ajax({
+    		         url: basePath+"/question/delete",
+    		         type: "POST",
+    		         dataType:"json",
+    		         data: {question:questionID},
+    		         success: function(data){
+    		        	 if(data.status==1){
+    		        		 $(context).text("Đã xóa");
+    		        		 $(context).attr('status','-1');
+    		        		 console.log("sucess delete question");
+    		        		 bootbox.alert('Xóa thành công!');
+    		        	 }
+
+    		         },
+    		         error:function(){
+    		        	 bootbox.alert('Không xóa được =((');
+    		        	 $(context).text("Xóa?");
+    		             console.log("AJAX request was a failure");
+    		         }
+    		       });
+    		  }
+
+
+    		});
+        }else{
+        	bootbox.alert('Xóa rồi thê, sao mà xóa được nữa =))');
+    	}
+    });
+
+
+
+
+
+} );// end document ready
+
+
+</script>

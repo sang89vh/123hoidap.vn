@@ -1,0 +1,278 @@
+<?php
+use FAQ\FAQCommon\Authcfg;
+?>
+<link rel="stylesheet" type="text/css" href="/css/markdown/markdown.css" />
+<script type="text/javascript" src="/js/markdown/Markdown.Converter.js"></script>
+<script type="text/javascript" src="/js/markdown/Markdown.Sanitizer.js"></script>
+<script type="text/javascript" src="/js/markdown/Markdown.Editor.js"></script>
+<script type="text/javascript" src="/js/markdown/faq_markdown.js"></script>
+<!-- <script type="text/javascript" src="/js/markdown/to-markdown.js"></script> -->
+
+<div class="col-md-12">
+	<div class="col-md-12">
+
+		<a id="faq_link_media_file"
+			class="fancybox fancybox.iframe btn btn-default btn-xs"
+			href="<?php echo $this->basepath("/media/index/mardown");?>">Thư viện
+			Media</a> <input style="display: none" id="faq_media_file" value="" />
+
+<textarea style="display: none;" id="faq_default_content"><?php echo $content;?></textarea>
+	</div>
+	<div class="col-md-12">
+
+		     <button id="faq_btn_tool_latex" class="btn btn-default btn-xs" >Công cụ gõ latex</button>
+			<div id="faq_tool_latex" style="display: none;">
+			<embed src="http://123hoidap.vn/support/latex" height="300px"  width="100%">
+			</div>
+
+	</div>
+	<div class="col-md-12 faq_wrap_markdown_edittor">
+		<div class="faq_markdown_edittor">
+			<div id="wmd-button-bar-answer"></div>
+			<textarea class="wmd-input" id="wmd-input-answer"></textarea>
+			<div class="form-group col-md-2"
+				style="padding-right: 0px !important; padding-left: 0px !important;">
+				<button
+					class="btn btn-primary btn-xs btn-block faq_btn_send_comment"
+					data-loading-text="Đang lưu...">Phản hồi</button>
+			</div>
+			<div class="form-group col-md-10 pull-right checkbox">
+				<div class=" col-md-6 pull-left">
+					<label>
+					    <input type="checkbox" checked="checked" class="faq_post_to_face"> Đăng Facebook
+					</label>
+				</div>
+				<div class=" col-md-6 pull-left">
+				<?php if($totalRankPoint>=Authcfg::CREATE_WIKI_POSTS){?>
+					<label title="câu trả lời sẽ được chỉnh sửa bỏi cộng đồng">
+					<input class="faq_wiki_post" type="checkbox" checked="checked"></input> Cộng đồng Wiki
+					</label>
+				<?php }?>
+				</div>
+
+			</div>
+
+		</div>
+		<br> <br>
+
+
+		<div id="wmd-preview-answer" class="wmd-preview"></div>
+	</div>
+	<div class="faq_wrap_editor_help col-md-12 pull-right">
+		<div id="faq_editor_help"
+			class="collapse navbar-collapse navbar-ex5-collapse">
+			<ul id="faq_question_index_nav" class="nav nav-tabs">
+				<li class=""><a href="#faq_editor_help_link" data-toggle="tab">Links</a></li>
+				<li class=""><a href="#faq_editor_help_image" data-toggle="tab">Ảnh</a></li>
+				<li class=""><a href="#faq_editor_help_css" data-toggle="tab">Styling/Headers</a></li>
+				<li class=""><a href="#faq_editor_help_list" data-toggle="tab">Danh
+						sách</a></li>
+				<li class=""><a href="#faq_editor_help_block" data-toggle="tab">Blockquotes</a></li>
+				<li class=""><a href="#faq_editor_help_code" data-toggle="tab">Code</a></li>
+				<li class=""><a href="#faq_editor_help_html" data-toggle="tab">HTML</a></li>
+				<li class=""><a href="#faq_editor_help_more" data-toggle="tab">...</a></li>
+
+			</ul>
+
+		</div>
+	</div>
+	<div class="col-md-12 pull-right faq_wrap_editor_help">
+
+
+		<div id="faq_question_content" class="tab-content">
+			<div class="tab-pane active" id="faq_editor_help_link">
+				<p>
+
+
+				<h4>Hướng dẫn sử dụng Link</h4>
+
+				<p>Với lựa chọn này sẽ tạo ra liên kết đến một trang khác Để tạo mới
+					một Link bạn click vào biểu tượng Hyperlink và nhập tên link sẽ
+					xuất hiện một đoạn text có dạng như sau: [enter link description
+					here][1]</p>
+				<pre>[1]:http://123hoidap.vn/subject/</pre>
+				<p>Thay đoạn text "enter link description here" bằng mô tả của bạn
+					ví dụ:</p>
+				<p>[click vào đây để đến danh sách chủ đề][1]</p>
+				<p>Kết quả:</p>
+				<p>
+					<a href="http://123hoidap.vn/subject/">click vào đây để đến danh
+						sách chủ đề</a>
+				</p>
+				</p>
+			</div>
+			<div class="tab-pane" id="faq_editor_help_image">
+				<p>
+
+
+				<h4>Hướng dẫn chèn ảnh</h4>
+
+				<p>Để thêm một ảnh minh họa bạn click biểu tượng Images và chọn ảnh
+					để tải lên. Click Add picture sẽ xuất hiện đoạn text dạng</p>
+				<p>![enter image description here][1]</p>
+				<pre>[1]: http://123hoidap.vn/images/logo/logo_qapolo.png</pre>
+				<p>Thay "enter image description here" bằng mô tả của bạn</p>
+
+
+				</p>
+			</div>
+			<div class="tab-pane fade" id="faq_editor_help_css">
+				<p>
+
+
+				<h4>Hướng dẫn style, tiêu đề</h4>
+				</p>
+
+				<div class="col1">
+					<p>Sử dụng để làm cho bài viết đẹp hơn, thân thiện hơn</p>
+					<pre>Bôi đậm văn bản có dạng: **hà nội**
+In nghiêng có dạng: *hà nội*
+Căn lề trái có dạng:  hà nội ------
+
+</pre>
+
+				</div>
+				<div class="col2">
+					<p>Đầu mỗi đoạn văn bản bạn có thể sử dụng headers:</p>
+					<pre>Tiêu đề chính
+==============
+
+Tiêu đề phụ
+-----------------
+</pre>
+					<p>Có thể sử dụng cú pháp sau để đánh dấu tiêu đề nhiều cấp:</p>
+					<pre># Tiêu đề cấp 1 #
+## Tiêu đề cấp 2 ##
+### Tiêu đề cấp 3 ###
+</pre>
+
+
+				</div>
+
+			</div>
+			<div class="tab-pane fade" id="faq_editor_help_list">
+				<p>
+
+
+				<h4>Hướng dẫn tạo danh sách</h4>
+				<div class="mdhelp-tab" id="mdhelp-lists" style="display: block;">
+
+					<div class="col1">
+						<pre>- Mục 1<span class="spaces">&nbsp;</span>Sử dụng dấu gạch đầu
++ Mục 2<span class="spaces">&nbsp;</span>Sử dụng đấu cộng ở đầu
+* Mục 3<span class="spaces">&nbsp;</span>Sử dụng dấu sao ở đầu
+
+4. Mục 4<span class="spaces">&nbsp;</span>Sử dụng số
+5. Mục 5<span class="spaces">&nbsp;</span>Sử dụng số theo thứ tự
+ the numbers for you
+6.<span class="spaces">&nbsp;</span>Có thể là không theo thứ tự.\</pre>
+					</div>
+					<div class="col2">
+						<pre>1.<span class="spaces">&nbsp;</span>Danh sách có phân cấp:
+<span class="spaces">&nbsp;&nbsp;&nbsp;&nbsp;</span>-<span
+								class="spaces">&nbsp;</span>Cấp 1.
+<span class="spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>*<span
+								class="spaces">&nbsp;</span>Cấp 2.
+<span class="spaces">&nbsp;&nbsp;&nbsp;&nbsp;</span>-<span
+								class="spaces">&nbsp;</span>Cấp 2.
+2.<span class="spaces">&nbsp;&nbsp;</span>Có thể sử dụng dấu cách đầu dòng
+<span class="spaces">&nbsp;&nbsp;&nbsp;&nbsp;</span>mục 1.
+<span class="spaces">&nbsp;</span>
+<span class="spaces">&nbsp;&nbsp;&nbsp;&nbsp;</span>mục 2.\</pre>
+					</div>
+				</div>
+				</p>
+			</div>
+
+
+
+
+
+
+			<div class="tab-pane fade" id="faq_editor_help_block">
+				<p>
+				<h4>Hướng dẫn chèn blockquote</h4>
+							<div class="mdhelp-tab" id="mdhelp-blockquotes" style="display: block;">
+        <div class="col1">
+            <pre>&gt; Tạo blockquote
+&gt; Sử dụng “&gt;” trước mỗi dòng.
+&gt;
+&gt; Có thể sử dụng định dạng sau, e.g.
+&gt;
+&gt; 1. Danh sách 1
+&gt; 2. Tiêu đề 1:
+&gt;
+&gt; ## Tiêu đề ##\</pre>
+        </div>
+        <div class="col2">
+                <p>
+                    có thể đặt blockquotes trong blockquotes:
+                </p>
+                <pre>&gt; Đăth blockquote theo cách thông thường
+&gt; &gt; Đặt blockquote lồng nhau
+&gt; &gt; &gt; &gt; Có thể lồng nhau theo nhiều cấp.\</pre>
+        </div>
+    </div>
+				</p>
+			</div>
+			<div class="tab-pane fade" id="faq_editor_help_code">
+				<p>
+				<h4>Hướng dẫn chèn code</h4>
+				<div class="mdhelp-tab" id="mdhelp-code" style="display: block;">
+        <p>
+            Tạo một đoạn code, nó sẽ được hiển thị với khoảng trắng phía trước:
+        </p>
+        <pre><span class="spaces">&nbsp;&nbsp;&nbsp;&nbsp;</span>Đoạn code sẽ được hiển thị với khoảng trắng phía trước
+<span class="spaces">&nbsp;&nbsp;&nbsp;&nbsp;</span>
+<span class="spaces">&nbsp;&nbsp;&nbsp;&nbsp;</span>Cú pháp Markdown và HTML sẽ không được chuyển đổi ví dụ nó sẽ hiển thị nguyên như sau:
+<span class="spaces">&nbsp;&nbsp;&nbsp;&nbsp;</span>&lt;i&gt;chữ nghiêng&lt;/i&gt;,  [link](http://123hoidap.vn)\</pre>
+        <p>
+            To create not a block, but an inline code span, use backticks:
+        </p>
+        <pre>The `$` character is just a shortcut for `window.jQuery`.
+</pre>
+        <p>
+            If you want to have a preformatted block within a list, indent by eight spaces:
+        </p>
+        <pre>1. This is normal text.
+2. So is this, but now follows a code block:
+<span class="spaces">&nbsp;</span>
+<span class="spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>Skip a line and indent eight spaces.
+<span class="spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>That's four spaces for the list
+<span class="spaces">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>and four to trigger the code block.\</pre>
+    </div>
+				</p>
+			</div>
+
+			<div class="tab-pane fade" id="faq_editor_help_html">
+				<p>
+				<h4>Hướng dẫn sử dụng Html</h4>
+				<div class="mdhelp-tab" id="mdhelp-html" style="display: block;">
+        <p>
+            Có thể sử dụng các thẻ Html để nhúng trực tiếp vào câu trả lời
+        Ví dụ :
+        </p>
+        <pre><p>Cộng hòa xã hội chủ nghĩa viêt nam </p>
+<b>Độc lập tự do hạnh phúc</b>
+
+</pre>
+
+    </div>
+				</p>
+			</div>
+
+			<div class="tab-pane fade" id="faq_editor_help_more">
+<a href="http://123hoidap.vn/support/help" data-toggle="tab" target="_blank" title="Xem thêm">Xem thêm</a>
+			</div>
+
+
+
+
+		</div>
+
+	</div>
+</div>
+
+
+
+

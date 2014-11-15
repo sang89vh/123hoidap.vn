@@ -1,0 +1,109 @@
+<?php
+use FAQ\FAQCommon\Util;
+use FAQ\FAQEntity\UserSpam;
+?>
+<?php
+
+if ($isFlagPosts) {
+	$isReported = false;
+	$totalReport=count($userSpams);
+?>
+<?php if($totalReport>0){?>
+<h5>Đã có <?php echo $totalReport;?> người báo vi phạm trước đó</h5>
+<?php }?>
+<ul class="list-group">
+<?php
+	/* @var $userSpam /FAQ/FAQEntity/UserSpam */
+	foreach ( $userSpams as $key => $userSpam ) {
+		$userCreateReport=$userSpam->getCreateBy () ;
+		if($userCreateReport->getId()==Util::getIDCurrentUser()){
+			$isReported=true;
+		}
+		$userName = Util::getUserName ($userCreateReport);
+		$timeUpdate=$userSpam->getDateUpdated()->getTimestamp()*1000;
+		?>
+
+ <li class="list-group-item">
+  	<strong><?php echo $userName?></strong>
+		<span class="text-muted  faq_post_time_span pull-right" post-time="<?php echo $timeUpdate;?>">
+		</span>
+
+</li>
+
+
+
+
+		<?php
+	}
+	?>
+</ul>
+<?php if(!$isReported){?>
+<h5>Báo câu hỏi vi phạm bởi vì</h5>
+<div>
+	<div role="form">
+		<div class="radio">
+			<label> <input type="radio" name="faq_option_answer_spam"
+				id="faq_option_answer_spam1" value="SPAM" checked=""> Có tính chất
+				phá hoại, quảng cáo...
+			</label>
+		</div>
+		<div class="radio">
+			<label> <input type="radio" name="faq_option_answer_spam"
+				id="faq_option_answer_spam2" value="OFFENSIVE">Xúc phạm, lăng mạng
+				hoặc không thích câu hỏi này
+			</label>
+		</div>
+		<div class="radio">
+			<label> <input type="radio" name="faq_option_answer_spam"
+				id="faq_option_answer_spam2" value="NOT_ANSWER"><strong>Không phải
+					là một câu trả lời</strong><br> <small>Được đăng tại câu trả lời
+					nhưng lại không có tính chất trả lời cho câu hỏi trên, nó cần được
+					sửa đổi hoặc xóa bỏ.</small>
+			</label>
+		</div>
+		<div class="radio">
+			<label> <input type="radio" name="faq_option_answer_spam"
+				id="faq_option_answer_spam2" value="SHOULD_CLOSED">Nên bị đóng vì
+				một số lý do nào đó
+			</label>
+		</div>
+		<div class="radio">
+			<label> <input type="radio" name="faq_option_answer_spam"
+				id="faq_option_answer_spam2" value="LOW_QUALITY">Chất lượng rất thấp
+			</label>
+		</div>
+		<div class="radio">
+			<label> <input type="radio" name="faq_option_answer_spam"
+				id="faq_option_answer_spam2" value="OTHER">Lý do khác
+			</label>
+		</div>
+		<button class="faq_btn_answer_spam btn btn-primary"
+			question="<?php echo $questionID;?>" answer="<?php echo $answerID;?>">Gửi</button>
+	</div>
+</div>
+
+<?php
+
+	}
+	}else {?>
+<div class="alert alert-danger">
+	<strong>Điểm câu hỏi!</strong>yêu cầu 15đ để báo vi phạm <br> <a
+		href="http://123hoidap.vn/support/scoring-system">Xen thêm điểm số&cấp
+		bậc</a> <br>
+</div>
+<?php if(!$isAllowed){?>
+<h5>Bạn cần đăng nhập trước!</h5>
+<div>
+	<a class="btn btn-default btn-sm" href="/user/login" role="button">Đăng
+		nhập</a>
+</div>
+<?php }?>
+<?php }?>
+<script type="text/javascript">
+$(".faq_post_time_span").text(function(index, text) {
+
+	   var datatime=parseInt($(this).attr('post-time'));
+	   $(this).html('<small>'+moment( new Date(datatime)).fromNow()+"</small>");
+
+});
+</script>

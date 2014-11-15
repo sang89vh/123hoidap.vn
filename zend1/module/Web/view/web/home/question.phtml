@@ -1,0 +1,73 @@
+<?php
+
+use FAQ\FAQCommon\Appcfg;
+use FAQ\FAQCommon\Authcfg;
+$this->headScript ()->prependFile ( $this->basePath () . '/js/home/question.js' )->prependFile ( $this->basePath () . '/js/question/common_question.js' )->prependFile ( $this->basePath () . '/js/question/list_question.js' )->appendFile ( $this->basePath () . '/js/bsa.js' )->appendFile ( $this->basePath () . '/js/bsa_script.js' );
+$this->headLink ()
+->prependStylesheet ( $this->basePath () . '/css/question/index.css' )
+->prependStylesheet ( $this->basePath () . '/css/home/index.css' );
+;
+?>
+<script type="text/javascript">
+var subject_select=null;
+var faq_url_paging="<?php echo $this->basepath("/home/question");?>";
+var totalLoad=0;
+var step= <?php echo Appcfg::$question_paging_size; ?>;
+var faq_from_paging=totalLoad*step;
+var faq_to_paging=(totalLoad+1)*step;
+var faq_data_paging={from:faq_from_paging,
+		            to:faq_to_paging};
+
+var totalRow=<?php echo $totalDocument?>;
+var subject_select=null;
+var type_search=0;
+var user=null;
+</script>
+<div class="faq_content">
+<?php if($privilegeByPoint||$role==Authcfg::GUEST):?>
+	<div id="faq_ask_now" class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+		<div class="form-inline" role="form">
+			<div class="form-group col-lg-10 col-md-10 col-sm-12 col-xs-12 pull-left">
+					<input type="text" class="form-control" id="faq_question_title"
+						placeholder="Bạn thắc mắc điều gì...">
+			</div>
+			<div class="col-lg-2 col-md-2 col-sm-12 col-xs-12 pull-right">
+				<button id="faq_btn_ask_now"type="button" class="btn btn-warning">Hỏi</button>
+			</div>
+		</div>
+
+	</div>
+	<div id="faq_ask_now_full" class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+    	<?php echo $this->partial("/web/question/ask-now.phtml");?>
+	</div>
+<?php endif;?>
+	<div id="faq_wrap_home_detail_header">
+
+		<div class="dropdown pull-right" id="faq_wrap_home_detail_option">
+			<a id="dLabel" role="button" data-toggle="dropdown" data-target="#"
+				href="#"> Chọn chủ đề <span class="caret"></span>
+			</a>
+			<ul id="faq_question_index_options" class="dropdown-menu" role="menu"
+				aria-labelledby="dLabel">
+
+				<li value='-1'><a href="#">Tất cả các chủ đề</a></li>
+                    <?php foreach ($list_subject as $sub):?>
+                <li value='<?php echo $sub['_id']->__toString(); ?>'><a
+					href='# <?php echo $sub['title']; ?>'><?php echo $sub['title']; ?></a></li>
+                    <?php endforeach;?>
+          </ul>
+		</div>
+	</div>
+<?php echo $this->partial("/web/home/top-question.phtml");?>
+
+<div id="faq_postswrapper">
+    <?php echo  $this->partial('/web/question/question-list.phtml');?>
+</div>
+	<div id="faq_loadmoreajaxloader" style="display: none;">
+		<div class='faq_container'>
+			<center>
+				<img src='<?php echo $this->basePath("/images/ajax-loader.gif")?>'>
+
+		</div>
+	</div>
+</div>

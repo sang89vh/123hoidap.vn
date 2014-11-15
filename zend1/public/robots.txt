@@ -1,0 +1,88 @@
+User-agent: *
+Allow: /
+Allow: /media/download-file/
+Allow: /media/get-media-image/
+Allow: /media/get-image/
+Disallow: /admin/
+Disallow: /web/
+Disallow: /answer/
+Disallow: /tour/
+
+
+
+
+Disallow: /comment/
+
+Disallow: /home/chart-answer/
+Disallow: /home/index/
+Disallow: /home/question/
+Disallow: /home/search/
+Disallow: /home/search-form/
+Disallow: /home/top-hashtag/
+Disallow: /home/top-member/
+Disallow: /home/top-question-hashtag/
+Disallow: /home/top-question-relationship/
+Disallow: /home/top-subject/
+
+Disallow: /media/add-media/
+Disallow: /media/avatar/
+Disallow: /media/create-directory/
+Disallow: /media/image-file/
+Disallow: /media/image-link/
+Disallow: /media/index/
+Disallow: /media/media-file/
+Disallow: /media/nav-media/
+Disallow: /media/read-image-media/
+Disallow: /media/read-video-thumbnail/
+Disallow: /media/update-media/
+Disallow: /media/upload-file/
+Disallow: /media/video-file/
+Disallow: /media/video-link/
+
+Disallow: /member/action-member/
+Disallow: /member/list-member/
+Disallow: /member/overview/
+
+Disallow: /message/
+
+Disallow: /question/add-share/
+Disallow: /question/askme-list/
+Disallow: /question/chart-question/
+Disallow: /question/close/
+Disallow: /question/close-list/
+Disallow: /question/content-question/
+Disallow: /question/create/
+Disallow: /question/delete/
+Disallow: /question/draft/
+Disallow: /question/finish-question/
+Disallow: /question/follow/
+Disallow: /question/follow-list/
+Disallow: /question/index/
+Disallow: /question/member-follow/
+Disallow: /question/member-share/
+Disallow: /question/member-spam/
+Disallow: /question/open-list/
+Disallow: /question/overview/
+Disallow: /question/premember-answer/
+Disallow: /question/premember-follow/
+Disallow: /question/premember-share/
+Disallow: /question/premember-spam/
+Disallow: /question/save-question/
+Disallow: /question/select-subject/
+Disallow: /question/share/
+Disallow: /question/spam/
+Disallow: /question/spam-list/
+Disallow: /question/unfollow/
+Disallow: /question/unspam/
+Disallow: /question/active-version/
+
+Disallow: /search/
+
+Disallow: /subject/action-subject/
+Disallow: /subject/list-subject/
+Disallow: /subject/overview/
+Disallow: /subject/question/
+
+Disallow: /user/
+
+

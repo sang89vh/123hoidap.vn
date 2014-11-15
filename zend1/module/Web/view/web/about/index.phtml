@@ -1,0 +1,22 @@
+<?php
+
+// add titile
+$this->headtitle("Giới thiệu về 123hoidap.vn");
+// setting meta description
+$this->placeholder('description')->append("Giới thiệu về 123hoidap.vn là gì? Mục đích, ý nghĩa của hệ thống hỏi đáp, chia sẻ bài viết hướng dẫn chuyên sâu");
+
+?>
+<div class="faq_content">
+<?php
+/* @var $new \FAQ\FAQEntity\News */
+foreach ($news as $key => $new) {
+  $title=$new->getTitle();
+  $content=$new->getContent();
+?>
+<h1 style="text-align: center;"><?php echo $title;?></h1>
+<p>
+<?php echo $content;?>
+</p>
+<?php }?>
+</div>
+

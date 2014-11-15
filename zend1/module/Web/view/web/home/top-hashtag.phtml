@@ -1,0 +1,39 @@
+<div class="panel-heading">
+<h4 class="panel-title">
+	Tag phổ biến
+</h4>
+</div>
+<div class="block top-hashtag" id="faq_top_hashtag">
+	<ul class="tags">
+
+
+   <?php
+/* @var $tag \FAQ\FAQEntity\KeyWord */
+foreach ($this->tags as $keytag => $tag) {
+    $keys=$tag->getKey();
+    foreach ($keys as $keyw => $key) {
+if(strlen($key)<20){
+//remove title  question
+    	$hashtag = urlencode($key);
+
+
+
+    ?>
+
+    	 <li><a href="<?php echo $this->basepath("/home/search?q=".$hashtag)?>"><?php
+    echo $key;
+    ?></a></li>
+
+	<?php
+	}
+	 }
+}
+
+?>
+</ul>
+</div>
+<?php
+
+// echo $this->right['name'];
+
+?>

@@ -1,0 +1,140 @@
+<?php
+use FAQ\FAQCommon\Util;
+
+echo $error;
+
+?>
+<?php
+
+/* @var $reply \FAQ\FAQEntity\Reply */
+// var_dump($reply);
+$replyn_id = $reply->getId ();
+$replyn_content = $reply->getContent ();
+$userCreateBy = $reply->getCreateBy ();
+$userID = $userCreateBy->getId ();
+$replyn_user_name = $userCreateBy->getFirstName () . ' ' . $userCreateBy->getLastName ();
+$replyn_userId = $userCreateBy->getId ();
+$replyn_date = $reply->getDateUpdated ();
+$avatar = $userCreateBy->getAvatar ();
+$reply_user_avatarId = $avatar->getId ();
+
+$contentType = $avatar->getContentType ();
+
+$extentionFile = Util::getTypeFile ( $contentType );
+$titleFileSeo = Util::convertUrlFileName ( $replyn_user_name, $extentionFile );
+// var_dump($isReply);
+$isEstablishedUser=false;
+$isShowVoteBest=false;
+?>
+<?php if($isReply):?>
+<li class="faq_feekback  media <?php echo $type=="COMMENT"?"comment_level2":"comment_level3";?>"
+	id="<?php echo $replyn_id;?>">
+	<div class="clearfix">
+		<a
+			href="/member/profile/<?php echo $userID; ?>/<?php echo Util::getUserNameSeo($userCreateBy);?>"
+			class="postActor"> <img class=" avatar img-circle faq_img_top_member"
+			user="<?php echo $replyn_userId; ?>"
+			style="-webkit-user-select: none"
+			src="/media/get-image/images/<?php echo $reply_user_avatarId."/".$titleFileSeo; ?>" />
+
+		</a>
+		<div class="faq_sub_reply media">
+			<div>
+
+				<a class="profileName   media-heading" target="_blank">
+			<?php echo $replyn_user_name; ?>
+		</a> <span class="text-muted  faq_post_time pull-right"
+					post-time="<?php echo $replyn_date->sec * 1000;?>"></span>
+				<div class=" fsm">
+					<div class="postText  media-body">
+				<?php echo $replyn_content; ?>
+			</div>
+					<div class="stat_elem">
+						<div class="action_links fsm">
+						<?php if($type=="COMMENT"):?>
+							<a role="button" class="faq_btn_reply_comment"
+								faq-data-comment="<?php echo "REPLY1+,".$replyn_id?>">Phản hồi</a>
+						<?php endif;?>
+						</div>
+					</div>
+				</div>
+			</div>
+			<div class="postReplies"></div>
+		</div>
+	</div>
+</li>
+<?php else :?>
+<ul>
+	<!------------------------------ Level 1 (Danh sach comment)-------------------------->
+	<li class="faq_feekback  media id="<?php echo $replyn_id;?>">
+		<div class="clearfix">
+			<div class="faq_box_like_dislike_answer pull-left ">
+				<div class="col-md-12 " title="câu trả lời dễ hiểu, hữu ích">
+					<span value='<?php echo $replyn_id;?>' active='0'
+						class="faq_like_answer faq-lagre-icon glyphicon glyphicon-thumbs-up"></span>
+				</div>
+				<div class="col-md-12" title="Tổng điểm vote là: 0">
+                         <?php if($isEstablishedUser){?>
+                            <span value='<?php echo $replyn_id;?>'
+						id="faq_total_point_like_answer" class="label label-primary">+0</span>
+					<span value='<?php echo $replyn_id;?>'
+						id="faq_total_point_dislike_answer" class="label label-danger">-0</span>
+                            <?php }else{?>
+
+                            <span value='<?php echo $replyn_id;?>'
+						class="faq_total_point_answer label label-default">0</span>
+
+                          <?php }?>
+                          </div>
+				<div class="col-md-12 " title="câu trả lời khó hiểu, không hữ ích">
+					<span value='<?php echo $replyn_id;?>' active='0'
+						class="faq_dislike_answer faq-lagre-icon glyphicon glyphicon-thumbs-down"></span>
+				</div>
+				<div class="col-md-12 " title="chọn câu trả lời tốt nhất">
+                         <?php if($isShowVoteBest){?>
+                            <span value='<?php echo $replyn_id;?>'
+						class="faq_is_best_answer faq-lagre-icon glyphicon glyphicon-ok"
+						isbest="false"></span>
+                         <?php }?>
+                         </div>
+			</div>
+			<a
+				href="/member/profile/<?php echo $userID; ?>/<?php echo Util::getUserNameSeo($userCreateBy);?>"
+				class="postActor"> <img
+				class=" avatar img-circle faq_img_top_member"
+				user="<?php echo $replyn_userId; ?>"
+				style="-webkit-user-select: none"
+				src="/media/get-image/images/<?php echo $reply_user_avatarId."/".$titleFileSeo; ?>" />
+
+			</a>
+			<div class="faq_sub_reply media">
+				<div>
+					<a class="profileName   media-heading" target="_blank">
+			<?php echo $replyn_user_name; ?>
+		</a> <span class="text-muted  faq_post_time pull-right"
+						post-time="<?php
+
+echo $replyn_date->sec * 1000;
+	?>"></span> <span class="text-muted  faq_total_like_answer pull-right"><small>--0
+							không thích--</small></span> <span
+						class="text-muted  faq_total_like_answer pull-right"><small>0
+							thích</small></span>
+					<div class=" fsm">
+						<div class="postText  media-body">
+				<?php echo $replyn_content; ?>
+			</div>
+						<div class="stat_elem">
+							<div class="action_links fsm">
+								<a role="button" class="faq_btn_reply_comment faq_display_none"
+									faq-data-comment="<?php echo "REPLY1+,".$replyn_id?>">Phản hồi</a>
+							</div>
+						</div>
+					</div>
+				</div>
+				<div class="postReplies"></div>
+			</div>
+		</div>
+	</li>
+</ul>
+
+<?php endif;?>

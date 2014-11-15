@@ -1,0 +1,48 @@
+<!-- popup thong tin thanh vien -->
+ <?php
+ use FAQ\FAQCommon\Util;
+ $this->headLink()
+    ->prependStylesheet($this->basePath() . '/css/member_overview.css');
+?>
+
+<!-- Scripts -->
+<div id="faq_content_overview_member" style="width:350px;">
+
+	<table>
+	<tr>
+	<td>
+		<a href="<?php echo $this->basepath("/member/question/$userID/$nameSeo"); ?>" style="text-decoration: none">
+		<img class="faq_img_overview_member"  style="float:left"
+			style="-webkit-user-select: none"
+			src="<?php echo $this->basepath("/media/get-image/images/$imageID/$titleFileSeo")?>">
+		<b class="faq_fullname_member"><?php echo $this->name;?></b>&nbsp;&nbsp;&nbsp;
+		<span><img src="/images/icon/Star-icon.png" /><b><?php echo $this->rank;?></b></span>
+		</a>
+	</td>
+	<td>
+		<div class="faq_info_overview">
+			<span><?php echo $this->appellation; ?></span>
+		</div>
+		<div class="faq_info_overview">
+			<i><?php echo $this->totalUserFollow;?> theo dõi</i>
+		</div>
+			<div class="dropdown faq_member_action">
+				<a
+					class="dropdown-toggle btn <?php if($statusFollowCode==2){ echo "btn-success";}else{echo "btn-info";}?>"
+					id="dLabel" role="button" data-toggle="dropdown" data-target="#"
+					><?php echo $currentStatusFollow;?><b class="caret"></b>
+				</a>
+				<ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+					<li role="presentation" class="<?php echo $userID==Util::getIDCurrentUser()?"disabled":"";?>"><a role="menuitem" tabindex="-1" user="<?php echo $userID;?>"
+						action=<?php echo $statusFollowCode;?>><?php echo $statusAction;?></a></li>
+				</ul>
+			</div>
+	</td>
+	</tr>
+	</table>
+</div>
+<script>
+  $(function() {
+	  $('.dropdown-toggle').dropdown();
+  });
+</script>

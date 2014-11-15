@@ -1,0 +1,9 @@
+<ul class="nav nav-pills nav-stacked">
+<?php foreach ($this->container as $page): ?>
+    <li <?php echo $page->isActive()? 'class="active"' : '' ?>>
+
+        <a href="<?php echo $page->getHref(); ?>">
+        <?php echo $page->getLabel(); ?></a>
+    </li>
+<?php endforeach; ?>
+</ul>

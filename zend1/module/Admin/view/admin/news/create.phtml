@@ -1,0 +1,88 @@
+<?php
+use FAQ\FAQCommon\FAQParaConfig;
+?>
+<!-- fancybox -->
+<link href="/css/fancybox/jquery.fancybox.css" media="screen"
+	rel="stylesheet" type="text/css">
+<script type="text/javascript" src="/js/jquery.fancybox.js"></script>
+<script type="text/javascript" src="/js/faq_fancybox.js"></script>
+<style>
+.faq_wrap_link_media_file{
+	display: none;
+}
+</style>
+<div class="col-md-12 faq_wrap_link_media_file">
+
+	<a id="faq_link_media_file"
+		class="fancybox fancybox.iframe btn btn-default btn-xs"
+		href="<?php echo $this->basepath("/media/index");?>">Thư viện
+		Media</a> <input style="display: none" id="faq_media_file" value="" />
+
+
+</div>
+<!-- Scripts -->
+<?php
+ $this->headScript()
+
+    ->appendFile($this->basePath() . '/js/tinymce/tinymce.min.js')
+    ->appendFile($this->basePath() . '/js/tinymce/jquery.tinymce.min.js')
+    ->prependFile($this->basePath() . '/js/faq_edittor.js')
+ ;
+?>
+<h1><a href="/admin/news/index">Trang quản lý</a></h1>
+<?php
+$form = $this->formNews;
+$form->setAttribute('action', $this->url("news", array(
+    "module" => "admin",
+    "action" => "create"
+)));
+$form->prepare();
+echo $this->form()->openTag($form);
+?>
+<div class="form-group" >
+<label>Loại tin</label><br>
+<select name="type">
+  <option value="<?php echo FAQParaConfig::NEWS_TYPE_ABOUT?>">Giới thiệu</option>
+  <option value="<?php echo FAQParaConfig::NEWS_TYPE_COMMUNITY_GUIDELINE?>">Nguyên tắc cộng đồng</option>
+  <option value="<?php echo FAQParaConfig::NEWS_TYPE_HELP?>">Trợ giúp</option>
+  <option value="<?php echo FAQParaConfig::NEWS_TYPE_SCORING_SYSTEM?>">Phương pháp tính điểm</option>
+  <option value="<?php echo FAQParaConfig::NEWS_TYPE_SITEMAP?>">Site map</option>
+  <option value="<?php echo FAQParaConfig::NEWS_TYPE_TERM?>">Điều khoản</option>
+</select>
+</div>
+<div class="form-group">
+            <?php
+            $title = $form->get('title');
+            $title->setValue($titlenews);
+            echo $this->formLabel($title);
+            ?>
+             <p class="text-danger help-block" id="faq_help_title_news"></p>
+            <?php
+            echo $this->forminput($title);
+            ?>
+
+</div>
+<div class="form-group">
+            <?php
+            $content = $form->get('content_news');
+            $content->setValue($contentnews);
+            echo $this->formLabel($content);
+            ?>
+            <p class="text-danger help-block" id="faq_help_content"></p>
+            <?php
+            echo $this->forminput($content);
+            ?>
+
+</div>
+
+            <?php
+            echo $this->formSubmit($form->get('submit'));
+            echo $this->form()->closeTag();
+            ?>
+<script type="text/javascript">
+$(document).ready(function(){
+
+	setTinyEdittor();
+});
+
+</script>

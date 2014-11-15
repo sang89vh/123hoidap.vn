@@ -1,0 +1,32 @@
+<?php use FAQ\FAQCommon\Util;?>
+<div class="panel-heading">
+<h4 class="panel-title">Câu hỏi liên quan</h4>
+</div>
+<div class="block top-hashtag" id="faq_top_hashtag">
+<ul class="list-top-question">
+   <?php
+   $k=0;
+ foreach ($this->questions as $key => $value) {
+ 	$k++;
+ 	$questionRelationshipID=$value->getId();
+ 	$relationshipTitle=$value->getTitle();
+ 	$relationshipTitle=$this->escapehtml($relationshipTitle);
+ 	$relationshipTitleShort=mb_substr($relationshipTitle,0,100,'UTF-8')."...";
+
+
+?>
+
+
+	 <li>
+	 <small class="faq_top_header_badge badge pull-left"><?php echo $k;?></small>
+	<a href="<?php echo $this->basepath("/question/detail/".$questionRelationshipID."/".Util::convertUrlSeo($relationshipTitle))?>" title="<?php echo $relationshipTitle;?>"><?php
+	 echo $relationshipTitleShort;
+	 ?></a></li>
+
+	<?php
+}
+
+?>
+</ul>
+</div>
+

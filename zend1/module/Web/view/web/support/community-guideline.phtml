@@ -1,0 +1,22 @@
+<?php
+
+// add titile
+$this->headtitle("Nguyên tắc cộng đồng");
+// setting meta description
+$this->placeholder('description')->append("Nguyên tắc cộng đồng, điều khoản sử dụng trong hệ thống 123hoidap.vn");
+
+?>
+<div class="faq_content">
+<?php
+/* @var $new \FAQ\FAQEntity\News */
+foreach ($news as $key => $new) {
+  $title=$new->getTitle();
+  $content=$new->getContent();
+?>
+<h1 style="text-align: center;"><?php echo $title;?></h1>
+<p>
+<?php echo $content;?>
+</p>
+<?php }?>
+</div>
+

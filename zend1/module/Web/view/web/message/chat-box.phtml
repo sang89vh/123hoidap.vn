@@ -1,0 +1,180 @@
+<?php
+use FAQ\FAQCommon\Util;
+$this->headLink ()->prependStylesheet ( $this->basePath () . '/css/message/more.css' );
+$currentUser = Util::getCurrentUser ();
+$currentUserName = Util::getUserName ( $currentUser );
+// add titile
+$this->headtitle ( "Tin nhắn của " . $currentUserName . " | " . $currentUser->getDateCreated ()->getTimestamp () );
+// setting meta description
+$this->placeholder ( 'description' )->append ( "Tin nhắn từ thành viên 123hoidap.vn tới " . $currentUserName );
+?>
+<script type="text/javascript" src="/js/typeahead.min.js"></script>
+<script type="text/javascript" src="/js/bootbox.js"></script>
+<script type="text/javascript" src="/js/page.js"></script>
+<link rel="stylesheet" href="/css/typeahead.css" type="text/css" />
+<div class="faq_content">
+	<div id="faq_message_detail_header">
+		<ul class="nav nav-tabs" id="faq_message_index_nav">
+			<li class=""><a href="<?php echo $this->basepath("/message");?>">Thông
+					báo</a></li>
+			<li class="active"><a
+				href="<?php echo $this->basepath("/message/chat-box");?>">Tin nhắn</a></li>
+		</ul>
+	</div>
+	<style>
+div.chat-list-user {
+	height: 400px;
+	border: 1px rgba(199, 205, 205, 0.41) solid;
+	padding: 1px;
+	overflow-y: auto;
+}
+
+#chat-users {
+	padding-right: 0px;
+}
+
+div.chat-box-one {
+	height: 400px;
+}
+
+li.user-online {
+	list-style: none;
+	border-top: 1px #EFEFEF solid;
+	border-bottom: 1px #EFEFEF solid;
+	margin-top: 1px;
+}
+
+li.user-online.active {
+	background-color: rgba(4, 132, 188, 0.73);
+}
+
+li.user-online img {
+	width: 30px;
+}
+
+div.chat-box-one-console {
+	height: 125px;
+	border: 1px rgba(220, 226, 220, 0.58) solid;
+}
+
+div.chat-box-one-content {
+	height: 305px;
+	border: 1px rgba(220, 226, 220, 0.58) solid;
+	overflow-y: auto;
+}
+
+#chat-box-one-cosole-msg {
+	margin-top: 8px;
+}
+
+span.unread {
+	color: red;
+	margin-left: 20px;
+}
+</style>
+	<div class="row">
+		<div class="col-lg-4">
+			<input type="text" placeholder="Tìm bạn chat" id="chat-search-user"
+				class="typeahead"
+				style="margin-bottom: 4px; border: 1px rgb(226, 236, 226) solid; width: 245px" />
+		</div>
+		<div class="col-lg-8" id="chat-box-one-header">
+			<div class="col-lg-5" id="chat-box-one-header-name">
+				<span class="label label-info"></span>
+			</div>
+			<div class="col-lg-7" id="chat-box-one-header-control">
+				<div class="btn-group pull-right">
+					<button type="button" class="btn btn-default dropdown-toggle btn-xs"
+						data-toggle="dropdown">
+						Tùy chọn&nbsp;<span class="caret"></span>
+					</button>
+					<ul class="dropdown-menu" role="menu">
+						<li><a href="#">Thêm user</a></li>
+						<li><a href="#">Tạo nhóm mới</a></li>
+						<li><a href="#">Xóa nhóm</a></li>
+					</ul>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="col-lg-4 chat-list-user">
+		<div id="chat-users" class="col-lg-12"
+			style="height: 100%; overflow-y: auto"></div>
+	</div>
+	<div class="col-lg-8 chat-box-one" id="chat-box-one"
+		room-id="box-no-room">
+		<div class="col-lg-12" id="chat-box-one-header"></div>
+		<div class="col-lg-12 chat-box-one-content" id="chat-box-one-content"></div>
+		<div class="col-lg-12 chat-box-one-console">
+		<div class="col-lg-12">
+			<textarea class="form-control" rows="2" id="chat-box-one-cosole-msg"></textarea>
+		</div>
+		<br>
+			<div class="col-lg-12">
+			<div class="checkbox col-lg-5">
+					<label> <input type="checkbox" value=""> Bấn Enter để gửi
+					</label>
+				</div>
+				<div class="col-lg-7 faq_display_none">
+					<button type="button">file</button>
+					<button type="button">photos</button>
+				</div>
+
+			</div>
+		</div>
+	</div>
+</div>
+<script>
+	<?php if($this->room_id){?>
+		var chat_room_id = '<?php echo $this->room_id;?>';
+	<?php }else{ ?>
+		var chat_room_id = null;
+	<?php }?>
+	$('#chat-search-user').typeahead({
+               	name: 'users',
+                limit: 7,
+                remote: '/search/member-by-keyword?q=%QUERY'
+              }).bind('typeahead:selected', function(evt, obj, name) {
+                  var user_id = obj.data;
+                  $('#chat-search-user').val('');
+                  $('#chat-box-one-content').attr('num_msg',0);
+                  $('#chat-box-one-content').attr('scroll-type','bottom');
+                  // create box
+            	  chat_utils.socket.get('/chat/createRoom', {userid: user_id}, function(res){
+            			if(res){
+                			console.log(res);
+            				chat_utils.user_id = res.user;
+            				if(res.room_id){
+            					var room_id = res.room_id;
+            					var another_user = [user_id];
+            					var name = res.room_name;
+            					var type = res.type;
+            					// add room
+            					chat_utils.addRoom(type, room_id, user_id, name);
+								// create box
+            					room = chat_utils.createBox(0, room_id, another_user);
+
+            					//
+            				}else{
+            					// refresh list box - try one.
+            					chat_utils.getListRoom();
+            				}
+            			}
+            		});
+              });
+	// scroll top handler. load more
+	$('#chat-box-one-content').scroll(function(evt){
+		if(evt.target.scrollTop ==0){
+			var room_id = $('#chat-box-one').attr('room-id');
+			if(room_id){
+				chat_utils.readMessage(room_id);
+			}
+			$(this).attr('scroll-type', 'top');
+		}else if($('#chat-box-one-content')[0].scrollHeight== evt.target.scrollTop + evt.target.clientHeight ){
+			$(this).attr('scroll-type','bottom');
+		} else {
+			$(this).attr('scroll-type','auto');
+		}
+	 });
+
+</script>

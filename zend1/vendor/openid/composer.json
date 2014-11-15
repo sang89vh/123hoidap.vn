@@ -1,0 +1,31 @@
+{
+    "name": "zendframework/zendopenid",
+    "description": "provides a simple API for building OpenID-enabled sites and identity providers",
+    "type": "library",
+    "license": "BSD-3-Clause",
+    "keywords": [
+        "zf2",
+        "openid"
+    ],
+    "homepage": "http://packages.zendframework.com/",
+    "autoload": {
+        "psr-0": {
+            "ZendOpenId": "library/"
+        }
+    },
+    "repositories": [
+        {
+            "type": "composer",
+            "url": "http://packages.zendframework.com/"
+        }
+    ],
+    "require": {
+        "php": ">=5.3.3",
+        "zendframework/zend-stdlib": ">=2.0.0"
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "2.0.x-dev"
+        }
+    }
+}

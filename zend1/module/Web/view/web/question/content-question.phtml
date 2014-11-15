@@ -1,0 +1,164 @@
+
+<!-- common -->
+<script type="text/javascript" src="/js/faq_edittor.js"></script>
+<script type="text/javascript" src="/js/typeahead.min.js"></script>
+<script type="text/javascript" src="/js/angular.min.js"></script>
+<script type="text/javascript" src="/js/bootstrap-tagsinput.js"></script>
+<script type="text/javascript" src="/js/bootstrap-tagsinput-angular.js"></script>
+
+<div id="left-content"   class="col-md-9  col-lg-9 col-sm-9 col-xs-12 faq_padding_left_none faq_padding_right_none"  >
+<?php echo $error;?>
+<!-- manager media file -->
+<div class="col-md-12">
+
+		<a id="faq_link_media_file"
+			class="fancybox fancybox.iframe btn btn-default btn-xs"
+			href="<?php echo $this->basepath("/media/index");?>">Thư viện
+			Media</a> <input style="display: none" id="faq_media_file" value="" />
+
+
+	</div>
+<?php
+$form = $this->form;
+$form->setAttribute('action', $this->url("question", array(
+    "module" => "web",
+    "action" => "content-question"
+)));
+$form->prepare();
+echo $this->form()->openTag($form);
+?>
+<div class="form-group">
+            <?php
+            $title = $form->get('title');
+            if($titleQuestion!="Chưa có tiêu đề"){
+            $title->setValue($titleQuestion);
+            }
+
+            ?>
+<label>Tiêu đề câu hỏi
+
+		<small class="faq_content_question_tooltip" data-toggle="tooltip"
+			title="" data-original-title='<p><b>Tiêu đề của câu hỏi</b><br>-
+			Chứa tối thiểu 20 ký tự<br>- Chứa tối đa 120 ký tự
+			</p>'> (hướng dẫn) </small>
+</label>
+<div class="col-md-12">
+		<p class="text-danger pull-left help-block"
+			id="faq_help_title"></p>
+</div>
+
+            <?php
+            echo $this->forminput($title);
+            ?>
+
+</div>
+<div class="form-group">
+            <?php
+            $kw = $form->get('key_word');
+
+            ?>
+
+<label>Từ khóa của câu hỏi
+<small class="faq_content_question_tooltip" data-toggle="tooltip"
+				title="" data-original-title='<p><b>Từ khóa cho câu hỏit</b><br>-
+				Từ khóa là những từ, cụm từ của câu hỏi có ý nghĩa quan trọng cho
+				câu hỏi. Từ khóa thường là danh từ chung, danh từ riêng mà câu hỏi
+				muốn nói đến<br>- Ví dụ: câu "Tìm hiểu về Việt Nam" thì từ khóa là
+				"Việt Nam" <br> <b>Hướng dẫn sử dụng</b><br>- Điền từ khóa của bài
+				viết và bấm phím Enter để hoàn thành mỗi từ khóa
+				</p>'> (hướng dẫn) </small>
+</label>
+<div class="col-md-12">
+<p class="text-danger help-block" id="faq_help_tag" ></p>
+</div>
+
+            <?php
+            echo $this->forminput($kw);
+            ?>
+
+
+
+
+</div>
+<div class="form-group">
+            <?php
+            $content = $form->get('content_question');
+            $content->setValue($contentQuestion);
+            ?>
+
+<label>Nội dung câu hỏi
+
+			<small class="faq_content_question_tooltip" data-toggle="tooltip"
+				title="" data-original-title='<p><b>Nội dung câu hỏi</b><br>- chứa
+				tối thiểu 50 ký tự<br>- câu hỏi nên được trình bày rõ ràng, sinh
+				động, tham khảo cách trình bày tại
+				http://123hoidap.vn/support/help
+				</p>'> (hướng dẫn) </small>
+
+</label>
+		<div class="col-md-12">
+			<p class="text-danger help-block"  id="faq_help_content"></p>
+		</div>
+
+            <?php
+            echo $this->forminput($content);
+            ?>
+
+
+</div>
+
+            <?php
+            echo $this->formSubmit($form->get('submit'));
+            echo $this->form()->closeTag();
+            ?>
+
+
+
+</div>
+<div class="visible-md  visible-lg visible-sm" id="right-content" >
+<div id="faq-tearm">
+
+  <?php
+    echo $this->partial('/web/home/top-tearm.phtml');
+    ?>
+</div>
+
+<div id="top-tag">
+    <?php
+    echo $this->partial('/web/home/top-tutorial-tag.phtml');
+    ?>
+</div>
+</div>
+
+
+
+<script type="text/javascript">
+
+$(".faq_content_question_tooltip").tooltip({
+	'html':'true',
+	'placement':'bottom'
+		});
+
+$(document).ready(function(){
+// 	$('#faq_txt_key_word').tagsinput({
+// 		  typeahead: {
+// 		    source:function(query) {
+// // 		        return $.get('http://someservice.com');
+// 		        return ['ađ', 'bđ', 'cđ', 'dđ', 'eđ'];
+// 		    },
+// 		    freeInput: false
+// 		  }
+// 		});
+	$("input,select,textarea").not("[type=submit]").jqBootstrapValidation();
+});
+// suggestion question
+$('div.bootstrap-tagsinput input').autocomplete({
+    serviceUrl: basePath+'/search/find-tag?title=false&user=false',
+    onSelect: function (suggestion) {
+    	var q=suggestion.value;
+    	$(this).val(q);
+    }
+});
+
+</script>
+

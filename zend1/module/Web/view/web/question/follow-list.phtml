@@ -1,0 +1,23 @@
+<?php
+use FAQ\FAQCommon\Appcfg;
+?>
+<script type="text/javascript">
+var faq_url_paging="<?php echo $this->basepath("/question/follow-list")?>";
+totalLoad++;
+var step= <?php echo Appcfg::$question_paging_size; ?>;
+var faq_from_paging=totalLoad*step;
+var faq_to_paging=(totalLoad+1)*step;
+var faq_data_paging="from="+faq_from_paging+"&to="+faq_to_paging;
+var totalRow=<?php echo $totalDocument?>;
+var subject_select=null;
+var user=null;
+</script>
+<div id="faq_postswrapper">
+    <?php echo  $this->partial('/web/question/question-list.phtml');?>
+</div>
+<div id="faq_loadmoreajaxloader" style="display: none;">
+	<div class='faq_container'>
+		<center><img 
+			src='<?php echo $this->basePath("/images/ajax-loader.gif")?>'>
+	</div>
+</div>

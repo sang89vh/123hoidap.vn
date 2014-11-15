@@ -1,0 +1,23 @@
+<link rel="stylesheet" type="text/css" href="/js/latex/equation-embed.css" />
+<script type="text/javascript" src="/js/latex/eq_config.js"></script>
+<script type="text/javascript" src="/js/latex/eq_editor-lite-15.js"></script>
+
+<!DOCTYPE html><html lang="vi_VN">
+<head><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<title>Công cụ soạn thảo latex | 123hoidap.vn</title>
+<style type="text/css">
+#EqnEditor { text-align:left; }
+</style>
+</head>
+<span>Coppy đoạn latex sinh từ công cụ và thêm ký tự $$ vào trước và sau đoạn latex đó</span>
+<span>Ví dụ: "\int_{1}^{n}" thêm ký tự $$ thành "$$\int_{1}^{n}$$" kết quả hiển thị <img alt="ký tư latex" src="/images/faq-latex.PNG"></span>
+<div id="editor"></div>
+<textarea id="testbox" rows="3" cols="40"></textarea>
+<img id="equation" />
+
+<script type="text/javascript">
+EqEditor.embed('editor','');
+var a=new EqTextArea('equation', 'testbox');
+EqEditor.add(a,false);
+</script>

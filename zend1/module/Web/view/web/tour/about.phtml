@@ -1,0 +1,441 @@
+
+<?php
+use FAQ\FAQCommon\Util;
+?>
+<style type="text/css">
+#chuyengia .row{
+	margin-bottom: 15px!important;
+}
+.faq_search_subject, .faq_header_subject{
+	display: none!important;
+}
+html,body {
+	height: 100%;
+	width: 100%;
+}
+
+/* fix bs3 horizontal scrollbar bug */
+.row {
+	margin: 0;
+	padding: 0
+}
+
+h1 {
+	font-size: 35px;
+}
+
+img.grayscale {
+	filter:
+		url("data:image/svg+xml;utf8,<svg xmlns=\'http://www.w3.org/2000/svg\'><filter id=\'grayscale\'><feColorMatrix type=\'matrix\' values=\'0.3333 0.3333 0.3333 0 0 0.3333 0.3333 0.3333 0 0 0.3333 0.3333 0.3333 0 0 0 0 0 1 0\'/></filter></svg>#grayscale");
+	/* Firefox 10+, Firefox on Android */
+	filter: gray; /* IE6-9 */
+	-webkit-filter: grayscale(100%);
+	/* Chrome 19+, Safari 6+, Safari 6+ iOS */
+}
+
+.icon-bar {
+	background-color: #fff;
+}
+
+.scroll-down {
+	position: fixed;
+	bottom: 20%;
+	right: 0%;
+	color: #f9f9f9;
+}
+
+.scroll-down i {
+	color: #2EDBC0;
+	font-size: 35px;
+}
+
+.header .btn-lg {
+	font-size: 28px;
+	border-color: #eeeeee;
+	padding: 15px;
+	background-color: transparent;
+	color: #ffffff;
+}
+
+.header .btn-lg:hover {
+	background-color: #eeeeee;
+	color: #777777;
+}
+
+.navbar a {
+	color: #fff;
+}
+
+.navbar-bold.affix {
+	background-color: #1abc9c;
+}
+
+.navbar-bold {
+	background-color: #1abc9c;
+	font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
+
+.navbar-bold li a:hover,.navbar-bold li.active {
+	background-color: #2EDBC0;
+}
+
+.vert {
+	vertical-align: middle;
+	width: 100%;
+	padding-top: 4%;
+}
+
+.header h1 {
+	font-size: 80px;
+	-webkit-text-stroke: 1px rgba(0, 0, 0, 0.1);
+	color: #431a6d;
+	color: #fff;
+	margin-left: -5px;
+	margin-bottom: 5px;
+	font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
+
+.header .lead {
+	color: #eeeeee;
+	font-size: 25px;
+}
+
+.header {
+	height:auto;
+	float:left;
+	margin-bottom:15px!important;
+	background: #1abc9c
+		url('/images/pt_squares_lg.png') repeat
+		center center fixed;
+}
+
+.blurb {
+	padding: 120px 0;
+	background-color: #fefefe;
+}
+
+.blurb .panel {
+	background-color: transparent;
+}
+
+.bright {
+	background: #7fbbda url('/images/bg_suburb.jpg') no-repeat center center
+		fixed;
+	color: #fff;
+}
+
+.featurette {
+	background: #545455;
+	padding: 50px 0;
+	color: #ffffff;
+}
+
+.featurette-item {
+	margin-bottom: 15px;
+}
+
+.featurette-item>div {
+	border: 3px solid #ffffff;
+	border-radius: 50%;
+	display: inline-block;
+	font-size: 56px;
+	width: 140px;
+	height: 140px;
+	line-height: 136px;
+	vertical-align: middle;
+	text-align: center;
+}
+
+.featurette-item>div:hover {
+	font-size: 68px;
+}
+
+.callout {
+	color: #ffffff;
+	padding-top: 7%;
+	height:auto;
+	float:left;
+	width: 100%;
+	background: url('/images/bg_suburb.jpg') no-repeat center center fixed;
+	-webkit-background-size: cover;
+	-moz-background-size: cover;
+	-o-background-size: cover;
+	background-size: cover;
+}
+
+.gallery {
+	padding: 50px 0;
+}
+
+.call-to-action {
+	background: #eeeeee;
+	padding: 50px 0;
+}
+
+.call-to-action .btn {
+	margin: 10px;
+}
+
+footer {
+	padding: 100px 0;
+}
+
+.faq_btn_explorer {
+	border: 3px solid white;
+}
+</style>
+</head>
+
+
+<body>
+
+
+	<div class="navbar navbar-fixed-top navbar-bold" data-spy="affix"
+		data-offset-top="1000">
+		<div class="container">
+			<div class="navbar-header">
+				<a href="/" class="navbar-brand">Trang chủ</a> <a
+					class="navbar-toggle" data-toggle="collapse"
+					data-target=".navbar-collapse"> <span class="icon-bar"></span> <span
+					class="icon-bar"></span> <span class="icon-bar"></span>
+				</a>
+			</div>
+			<div class="navbar-collapse collapse" id="navbar">
+				<ul class="nav navbar-nav">
+					<li><a href="#gioithieu">Giới thiệu</a></li>
+					<li><a href="#moibanbe">Mời bạn bè</a></li>
+					<li><a href="#chudequantam">Chủ đề quan tâm</a></li>
+					<li><a href="#chuyengia">Chuyên gia</a></li>
+					<li><a href="#doitac">Đối tác</a></li>
+				</ul>
+			</div>
+		</div>
+	</div>
+
+	<div class="header vert">
+		<div class="container">
+
+			<h1>Cộng đồng lập trình Việt</h1>
+			<p class="lead">Mọi câu hỏi đều có câu trả lời.</p>
+			<div>&nbsp;</div>
+			<a href="#gioithieu" class="faq_btn_explorer btn btn-default btn-lg">Khám
+				phá ngay</a>
+		</div>
+	</div>
+
+	<div id="gioithieu" class="blurb vert">
+		<div class="container">
+			<div class="row">
+				<div class="col-md-12 text-center">
+					<h1>Lời giới thiệu</h1>
+				</div>
+				<div class="col-md-12 text-left">
+					<p class="lead">Với mong muốn cung cấp một hệ thống giúp cộng đồng
+						lập trình viên Việt Nam trao đổi , chia sẻ những khó khăn, thắc
+						mắc trong quá trình làm việc, học tập của mình. Chúng tôi mong
+						muốn kết nối người có kiến thức với người cần kiến thức, giúp mọi
+						người tìm được câu trả lời nhanh nhất, chính xác nhất.</p>
+					<p class="lead">Và cuối cùng hệ thống được vận hành bỏi chính sự
+						đóng góp của bạn và các thành viên khác, vì một cộng đồng lớn mạnh
+						và chuyên nghiệp hãy cùng chúng tôi xây dựng 123hoidap.vn
+						ngay bây giờ.</p>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="featurette vert" id="moibanbe">
+		<div class="container">
+			<div class="row">
+				<div class="col-md-12 text-center">
+					<h1>Mời bạn bè tham gia cùng</h1>
+				</div>
+			</div>
+			<div class="row">
+				<div class="col-md-2 col-md-offset-2 text-center">
+					<div class="featurette-item">
+						<div class="icon-rocket">
+						<div class="fb-like" data-href="http://123hoidap.vn/" data-layout="button" data-action="like" data-show-faces="false" data-share="false"></div>
+						</div>
+						<h4>Thích</h4>
+						<p>123hoidap.vn trên Facebook.</p>
+					</div>
+				</div>
+				<div class="col-md-2 text-center">
+					<div class="featurette-item">
+						<div class="icon-magnet">
+						<div class="fb-share-button" data-href="http://123hoidap.vn/" data-type="button"></div>
+						</div>
+						<h4>Chia sẻ</h4>
+						<p>với bạn bè trên Facebook.</p>
+					</div>
+				</div>
+				<div class="col-md-2 text-center">
+					<div class="featurette-item">
+						<div class="icon-magnet">
+						<div class="fb-share-button" data-href="http://123hoidap.vn/" data-type="button"></div>
+						</div>
+						<h4>Chia sẻ</h4>
+						<p>với bạn bè trên Google+.</p>
+					</div>
+				</div>
+				<div class="col-md-2 text-center">
+					<div class="featurette-item">
+						<div class="icon-magnet">
+						<div class="fb-share-button" data-href="http://123hoidap.vn/" data-type="button"></div>
+						</div>
+						<h4>Chia sẻ</h4>
+						<p>với bạn bè trên Google+.</p>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="blurb vert" id="chudequantam">
+		<div >
+			<div class="col-md-12 text-center">
+				<h2>Bạn quan tâm chủ đề nào?</h2>
+			</div>
+			<div class="container">
+				<div class="row">
+					<div class="col-md-12">
+						<?php echo $this->partial("/web/subject/index.phtml")?>
+					</div>
+				</div>
+			</div>
+
+		</div>
+	</div>
+
+	<div class="callout vert" id="chuyengia">
+		<div >
+			<div class="col-md-12 text-center">
+				<h2>Danh sách chuyên gia của hệ thống</h2>
+			</div>
+			<div class="col-md-12 text-center">&nbsp;</div>
+			<div class="container">
+				<div class="row">
+				 <?php
+				$i = 6;
+				foreach ( $list_member as $member ) {
+					/* @var $member \FAQ\FAQEntity\User */
+					$memberID = $member->getId ();
+					$avatar = $member->getAvatar ();
+					$imageID = $avatar->getId ();
+
+					$contentType = $avatar->getContentType ();
+					$titleAvatar = $avatar->getName ();
+					$extentionFile = Util::getTypeFile ( $contentType );
+					$titleFileSeo = Util::convertUrlFileName ( $titleAvatar, $extentionFile );
+					?>
+					<div class="col-sm-2">
+						<a
+					href="<?php echo $this->basepath("/member/profile/".$memberID); ?>/<?php echo Util::getUserNameSeo($member);?>">
+
+						<img class="faq_img_overview_member img-circle grayscale"
+							data-toggle="tooltip" data-placement="top" title="<?php echo Util::getUserAppellationText($member)?>"
+							style="-webkit-user-select: none"
+							src="<?php echo $this->basepath("/media/get-image/images/$imageID/$titleFileSeo")?>">
+
+				</a>
+					</div>
+
+                    <?php
+					$i ++;
+					if ($i % 6 == 0) {
+						?>
+        </div>
+	<div class="row">
+        <?php }?>
+     <?php
+				}
+				?>
+
+
+
+				</div>
+			</div>
+		</div>
+	</div>
+	<div id="doitac" class="header vert">
+		<div class="container text-center">
+
+
+			<p class="lead">Đối tác</p>
+			<div class="row">
+			<div class="col-md-2 col-lg-2 col-sm-2 col-xs-12 ">
+			<div class="thumbnail">
+				<img data-toggle="tooltip" data-placement="top" class="faq_partner"
+				title="Công ty Cổ phần Thông tin và Truyền thông Thiên Việt<br/>Địa chỉ: Số 199 Phùng Khoang, Trung Văn, Từ Liêm, Hà Nội<br/>Điện thoại: +84-04-22181939"
+				src="/images/logo/logo_thienviet_jsc.png" />
+			</div>
+			</div>
+			</div>
+
+		</div>
+	</div>
+	<div class="vert">
+		<div class="container">
+			<center>
+				<a href="/" class="faq_btn_explorer btn btn-warning btn-lg">Đến
+					trang chủ</a>
+			</center>
+		</div>
+	</div>
+
+
+
+
+	<footer>
+		<div class="container">
+			<div class="row">
+				<div class="col-md-6 col-md-offset-3 text-center">
+
+					<p>
+
+
+					<center>
+						© <span>Copyright 2013 123hoidap.vn,</span> All rights
+						reserved
+					</center>
+					</p>
+
+
+				</div>
+			</div>
+		</div>
+	</footer>
+
+	<ul class="nav pull-right scroll-down">
+		<li><a href="#" title="Scroll down"><i
+				class="glyphicon glyphicon-chevron-down"></i></a></li>
+	</ul>
+
+
+
+
+	<script type='text/javascript'>
+
+        $(document).ready(function() {
+
+
+/* smooth scrolling for scroll down */
+$('.scroll-down').click(function(){
+  $('body,html').animate({scrollTop:$(window).scrollTop()+800},1000);
+})
+
+/* highlight the top nav as scrolling occurs */
+$('body').scrollspy({ target: '#navbar' });
+
+
+        });
+
+        $('.faq_img_overview_member').tooltip({'html':true});
+        $('.faq_partner').tooltip({'html':true});
+
+        </script>
+
+
+</body>
+</html>

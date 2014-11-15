@@ -1,0 +1,74 @@
+ <?php
+ use FAQ\FAQCommon\FAQParaConfig;
+use FAQ\FAQCommon\Authcfg;
+use FAQ\FAQCommon\Util;
+ ?>
+<script type="text/javascript">
+var TRUSTED_USER = <?php echo Authcfg::TRUSTED_USER?>;
+var PROTECT_QUESTIONS = <?php echo Authcfg::PROTECT_QUESTIONS?>;
+var ACCESS_TO_MODERATOR_TOOLS = <?php echo Authcfg::ACCESS_TO_MODERATOR_TOOLS?>;
+var APPROVE_TAG_WIKI_EDITS = <?php echo Authcfg::APPROVE_TAG_WIKI_EDITS?>;
+var CAST_CLOSE_AND_REOPEN_VOTES = <?php echo Authcfg::CAST_CLOSE_AND_REOPEN_VOTES?>;
+var CREATE_TAG_SYNONYMS = <?php echo Authcfg::CREATE_TAG_SYNONYMS?>;
+var EDIT_QUESTIONS_AND_ANSWERS = <?php echo Authcfg::EDIT_QUESTIONS_AND_ANSWERS?>;
+var CREATE_TAGS = <?php echo Authcfg::CREATE_TAGS?>;
+var CREATE_GALLERY_CHAT_ROOMS = <?php echo Authcfg::CREATE_GALLERY_CHAT_ROOMS?>;
+var ESTABLISHED_USER = <?php echo Authcfg::ESTABLISHED_USER?>;
+var ACCESS_REVIEW_QUEUES = <?php echo Authcfg::ACCESS_REVIEW_QUEUES?>;
+var VIEW_CLOSE_VOTES = <?php echo Authcfg::VIEW_CLOSE_VOTES?>;
+var REDUCE_ADS = <?php echo Authcfg::REDUCE_ADS?>;
+var VOTE_DOWN = <?php echo Authcfg::VOTE_DOWN?>;
+var CREATE_CHAT_ROOMS = <?php echo Authcfg::CREATE_CHAT_ROOMS?>;
+var EDIT_COMMUNITY_WIKI = <?php echo Authcfg::EDIT_COMMUNITY_WIKI?>;
+var SET_BOUNTIES = <?php echo Authcfg::SET_BOUNTIES?>;
+var COMMENT_EVERYWHERE = <?php echo Authcfg::COMMENT_EVERYWHERE?>;
+var TALK_IN_CHAT = <?php echo Authcfg::TALK_IN_CHAT?>;
+var FLAG_POSTS = <?php echo Authcfg::FLAG_POSTS?>;
+var VOTE_UP = <?php echo Authcfg::VOTE_UP?>;
+var CREATE_WIKI_POSTS = <?php echo Authcfg::CREATE_WIKI_POSTS?>;
+var REMOVE_NEW_USER_RESTRICTIONS = <?php echo Authcfg::REMOVE_NEW_USER_RESTRICTIONS?>;
+var PARTICIPATE_IN_META = <?php echo Authcfg::PARTICIPATE_IN_META?>;
+var CREATE_POSTS = <?php echo Authcfg::CREATE_POSTS?>;
+
+            var userId='<?php echo Util::getIDCurrentUser();?>';
+            var isAllowed=<?php echo $this->isAllowed?'true':'false';?>;
+            var role='<?php echo $this->role;?>';
+            var totalRankPoint='<?php echo $this->totalRankPoint;?>';
+
+var faquser =
+ {
+		userId: userId,
+		isAllowed: isAllowed,
+		role: role,
+		totalRankPoint: totalRankPoint,
+		isPrivilegeByPoint: function(pointRequire){
+        if(totalRankPoint>=pointRequire){
+			return true;
+            }else{
+            return false;
+        }
+ 	}
+ };
+            moment.lang('vi-vn');
+            var basePath='<?php echo $this->basePath();?>';
+            var baseUrl='<?php echo $this->url();?>';
+            var domain= '123hoidap.vn';
+            var statusFollow="<?php echo FAQParaConfig::statusFollow?>";
+            var statusUnfollow="<?php echo FAQParaConfig::statusUnfollow?>";;
+            var actionFollow="<?php echo FAQParaConfig::actionFollow?>";
+            var actionUnfollow="<?php echo FAQParaConfig::actionUnfollow?>";
+            var imgAjaxLoad="<div class='container'><center><img  src='<?php echo $this->basePath("/images/ajax-loader.gif")?>'> </center></div>";
+
+    </script>
+
+<!--     <script type="text/x-mathjax-config"> -->
+<!-- MathJax.Hub.Config({ -->
+<!--   config: ["MMLorHTML.js"], -->
+<!--   jax: ["input/TeX","input/MathML","input/AsciiMath","output/HTML-CSS","output/NativeMML"], -->
+<!--   extensions: ["tex2jax.js","mml2jax.js","asciimath2jax.js","MathMenu.js","MathZoom.js"], -->
+<!--   TeX: { -->
+<!--     extensions: ["AMSmath.js","AMSsymbols.js","noErrors.js","noUndefined.js"] -->
+<!--   } -->
+<!-- }); -->
+
+<!--     </script> -->

@@ -1,0 +1,171 @@
+
+
+<?php
+use FAQ\FAQCommon\Util;
+$totalPage = ceil ( $totalDocument / 20 );
+$this->headtitle ( "Danh sách tag phổ biến" );
+// setting meta description
+$this->placeholder ( 'description' )->append ( "Danh sách tag phổ biến, câủ đề nóng, câu hỏi thường gặp, câu trả lời hay, bài viết hướng dẫn tốt trong hệ thống 123hoidap.vn" );
+
+$this->headScript ()->prependFile ( $this->basePath () . '/js/tag/index.js' );
+$defaultImage = '<img class="media-object"
+			data-src="holder.js/64x64" alt="64x64"
+			style="width: 64px; height: 64px;"
+			src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAEAAAABACAYAAACqaXHeAAACDUlEQVR4Xu2Yz6/BQBDHpxoEcfTjVBVx4yjEv+/EQdwa14pTE04OBO+92WSavqoXOuFp+u1JY3d29rvfmQ9r7Xa7L8rxY0EAOAAlgB6Q4x5IaIKgACgACoACoECOFQAGgUFgEBgEBnMMAfwZAgaBQWAQGAQGgcEcK6DG4Pl8ptlsRpfLxcjYarVoOBz+knSz2dB6vU78Lkn7V8S8d8YqAa7XK83ncyoUCjQej2m5XNIPVmkwGFC73TZrypjD4fCQAK+I+ZfBVQLwZlerFXU6Her1eonreJ5HQRAQn2qj0TDukHm1Ws0Ix2O2260RrlQqpYqZtopVAoi1y+UyHY9Hk0O32w3FkI06jkO+74cC8Dh2y36/p8lkQovFgqrVqhFDEzONCCoB5OSk7qMl0Gw2w/Lo9/vmVMUBnGi0zi3Loul0SpVKJXRDmphvF0BOS049+n46nW5sHRVAXMAuiTZObcxnRVA5IN4DJHnXdU3dc+OLP/V63Vhd5haLRVM+0jg1MZ/dPI9XCZDUsbmuxc6SkGxKHCDzGJ2j0cj0A/7Mwti2fUOWR2Km2bxagHgt83sUgfcEkN4RLx0phfjvgEdi/psAaRf+lHmqEviUTWjygAC4EcKNEG6EcCOk6aJZnwsKgAKgACgACmS9k2vyBwVAAVAAFAAFNF0063NBAVAAFAAFQIGsd3JN/qBA3inwDTUHcp+19ttaAAAAAElFTkSuQmCC">
+		';
+?>
+<script type="text/javascript">
+var tags ="";
+</script>
+<style>
+.faq_tag_reationship,.faq_nav_tag {
+	width: 100%;
+}
+
+.faq_img_tag {
+	width: 85px;
+	height: 85px;
+}
+</style>
+<!-- <center> -->
+<!-- 	<h2>Danh sách Tag phổ biến trên 123hoidap.vn</h2> -->
+<!-- </center> -->
+<div class="faq_nav_tag pull-left">
+	<nav class="navbar navbar-default" role="navigation"
+		style="height: auto !important;">
+		<!-- Collect the nav links, forms, and other content for toggling -->
+		<div class="collapse navbar-collapse"
+			id="bs-example-navbar-collapse-1">
+			<ul class="nav navbar-nav">
+
+				<li class="<?php echo $type=="popular"?"active":"";?>"><a href="/tag/index/1?type=popular">Phổ biến</a></li>
+				<li class="<?php echo $type=="location"?"active":"";?>"><a href="/tag/index/1?type=location">Nơi làm việc</a></li>
+				<li class="<?php echo $type=="member"?"active":"";?>"><a href="/tag/index/1?type=member">Thành viên</a></li>
+				<li class="<?php echo $type=="skill"?"active":"";?>"><a href="/tag/index/1?type=skill">Kỹ năng</a></li>
+					<?php if($isAdmin==true){?>
+				<li class="dropdown" class="<?php echo !empty($status)?"active":"";?>"><a href="#" class="dropdown-toggle"
+					data-toggle="dropdown">Theo trạng thái <b class="caret"></b></a>
+					<ul class="dropdown-menu">
+						<li><a href="/tag/index/1?status=new">Mới duyệt</a></li>
+						<li><a href="/tag/index/1?status=edit">Chờ duyệt chỉnh sửa</a></li>
+						<li><a href="/tag/index/1?status=create">Chờ duyệt tạo mới</a></li>
+
+					</ul></li>
+
+				<li><button id="faq_btn_create_tag" type="button"
+						class="btn btn-primary navbar-btn">
+						<span class="glyphicon glyphicon-plus"></span>Tạo mới
+					</button></li>
+					<?php }?>
+			</ul>
+			<form class="navbar-form navbar-left" role="search" action="">
+				<div class="form-group">
+					<input name="tag" type="text" class="form-control" placeholder="Tag cần tìm">
+					<input name="type" type="text" class="form-control" value="<?php echo $type;?>" style="display: none;">
+				</div>
+				<button type="submit" class="btn btn-default">Tìm kiếm</button>
+			</form>
+
+		</div>
+		<!-- /.navbar-collapse -->
+	</nav>
+	<br>
+</div>
+
+<div class="col-md-12 pull-left">
+<?php
+/* @var $tag \FAQ\FAQEntity\Tag */
+foreach ( $tags as $keyt => $tag ) :
+	$tagID = $tag->getId ();
+	$tagRelationShips = $tag->getRelationshipTag ();
+	$title = $tag->getTagName ();
+	$avatar = $tag->getAvatar ();
+	if (! empty ( $avatar )) {
+		$imageID = $avatar->getId ();
+		$contentType = $avatar->getContentType ();
+		$extentionFile = Util::getTypeFile ( $contentType );
+		$titleFileSeo = Util::convertUrlFileName ( $title, $extentionFile );
+	}
+
+	?>
+	<div class="media col-md-12">
+		<a class="pull-left" href="#">
+		<?php
+	if (! empty ( $avatar )) {
+		?>
+		<img class="faq_img_tag media-object img-thumbnail"
+			 alt="<?php echo $title;?>"
+			src="<?php echo $this->basepath("/media/get-image/images/$imageID/$titleFileSeo")?>" />
+		<?php
+
+} else {
+
+		echo $defaultImage;
+	}
+	?>
+	</a>
+	<?php
+		if($isAdmin==true){
+	?>
+		<a href="/tag/edit/<?php echo $tagID;?>"<span
+			class="glyphicon glyphicon-pencil"></span>Sửa
+
+		</a>
+		<button  tagid="<?php echo $tagID; ?>" type="button"
+		class="faq_btn_delete_tag btn btn-link">
+			<span class="glyphicon glyphicon-trash"></span>Xóa
+		</button>
+			<?php }?>
+		<div class="media-body">
+			<h4 class="media-heading">
+			<a href="<?php echo $this->basepath("/home/search?q=".$title);?>"><?php echo $title;?></a>
+
+
+			</h4>
+			<?php echo $tag->getDesc();?>
+		<div class="pull-left faq_tag_reationship">
+				<span class="label label-primary">Tag liên quan</span><br>
+				<ul class="tags">
+				<?php
+	/* @var $tagRelationShip \FAQ\FAQEntity\Tag */
+	foreach ( $tagRelationShips as $key => $tagRelationShip ) :
+
+		?>
+
+				            <li><a
+						href="<?php echo $this->basepath("/home/search?q=".$tagRelationShip->getTagName ())?>">
+						            <?php
+		echo $tagRelationShip->getTagName ();
+		?>
+									</a></li>
+
+
+
+						<?php
+	endforeach
+	;
+	?>
+			</ul>
+			</div>
+		</div>
+	</div>
+	<hr>
+<?php endforeach;?>
+</div>
+<div class="col-md-12 pull-left">
+	<center>
+		<ul class="pagination">
+			<li><a href="/tag/index/1">&laquo;</a></li>
+  <?php
+
+for($x = ($page - 3); $x < (($page + 3) + 1); $x ++) {
+
+			if (($x > 0) && ($x <= $totalPage)) {
+				?>
+  <li class="<?php echo $x==$page?"active":"";?>"><a
+				href="/tag/index/<?php echo $x;?>"><?php echo $x;?> </a></li>
+ <?php }}?>
+  <li><a href="/tag/index/<?php echo $totalPage;?>">&raquo;</a></li>
+		</ul>
+	</center>
+</div>

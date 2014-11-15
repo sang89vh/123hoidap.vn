@@ -1,0 +1,44 @@
+<?php
+    use FAQ\FAQCommon\Util;
+/*@var $user \FAQ\FAQEntity\User */
+    $user = $this->user;
+    $avatar=$user->getAvatar() ;
+    $user_avatarID = $avatar->getId();
+
+    $contentType = $avatar->getContentType();
+    
+    $extentionFile = Util::getTypeFile($contentType);
+    $titleFileSeo = Util::convertUrlFileName(Util::getUserName($user),$extentionFile);
+?>
+<style>
+    #member_summary{
+    	margin-left:10px;
+    }
+    #member_summary span{
+    	font-size: 20px;
+        color: #01BBBB;
+        font-style: italic;
+    }
+    #member_summary img{
+    	margin-left:30px;
+    }
+    .header_title{
+    	font-size:25px;
+    	font-style: italic;
+    	color:#327518;
+    	border-bottom:1px gray solid;
+    	margin-bottom:10px;
+    	width:100%;
+    }
+</style>
+<div style="width:100%;" class="pull-left">
+    <img user="<?php echo $reply_user_id1; ?>"  width="150px" height="150px" class="pull-left"
+         src="/media/get-image/images/<?php echo $user_avatarID."/".$titleFileSeo; ?>" />
+    <div id="member_summary" class="pull-left" >
+        <img src="/images/graduate.png" width="32px"  /><span><?php echo Util::getUserRankText($user);?></span>
+        <img src="/images/subject.png" width="32px"  /><span><?php echo Util::getUserAppellationText($user);?></span>
+        <img src="/images/rank-point.png" width="32px" /><?php echo $user->getTotalRankPoint(); ?></span>
+        <img src="/images/dolla-point.png" width="32px"  /><span><?php echo $user->getTotalMoneyPoint(); ?></span>
+    </div>
+</div>
+

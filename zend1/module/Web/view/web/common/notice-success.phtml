@@ -1,0 +1,13 @@
+<img src="/images/notice-success.png" style="float:left;"  />
+<div style="float:left;font-size:20px;margin-top:64px;width:600px;font-style:italic;color:#339DFF;">
+echo $this->message;
+</div>
+<a style="display:none" id="url_back" href="<?php echo $this->url_back; ?>"></a>
+<?php if($this->time && $this->url_back){?>
+    <script>
+         function redirect(){
+             $('#url_back')[0].click();
+         }
+         setTimeout('redirect()',<?php echo $this->time; ?>);
+    </script>
+<?php }?>

@@ -1,0 +1,24 @@
+<div class="panel-heading">
+<h4 class="panel-title">Tag liên quan</h4>
+</div>
+<div class="block top-hashtag" id="faq_top_hashtag">
+    <ul class="tags">
+
+
+   <?php
+foreach ($this->hashtag as $key => $value) {
+if(!empty($value['tag'])){
+$ht=$value['tag'];
+}else{
+$ht=$value;
+}
+	?>
+	 <li><a href="<?php echo $this->basepath("/home/search?q=".urlencode($ht))?>"><?php
+	 echo $ht;
+	 ?></a></li>
+
+	<?php
+}
+?>
+</ul>
+</div>

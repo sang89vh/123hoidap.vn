@@ -1,0 +1,19 @@
+<?php
+	if(!$this->currentUser){
+?>
+	<script>
+		var message = {};
+		message.type = 'who';
+		message.code = 'status';
+		message.value = 'offline';
+		window.parent.postMessage(message, "http://price.qapolo.com:1337");
+	</script>
+<?php }else{?>
+	<script>
+		var message = {};
+		message.type = 'who';
+		message.code = 'status';
+		message.value = 'online';
+		window.parent.postMessage(message, "http://price.qapolo.com:1337");
+		</script>
+<?php }?>

@@ -1,0 +1,80 @@
+
+<div class="col-md-3">
+	<a class="faq_link_share" data-toggle="tooltip"
+		title="Chia sẻ lên Facebook"
+		onclick="
+    window.open(
+      'https://www.facebook.com/sharer/sharer.php?u='+encodeURIComponent(location.href),
+      'facebook-share-dialog',
+      'width=626,height=436');
+    return false;"> <img class=" img-circle  faq_img_share" alt=""
+		src="<?php echo $this->basepath("/images/logo/logo_facebook.jpg")?>">
+	</a>
+</div>
+<div class="col-md-3">
+	<a class="faq_link_share" data-toggle="tooltip"
+		title="Chia sẻ lên Google+"
+		onclick="
+    window.open(
+      'https://plus.google.com/share?url='+encodeURIComponent(location.href),
+      'facebook-share-dialog',
+      'width=626,height=436');
+    return false;"> <img class=" img-circle  faq_img_share" alt=""
+		src="<?php echo $this->basepath("/images/logo/logo_googleplus.jpg")?>">
+	</a>
+</div>
+<div class="col-md-3">
+	<a class="faq_link_share" data-toggle="tooltip"
+		title="Chia sẻ lên Tiwtter"
+		onclick="
+    window.open(
+      'https://twitter.com/share?original_referer='+encodeURIComponent(location.href),
+      'facebook-share-dialog',
+      'width=626,height=436');
+    return false;"> <img class=" img-circle  faq_img_share" alt=""
+		src="<?php echo $this->basepath("/images/logo/logo_tiwtter.jpg")?>">
+	</a>
+</div>
+<div class="col-md-3">
+<a class="faq_link_share" data-toggle="tooltip"
+		title="Chia sẻ lên Zing Me"
+		onclick="
+    window.open(
+      'http://link.apps.zing.vn/share?u='+encodeURIComponent(location.href),
+      'facebook-share-dialog',
+      'width=626,height=436');
+    return false;">
+	<img class=" img-circle  faq_img_share" alt=""
+		src="<?php echo $this->basepath("/images/logo/logo_zingme.jpg")?>">
+		</a>
+</div>
+<script type="text/javascript">
+
+$(".faq_link_share").tooltip({placement:'top',html:'true'});
+$(document).on('click',".faq_link_share",function(){
+	console.log("click share");
+
+	$('.faq_action_share').popover('hide');
+
+	 $.ajax({
+         url: basePath+"/question/add-share",
+         type: "POST",
+         dataType:"json",
+         data: "question=" + questionID, //The data your sending to page
+         success: function(data){
+      	   if(data.status==1){
+
+        		 var faq_total_share_question=$("#faq_total_share_question").text();
+        		 $("#faq_total_share_question").text(++faq_total_share_question);
+      	   }
+
+         },
+         error:function(){
+             console.log("AJAX request was a failure");
+         }
+       });
+});
+
+
+</script>
+

@@ -1,0 +1,117 @@
+1. sua file persistenColection
+	+ line 399-> if ($this->mapping !== null && (isset($this->mapping['embedded']) || $this->mapping['isCascadeRemove'])) {
+
+2. Xoa cascade setup
+	+ cach1: cai dat la embed
+	+ cach2: referece with cascade='remove'
+3. session
+	+ c1. mongo-db
+		use Zend\Session\SaveHandler\MongoDB;
+		use Zend\Session\SaveHandler\MongoDBOptions;
+		use Zend\Session\SessionManager;
+		$mongo = new Mongo();
+		$options = new MongoDBOptions(array(
+				'database' => 'myapp',
+				'collection' => 'sessions',
+		));
+		$saveHandler = new MongoDB($mongo, $options);
+		$manager = new SessionManager();
+		$manager->start();
+		$manager->getStorage()->setMetadata('key','value');
+		$manager->setSaveHandler($saveHandler);
+		// get: $manager->getStorage()->get('key');
+	+ c2. array
+		use Zend\Session\Storage\ArrayStorage;
+		use Zend\Session\SessionManager;
+		$populateStorage = array('foo' => 'bar');
+		$storage = new ArrayStorage($populateStorage);
+		$manager = new SessionManager();
+		$manager->setStorage($storage);
+		$manager->start();
+		// get: $manager->getStorage()->foo;
+4. Acl
+use Zend\Permissions\Acl\Acl;
+use Zend\Permissions\Acl\Role\GenericRole;
+      $acl = new Acl();
+      $guestRole = new GenericRole('guest');
+      $adminRole = new GenericRole('admin');
+      $memberRole = new GenericRole('member');
+      $parents = array('guest', 'member', 'admin');
+      $acl->addRole($guestRole)->addRole($adminRole)->addRole($memberRole);
+      $acl->addRole(new GenericRole('someUser'), $parents);
+      $bookResource = new GenericResource("book-izzi");
+      $acl->addResource($bookResource);
+      $acl->allow('guest', 'book-izzi',array('abc','xyz'));
+      // Serialize and unserialize
+5. apoloAbstractActionControler extends AbstractActionController{
+	public function onDispatch(MvcEvent $e){
+		// check login
+		// custom router if need
+		// setlayout if need
+		parent::onDispatch($e);
+	}
+	// some utilities function
+}
+6. Auth with mongo
+$authOdmAdapter = $this->getServiceLocator()->get('doctrine.authenticationadapter.odm_default');
+$authOdmAdapter->setIdentityValue('long@123hoidap.vn');
+$authOdmAdapter->setCredentialValue('asdf1234');
+$authOdmAdapter->setCredentialValue('asdf1234');
+$check = $authOdmAdapter->authenticate();
+/* require collection: Application\Model\User{username, password}
+	c2. custom collection and field
+		$em = new doc\Employee($this);
+  		/*@var $authOdmAdapter \DoctrineModule\Authentication\Adapter\ObjectRepository */
+        $authOdmAdapter = $this->getServiceLocator()->get('doctrine.authenticationadapter.odm_default');
+        $authOdmStorage = $this->getServiceLocator()->get("doctrine.authenticationstorage.odmdefault");
+        //$authOdmAdapter->setIdentityValue('long'); $authOdmAdapter->setCredentialValue('asdf1234');
+        $authOptions = new Authentication();
+        $authOptions->setIdentityProperty("email");
+        $authOptions->setCredentialProperty("password");
+        $authOptions->setObjectManager($em->getDb()->getDm());
+        $authOptions->setIdentityClass('Application\Documents\Users');
+        $authOdmAdapter->setOptions($authOptions);
+        $authOdmAdapter->setIdentityValue('long@123hoidap.vn');
+        $authOdmAdapter->setCredentialValue('asdf1234');      
+		$check = $authOdmAdapter->authenticate();
+// de luu session tren mongodb da sua doi authoptions:  $authOptions->setSessionManager($sm);
+7. Zend auth openid;
+8. Twitter auth co su trao doi token
+	- app_id, app_secret, callback_url => oauth_token, oauth_token_secret
+	- app_id, app_secret, oauth_token, oauth_token_secret => access_token
+9.1 - cascadeDetach($document $visited){
+		- thuc hien detach, co xem den de quy.
+		- visited: dam bao vong lap duoc dung neu referece vong
+	}
+10. code flow
+	- entity	- mapper	- controller
+11 return only view not layout
+	+ return $this->getResponse();
+	+ $view = new ViewModel(array(
+        		'message' => 'Hello world',
+        ));
+      $this->getEvent()->setViewModel($view);
+      $this->getEvent()->getViewModel()->setTemplate("web/home/top-hastag");
+	+  $view->setTerminal(true);
+12. at layout can change $this->content to $this->noidung by code
+		$view = new ViewModel(array('content'=>'xyzt'));
+
+        $view->setCaptureTo('cc');
+        
+        return $view;
+13. nesting
+	$view->addChild($leftView, 'left')->addChild($rightView, 'right');
+	return $view;
+14. set new layout + set new view
+	 	$layout = $this->layout('layout/layout1');
+        
+        $view = new ViewModel();
+        $view->setTemplate('web/home/top-hashtag');
+        return $view;
+15 $e->getApplication()->getEventManager()->attach('dispatch', array($this, 'loadSessionData'));
+
+16. layout
+	- at controller
+		$this->layout()->abc = 'abc';
+	- at layout
+		echo $this->abc;

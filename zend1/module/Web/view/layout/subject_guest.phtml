@@ -1,0 +1,118 @@
+<?php use FAQ\FAQCommon\FAQParaConfig;
+echo $this->doctype(); ?>
+<html lang="vi_VN">
+<head><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+        <?php  echo $this->headTitle($this->translate('Hỏi đáp | Hướng dẫn | 123hoidap.vn'))->setSeparator(' | ')->setAutoEscape(false)?>
+
+        <?php
+        echo $this->headMeta('description', $this->placeholder('description').$this->headMetaDesc)
+//                  ->appendHttpEquiv('Content-Type',
+//                                    'text/html; charset=UTF-8')
+                 ->appendHttpEquiv('Content-Language', 'vi-VN');
+
+        echo $this->headLink(array(
+            'rel' => 'shortcut icon',
+            'type' => 'image/vnd.microsoft.icon',
+            'href' => $this->basePath() . '/img/qapolo_logo_mini.ico'
+        ))->prependStylesheet($this->basePath() . '/css/icons.css')
+            ->prependStylesheet($this->basePath() . '/css/style.css')
+            ->prependStylesheet($this->basePath() . '/css/bootstrap.css')
+            ->prependStylesheet($this->basePath() . '/css/footer.css')
+            ->prependStylesheet($this->basePath() . '/css/home.css')
+            ->prependStylesheet($this->basePath() . '/css/common.css')
+            ->prependStylesheet($this->basePath() . '/css/prettify.css')
+            ->prependStylesheet($this->basePath() . '/css/jquery.smallipop.css')
+            ->prependStylesheet($this->basePath() . '/css/animate.min.css')
+            ->prependStylesheet($this->basePath() . '/css/docs.css')
+            ->prependStylesheet($this->basePath() . '/css/bootstrap.icon-large.css')
+            ->prependStylesheet($this->basePath() . '/css/fancybox/jquery.fancybox.css')
+
+            //->prependStylesheet($this->basePath() . '/css/smoothness/jquery-ui-1.10.3.custom.css')?>
+
+        <!-- Scripts -->
+        <?php
+
+        echo $this->headScript()
+            ->prependFile($this->basePath() . '/js/html5.js', 'text/javascript', array(
+            'conditional' => 'lt IE 9'
+        ))
+            ->prependFile($this->basePath() . '/js/common.js')
+            ->prependFile($this->basePath() . '/js/jquery.cookie.js')
+//             ->prependFile($this->basePath() . '/js/mathjax/MathJax.js?config=TeX-MML-AM_HTMLorMML&locale=vi')
+
+            ->prependFile($this->basePath() . '/js/bootstrap.js')
+            ->appendFile($this->basePath() . '/js/prettify.js')
+            ->appendFile($this->basePath() . '/js/jqBootstrapValidation.js')
+   			->appendFile($this->basePath() . '/js/jquery/smallipop/modernizr.js')
+            ->appendFile($this->basePath() . '/js/jquery/smallipop/jquery.smallipop.min.js')
+            ->prependFile($this->basePath() . '/js/bootbox.js')
+            ->prependFile($this->basePath() . '/js/moment2.2.1.js')
+            ->prependFile($this->basePath() . '/js/jquery.fancybox.js')
+            ->appendFile($this->basePath() . '/js/faq_fancybox.js')
+
+             ->prependFile($this->basePath() . '/js/jquery-2.0.3.js')
+             ->appendFile($this->basePath() . '/js/fixto.min.js')
+             ->appendFile($this->basePath() . '/js/jquery.anchor.js')
+             ->appendFile($this->basePath() . '/js/jquery.autocomplete.js');
+      echo $this->partial("/util/init-jsvariable.phtml");
+        ?><!--     </script> -->
+
+    </head>
+<body>
+ <div id="avatar_tooltip_container" over_tooltip="no"></div>
+ <script>
+                 $('#avatar_tooltip_container').mouseenter(function(){
+               	           $(this).attr('over_tooltip','yes');
+                 });
+                 $('#avatar_tooltip_container').mouseleave(function(){
+               	           $(this).attr('over_tooltip','no');
+                 });
+ </script>
+	<div id="header" class="navbar">
+		<!-- begin header -->
+<?php
+echo $this->partial('/layout/header_guest.phtml');
+// outputs as unordered list with pretty indentation
+?>
+	</div>
+	<!-- end header -->
+
+		<div class="container">
+	<div class="bs-docs-section">
+
+			<div class="row">
+   				 <div class="faq_white_content">
+					<div id="left-content"   class="col-md-9  col-lg-9 col-sm-9 col-xs-12 faq_padding_left_none faq_padding_right_none panel panel-primary" >
+					       <?php
+					       echo $this->content;
+					        ?>
+					</div>
+					<div class="visible-md  visible-lg visible-sm" id="right-content" >
+					      <?php
+												echo $this->partial ( '/layout/category_subject.phtml' );
+												?>
+					</div>
+				</div>
+
+			</div>
+		</div>
+		<div class="bs-docs-section">
+
+			<div class="row">
+				<div id="footer">
+
+					   <?php
+								echo $this->partial ( '/layout/footer_layout.phtml' );
+								// outputs as unordered list with pretty indentation
+								?>
+
+
+		</div>
+			</div>
+		</div>
+		<div id="avatar_tooltip_container"></div>
+	</div>
+
+</body>
+</html>

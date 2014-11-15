@@ -1,0 +1,64 @@
+<?php use FAQ\FAQEntity\User;
+echo $this->doctype(); ?>
+<?php  echo $this->headTitle('Quản lý lưu trữ - 123hoidap.vn'); ?>
+<html lang="vi_VN">
+<head><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<?php
+        echo $this->headMeta('description', $this->placeholder('description').$this->headMetaDesc)
+//                  ->appendHttpEquiv('Content-Type',
+//                                    'text/html; charset=UTF-8')
+                 ->appendHttpEquiv('Content-Language', 'vi-VN');
+            // 1633
+
+            echo $this->headLink(array(
+            'rel' => 'shortcut icon',
+            'type' => 'image/vnd.microsoft.icon',
+            'href' => $this->basePath() . '/img/qapolo_logo_mini.ico'
+        ))
+            ->prependStylesheet($this->basePath() . '/css/bootstrap.css')
+           ?>
+
+        <!-- Scripts -->
+        <?php
+
+            echo $this->headScript()
+            ->prependFile($this->basePath() . '/js/html5.js', 'text/javascript', array(
+            'conditional' => 'lt IE 9'
+        ))
+            ->prependFile($this->basePath() . '/js/page.js')
+            ->prependFile($this->basePath() . '/js/bootbox.js')
+            ->prependFile($this->basePath() . '/js/bootstrap.js')
+            ->prependFile($this->basePath() . '/js/jquery-2.0.3.js')
+            ->appendFile($this->basePath() . '/js/jquery.anchor.js')
+            ->appendFile($this->basePath() . '/js/fixto.min.js')
+
+            ?>
+    </head>
+    <style>
+        body{
+        	width:100%;
+        }
+        .notice_error_text {
+        	font-style:italic;
+        	color:red;
+        }
+        .media-item-selected img{
+        	border:2px green dotted !important;
+        }
+    </style>
+
+<body>
+
+	<!-- Part 1: Wrap all page content here -->
+
+	<div id="wrap">
+		<div class="container">
+		    <div id="faq_media_content" >
+			     <?php echo $this->content; ?>
+			</div>
+		</div>
+		<div id="push"></div>
+	</div>
+</body>
+</html>

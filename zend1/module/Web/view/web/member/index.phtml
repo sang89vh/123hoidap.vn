@@ -1,0 +1,56 @@
+<!-- Trang danh sach member -->
+<?php
+$this->headLink()
+->prependStylesheet($this->basePath() . '/css/member/index.css');
+$this->headScript()
+->appendFile($this->basePath() . '/js/bsa.js')
+->appendFile($this->basePath() . '/js/member/index.js')
+;
+
+// setting meta description
+$this->placeholder('description')
+->append("Danh sách thành viên của hệ thống hỏi đáp, bài viết hướng dẫn, hỗ trợ, tư vấn người dùng");
+?>
+
+
+<script type="text/javascript">
+var faq_url_paging="<?php echo $this->basepath("/member/list-member")?>";
+var totalLoad=0;
+var step=12;
+var faq_from_paging=totalLoad*step;
+var faq_to_paging=(totalLoad+1)*step;
+var faq_data_paging={
+		keyword:"",
+		from:faq_from_paging,
+		to:faq_to_paging
+		};
+var type_search=0;
+var totalmember=<?php echo $total_member;?>;
+
+</script>
+<div class="faq_wrap_content">
+<div id="faq_wrap_search_member" class="col-md-12 pull-left">
+
+		<div class="form-inline pull-left faq_search_member" role="form">
+			<div class="form-group faq_imp_search_member">
+				<label class="sr-only" for="faq_lbl_search_member">Tìm kiếm chủ đề</label>
+				<input type="text" class="form-control" id="faq_txt_search_member"
+					placeholder="Tìm kiếm thành viên" name="search_member">
+			</div>
+			<button class="btn btn-default" id="faq_btn_search_member">Tìm</button>
+		</div>
+
+</div>
+<div class="col-md-12 pull-left">
+<div id="faq_postswrapper">
+    <?php echo $this->partial('/web/member/list-member.phtml');?>
+    </div>
+<div id="faq_loadmoreajaxloader" style="display: none;">
+	<div class='faq_container'>
+		<center><img
+			src='<?php echo $this->basePath("/images/ajax-loader.gif")?>'>
+
+	</div>
+</div>
+</div>
+</div>

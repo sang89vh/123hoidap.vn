@@ -1,0 +1,179 @@
+
+<?php
+use FAQ\FAQCommon\FAQParaConfig;
+use FAQ\FAQCommon\Util;
+$subjectID = $subject->getId ();
+$titleSubject = $subject->getTitle ();
+$totalThread = $subject->getTotalQuestion ();
+$totalUserFollow = $subject->getTotalUserFollow ();
+$avatar = $subject->getAvatar ();
+$imageID = $avatar->getId ();
+
+$contentType = $avatar->getContentType ();
+
+$extentionFile = Util::getTypeFile ( $contentType );
+$titleFileSeo = Util::convertUrlFileName ( $titleSubject, $extentionFile );
+
+$statusFollowCode = 1;
+$currentStatusFollow = FAQParaConfig::statusUnfollow;
+/* @var $userFollows \Doctrine\Common\Collections\ArrayCollection */
+$userFollows = $subject->getUserFollow ();
+
+if ($userFollows->contains ( Util::getCurrentUser () )) {
+	$statusFollowCode = 2;
+}
+if ($statusFollowCode == 1) {
+	$statusAction = FAQParaConfig::actionFollow;
+} else {
+	$statusAction = FAQParaConfig::actionUnfollow;
+	$currentStatusFollow = FAQParaConfig::statusFollow;
+}
+?>
+
+<div id="overview-subject-home" class="panel panel-primary">
+	<img class="img-thumbnail" subject="<?php echo $subjectID;?>"
+		alt="<?php echo $title;?>"
+		src="<?php echo $this->basepath("/media/get-image/images/$imageID/$titleFileSeo")?>" />
+
+	<div class="faq_info_subject">
+		<h4><?php echo $titleSubject;?></h4>
+	</div>
+	<div class="faq_info_subject">
+		<p><?php echo $totalThread." bài viết";?></p>
+	</div>
+	<div class="faq_info_subject">
+		<p><?php echo $totalUserFollow." người quan tâm";?></p>
+	</div>
+	<p>
+
+
+	<div class="dropdown faq_subject_action faq_info_subject">
+		<button  title='Click để "<?php echo $statusAction;?>"' type="button" class="faq_btn_follow_subject btn btn-xs <?php if($statusFollowCode==2){ echo "btn-warning";}else{echo "btn-default";}?>"
+							subject="<?php echo $subjectID?>"
+							action=<?php echo $statusFollowCode;?>
+						><?php echo $currentStatusFollow;?>
+						</button>
+	</div>
+
+	</p>
+
+	<div class="col-md-12">
+		<div class="fb-like" data-width="100" data-layout="button_count"
+			data-action="like" data-show-faces="true" data-share="true"></div>
+	</div>
+</div>
+<div class="overview-subject-home-toggle text-centcer"
+	title="thu nhỏ lại, mở rộng ra">
+	<center>
+		<b title="thu nhỏ lại, mở rộng ra" class="glyphicon glyphicon-eject"></b>
+	</center>
+</div>
+<?php if(isset($subjectCategories)):?>
+<div id="category-article" class="panel panel-primary">
+	<!-- //subject category -->
+
+ <?php
+	echo $this->partial ( '/util/generate-user-category.phtml' );
+	?>
+<div class="panel-heading">
+		<h4 class="panel-title">
+			<span class="faq_top_icon glyphicon glyphicon-list"></span>Mục lục
+		</h4>
+		<small>Chọn: <span id="faq_current_usercategory">--</span></small>
+	</div>
+	<div class="faq_menu_category_toggle text-center"
+		title="mở rộng, thu nhỏ menu">
+		<b class="caret" title="mở rộng, thu nhỏ menu"></b>
+	</div>
+
+	<div class="block faq_category_article_scroll"
+		id="faq_category_article">
+<?php
+
+	foreach ( $subjectCategories as $key => $category ) :
+		if ($category->getStatus () == FAQParaConfig::STATUS_ACTIVE) :
+			$sucategories = $category->getChildren ();
+			?>
+
+
+		<div class="faq_group_category">
+
+			<ol class="nav nav-pills nav-stacked">
+				<li class="faq_top"><h5 class="text-left">
+						<span class="glyphicon glyphicon-folder-open faq_top_icon"></span><?php echo  $category->getTitle();?></h5></li>
+                <?php
+
+			foreach ( $sucategories as $key => $subcategory ) :
+				if ($subcategory->getStatus () == FAQParaConfig::STATUS_ACTIVE) :
+					?>
+                	<li><a
+					class="faq_tooltip faq_title_user_subcategory <?php echo $subcategory->getTotalArticle()==0?"faq_category_nonearticle":"";?>"
+					data-toggle="tooltip" data-placement="top" title=""
+					data-original-title="<?php echo $subcategory->getDesc().". <br/> Đang có ".$subcategory->getTotalArticle()." bài viết";?>"
+					subcategory="<?php echo $subcategory->getId();?>"><b>-
+    					<?php echo $subcategory->getTitle();?>
+    					</b><span class="badge pull-right"><?php echo $subcategory->getTotalArticle();?></span></a>
+<?php generateUserCategory($subcategory);?>
+				</li>
+
+
+				<?php
+          endif;
+			endforeach
+			;
+			?>
+    			</ol>
+		</div>
+
+
+
+
+		<?php
+endif;
+	endforeach
+	;
+
+	?>
+</div>
+</div>
+<?php elseif (isset($tags)):?>
+<div class="panel-heading">
+	<h4 class="panel-title">Tag phổ biến</h4>
+</div>
+<div class="block top-hashtag" id="faq_top_hashtag">
+	<ul class="tags">
+
+   <?php
+	/* @var $tag \FAQ\FAQEntity\KeyWord */
+	foreach ( $tags as $keytag => $tag ) {
+		$keys = $tag->getKey ();
+		foreach ( $keys as $keyw => $key ) {
+			$hashtag = urlencode ( $key );
+
+			?>
+
+    	 <li><a
+			href="<?php echo $this->basepath("/home/search?q=".$hashtag)?>"><?php
+			echo mb_substr ( $key, 0, 50, 'UTF-8' );
+			?></a></li>
+
+	<?php
+		}
+	}
+
+	?>
+</ul>
+	</ul>
+</div>
+
+
+<?php endif;?>
+<style>
+.faq_info_subject {
+	padding: 0px 15px 0px 15px;
+}
+
+ul ul,ol ul,ul ol,ol ol {
+	margin-bottom: 10px !important;
+}
+</style>

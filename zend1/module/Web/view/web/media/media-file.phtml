@@ -1,0 +1,41 @@
+<div class="bs-example">
+	<div class="row">
+<?php
+use FAQ\FAQCommon\Util;
+$k=6;
+$listSubDir = $this->listSubDir;
+for ($i = 0; $i < count($listSubDir); $i ++) {
+    ?>
+       <div id="<?php echo $listSubDir[$i]->id;?>" class="col-sm-6 col-md-2" context="edit">
+			<div href="/media/<?php echo $listSubDir[$i]->id;?>"
+				class="thumbnail media-item"
+				item_id="<?php echo $listSubDir[$i]->id;?>">
+				<div class="col-sm-12 col-md-12">
+				<img
+						alt="<?php echo $listSubDir[$i]->name;?>"
+						title="<?php echo $listSubDir[$i]->name;?>"
+						src="/img/<?php echo strtoupper(Util::getTypeFile($listSubDir[$i]->contentType)).".png";?>">
+        					<div class="faq_title_media_file"><?php echo $listSubDir[$i]->name;?>
+        					</div>
+
+					</div>
+			</div>
+			<img src="/images/edit_24x24.png" class="edit-icon"
+				class="pull-right" style="position: absolute; top: -5px;"
+				item_id="<?php echo $listSubDir[$i]->id; ?>"
+				item_name="<?php echo $listSubDir[$i]->name;?>"
+				item_content_type="<?php echo $listSubDir[$i]->contentType;?>"
+				item_type="<?php echo $listSubDir[$i]->type;?>"></img>
+		</div>
+<?php
+$k++;
+if($k%6==0){
+        ?>
+        </div>
+         <div class="row">
+        <?php }
+
+    }
+    ?>
+      </div>
+</div>

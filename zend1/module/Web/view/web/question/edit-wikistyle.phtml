@@ -1,0 +1,261 @@
+ <?php
+use FAQ\FAQCommon\Util;
+use FAQ\FAQCommon\Authcfg;
+ $this->headLink()
+    ->prependStylesheet($this->basePath() . '/css/question/create_question.css')
+    ->prependStylesheet ( $this->basePath () . '/css/question/index.css' )
+    ->prependStylesheet ( $this->basePath () . '/css/fuelux.css' )
+    ->prependStylesheet ( $this->basePath () . '/css/fuelux-responsive.css' )
+ ;
+
+$this->headScript ()
+
+->appendFile ( $this->basePath () . '/js/tinymce/tinymce.min.js' )
+->appendFile ( $this->basePath () . '/js/tinymce/jquery.tinymce.min.js' )
+->appendFile ( $this->basePath () . '/js/faq_edittor.js' )
+->appendFile ( $this->basePath () . '/js/typeahead.min.js' )
+->appendFile ( $this->basePath () . '/js/angular.min.js' )
+->appendFile ( $this->basePath () . '/js/bootstrap-tagsinput.js' )
+->appendFile ( $this->basePath () . '/js/bootstrap-tagsinput-angular.js' )
+->appendFile ( $this->basePath () . '/js/question/finish_question.js')
+->appendFile ( $this->basePath () . '/js/question/create_question_basic.js')
+;
+$currentUser=Util::getCurrentUser();
+$totalMoneyPoint=$currentUser->getTotalMoneyPoint();
+$totalRankPointUser=$currentUser->getTotalRankPoint();
+?>
+
+<!-- Scripts -->
+
+
+<script type="text/javascript">
+var backUrl = "<?php echo $backUrl;?>";
+var questionID = "<?php echo $questionID;?>";
+var tags = "<?php echo $tags;?>";
+var title="<?php echo $title;?>";
+var contentQuestion="";
+var subject = "<?php echo $subjectID;?>";
+var totalMoneyPoint = <?php echo $totalMoneyPoint;?>;
+</script>
+
+
+<div class="faq_content">
+<?php if($totalRankPointUser < Authcfg::EDIT_QUESTIONS_AND_ANSWERS){?>
+<div class="col-md-12 alert alert-danger fade in">
+        <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
+        <strong>Lưu ý!</strong> Chỉnh sửa của bạn sẽ được lưu vào danh sách sửa đổi của câu hỏi.
+        Nó sẽ được thực sự áp dụng khi được duyệt!
+</div>
+<?php }?>
+<div class="col-md-12" id="faq_header_btn_create_basic">
+	<button type="button" class="btn btn-warning btn-sm" data-loading-text="Đang lưu..." id="faq_question_save">Lưu sửa đổi</button>
+	<button type="button" class="btn btn-default btn-sm" data-loading-text="Đang xử lý" id="faq_question_cancel">Bỏ qua</button>
+
+
+
+</div>
+<div id="left-content"   class="col-md-9  col-lg-9 col-sm-9 col-xs-12"  >
+<?php echo $error;?>
+<!-- manager media file -->
+<div class="col-md-12">
+
+		<a id="faq_link_media_file"
+			class="fancybox fancybox.iframe btn btn-default btn-xs"
+			href="<?php echo $this->basepath("/media/index");?>">Thư viện
+			Media</a> <input style="display: none" id="faq_media_file" value="" />
+
+
+	</div>
+<?php
+$form = $this->form;
+$form->setAttribute('action', $this->url("question", array(
+    "module" => "web",
+    "action" => "content-question"
+)));
+$form->prepare();
+echo $this->form()->openTag($form);
+?>
+<div class="form-group">
+            <?php
+            $title = $form->get('title');
+            if($titleQuestion!="Chưa có tiêu đề"){
+            $title->setValue($titleQuestion);
+            }
+
+            ?>
+<label>* Tiêu đề câu hỏi
+
+		<small class="faq_content_question_tooltip" data-toggle="tooltip"
+			title="" data-original-title='<p><b>Tiêu đề của câu hỏi</b><br>-
+			Chứa tối thiểu 20 ký tự<br>- Chứa tối đa 120 ký tự
+			</p>'> (hướng dẫn) </small>
+</label>
+<div class="col-md-12">
+		<p class="text-danger pull-left help-block"
+			id="faq_help_title"></p>
+</div>
+
+            <?php
+            echo $this->forminput($title);
+            ?>
+
+</div>
+<div class="form-group">
+            <?php
+            $kw = $form->get('key_word');
+
+            ?>
+
+<label>* Từ khóa của câu hỏi
+<small class="faq_content_question_tooltip" data-toggle="tooltip"
+				title="" data-original-title='<p><b>Từ khóa cho câu hỏit</b><br>-
+				Từ khóa là những từ, cụm từ của câu hỏi có ý nghĩa quan trọng cho
+				câu hỏi. Từ khóa thường là danh từ chung, danh từ riêng mà câu hỏi
+				muốn nói đến<br>- Ví dụ: câu "Tìm hiểu về Việt Nam" thì từ khóa là
+				"Việt Nam" <br> <b>Hướng dẫn sử dụng</b><br>- Điền từ khóa của bài
+				viết và bấm phím Enter để hoàn thành mỗi từ khóa
+				</p>'> (hướng dẫn) </small>
+</label>
+<div class="col-md-12">
+<p class="text-danger help-block" id="faq_help_tag" ></p>
+</div>
+
+            <?php
+            echo $this->forminput($kw);
+            ?>
+
+
+
+
+</div>
+<div class="form-group">
+            <?php
+            $content = $form->get('content_question');
+            $content->setValue($contentQuestion);
+            ?>
+
+<label>* Nội dung câu hỏi
+
+			<small class="faq_content_question_tooltip" data-toggle="tooltip"
+				title="" data-original-title='<p><b>Nội dung câu hỏi</b><br>- chứa
+				tối thiểu 50 ký tự<br>- câu hỏi nên được trình bày rõ ràng, sinh
+				động, tham khảo cách trình bày tại
+				http://123hoidap.vn/support/help
+				</p>'> (hướng dẫn) </small>
+
+</label>
+		<div class="col-md-12">
+			<p class="text-danger help-block"  id="faq_help_content"></p>
+		</div>
+
+            <?php
+            echo $this->forminput($content);
+            ?>
+
+
+</div>
+<div class="form-group fuelux">
+                            <?php
+                            $bp = $form->get('bonus_point');
+//                             var_dump($data['bonus_point']);
+                            $bp->setValue(0);
+//                             echo $this->formLabel($bp);
+                            ?>
+<label>Thêm điểm thưởng cho câu trả lời hay nhất
+
+			<small class="faq_content_question_tooltip" data-toggle="tooltip"
+				title="" data-original-title='<p><b>Tặng điểm cho câu trả lời hay nhất</b>
+				<br>- Thêm điểm thưởng cho câu trả lời hay nhất để khuyến khích người trả lời
+				<br>- Nếu bạn muốn có câu trả lời nhanh hơn, tốt hơn hãy click tặng điểm ngay bây giờ
+				</p>'> (hướng dẫn) </small>
+
+</label>
+                             <div class="col-lg-9 pull-left">
+                             <div class="spinner">
+                                    <?php
+                                    echo $this->forminput($bp);
+
+                                    ?>
+                                    <div
+							class="spinner-buttons	btn-group btn-group-vertical">
+                                		<button type="button"
+								class="btn spinner-up">
+                                			<i class="icon-chevron-up"></i>
+                                		</button>
+                                		<button type="button"
+								class="btn spinner-down">
+                                			<i class="icon-chevron-down"></i>
+                                		</button>
+                            	    </div>
+                            </div>
+                            <span>(Bạn đang có <b id="faq_total_point"><?php echo $totalMoneyPoint===null?0:$totalMoneyPoint;?></b>
+							điển)
+						</span>
+					</div>
+</div>
+<div class="form-group">
+            <?php
+            $noteEdit = $form->get('note_edit');
+            ?>
+
+<label>* Nội dung sửa đổi
+
+			<small class="faq_content_question_tooltip" data-toggle="tooltip"
+				title="" data-original-title='<p><b>Ghi chú sửa đổi</b><br>- Lưu lại những
+				sửa đổi của bạn
+				</p>'> (hướng dẫn) </small>
+
+</label>
+		<div class="col-md-12">
+			<p class="text-danger help-block"  id="faq_help_note_edit"></p>
+		</div>
+
+            <?php
+            echo $this->forminput($noteEdit);
+            ?>
+
+
+</div>
+
+            <?php
+            echo $this->formSubmit($form->get('submit'));
+            echo $this->form()->closeTag();
+            ?>
+
+
+
+</div>
+<div id="right-content" class="panel panel-primary  visible-lg  visible-md  visible-sm">
+<div class="panel-heading">
+<h4 class="panel-title">
+	* Chủ đề <small class="faq_content_question_tooltip"
+				data-toggle="tooltip" title="" data-original-title='<p><b>Chủ đề của câu hỏi</b>
+				<br>- Hãy chọn chủ đề cho câu hỏi
+				<br>- 123hoidap.vn khuyến khích các bài viết được phân loại vào các mục lục một cách rõ ràng
+					</p>'> (hướng dẫn) </small>
+</h4>
+<h4 class="panel-title">Đang chọn:<a id="faq_subject_selected" href="#" class="anchorLink"></a></h4>
+</div>
+<div class="faq_menu_category_toggle text-center" title="mở rộng, thu nhỏ menu"><b class="caret" title="mở rộng, thu nhỏ menu"></b></div>
+<ul class="nav nav-pills nav-stacked faq_nav_subject_scroll" id="faq_nav_subject">
+<?php
+
+		// var_dump($list_subject);
+		/* @var $subject /FAQ/FAQEntity/Subject */
+		foreach ( $list_subject as $key => $subject ) :
+
+		    $forsubjectID=$subject->getId();
+
+		?>
+
+        <li id="<?php echo $forsubjectID; ?>" subject="<?php echo $forsubjectID?>" class="<?php echo $subjectID==$forsubjectID?"active":""?>"><a href="#"><?php echo  $subject->getTitle();?></a></li>
+
+
+		<?php
+		endforeach;
+		?>
+</ul>
+</div>
+<div class="col-md-12" id="faq_question_preview"></div>
+
+

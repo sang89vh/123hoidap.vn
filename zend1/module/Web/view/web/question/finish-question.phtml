@@ -1,0 +1,124 @@
+<?php
+use FAQ\FAQCommon\Util;
+$totalMoneyPoint=Util::getCurrentUser()->getTotalMoneyPoint();
+?>
+<link href="/css/question/index.css" media="screen" rel="stylesheet" type="text/css">
+<script type="text/javascript"
+	src="/js/mathjax/MathJax.js?config=TeX-MML-AM_HTMLorMML&locale=vi"></script>
+
+<script type="text/javascript" src="/js/question/finish_question.js"></script>
+<script type="text/x-mathjax-config">
+MathJax.Hub.Config({
+  config: ["MMLorHTML.js"],
+  jax: ["input/TeX","input/MathML","input/AsciiMath","output/HTML-CSS","output/NativeMML"],
+  extensions: ["tex2jax.js","mml2jax.js","asciimath2jax.js","MathMenu.js","MathZoom.js"],
+  TeX: {
+    extensions: ["AMSmath.js","AMSsymbols.js","noErrors.js","noUndefined.js"]
+  }
+});
+</script>
+<script type="text/javascript">
+var totalMoneyPoint = <?php echo $totalMoneyPoint;?>;
+</script>
+<div id="left-content"   class="col-md-9  col-lg-9 col-sm-9 col-xs-12 faq_padding_left_none faq_padding_right_none"  >
+<?php echo $error;?>
+<div class="faq_content">
+	<div id="faq_container_question" class="col-md-12 col-sm-12">
+		<div>
+			<h4 class="text-primary"><?php echo $data["title"];?></h4>
+			<span class="text-muted">Nhóm câu hỏi <?php echo $data['subject_title'];?></span>
+			<div id="content_question">
+				<!-- 				<pre class='prettyprint linenums'> -->
+		              <?php echo $data["content_question"];?>
+<!-- 	            </pre> -->
+			</div>
+			<div class="col-md-12 pull-left">
+				<b>Từ khóa: </b>
+				<input type="text" id="faq_label_key_word" disabled value="<?php echo $data['key_word'];?>" data-role="tagsinput" />
+				</div>
+
+
+			</div>
+			<div class="clearfix col-md-12 pull-left">
+		       <?php
+        $form = $this->form;
+        $form->setAttribute('action', $this->url("question", array(
+            "module" => "web",
+            "action" => "finish-question"
+        )));
+        $form->prepare();
+        echo $this->form()->openTag($form);
+        ?>
+
+                <div class="form-group">
+                            <?php
+                            $bp = $form->get('bonus_point');
+//                             var_dump($data['bonus_point']);
+                            $bp->setValue($data['bonus_point']);
+                            echo $this->formLabel($bp);
+                            ?>
+                             <div class="col-lg-9 pull-left">
+                             <div class="spinner">
+                                    <?php
+                                    echo $this->forminput($bp);
+
+                                    ?>
+                                    <div
+							class="spinner-buttons	btn-group btn-group-vertical">
+                                		<button type="button"
+								class="btn spinner-up">
+                                			<i class="icon-chevron-up"></i>
+                                		</button>
+                                		<button type="button"
+								class="btn spinner-down">
+                                			<i class="icon-chevron-down"></i>
+                                		</button>
+                            	    </div>
+                            </div>
+                            <span>(Bạn đang có <b id="faq_total_point"><?php  echo $totalMoneyPoint===null?0:$totalMoneyPoint;?></b>
+							điển)
+						</span>
+					</div>
+				</div>
+
+
+                            <?php
+                            echo $this->formSubmit($form->get('submit'));
+                            echo $this->form()->closeTag();
+                            ?>
+        </div>
+
+		</div>
+        <br/>
+        <div class="col-md-12 col-sm-12 pull-left">
+        <div class="panel-heading">
+<h4 class="panel-title"> DANH SÁCH CÂU HỎI LIÊN QUAN</h4>
+</div>
+         <?php echo  $this->partial('/web/question/question-list.phtml');?>
+
+        </div>
+</div>
+
+</div>
+<div class="visible-md  visible-lg visible-sm" id="right-content" >
+<div id="faq-tearm">
+
+  <?php
+    echo $this->partial('/web/home/top-tearm.phtml');
+    ?>
+</div>
+
+<div id="top-tag">
+    <?php
+    echo $this->partial('/web/home/top-tutorial-tag.phtml');
+    ?>
+</div>
+</div>
+<script type="text/javascript">
+$(document).ready(function(){
+// 	$('#faq_label_key_word').tagsinput();
+
+});
+
+</script>
+

@@ -1,0 +1,165 @@
+<script src="/js/jquery.fancybox.js" ></script>
+<script src="/js/faq_fancybox.js"></script>
+<script src="/js/jquery/jquery.dataTables.min.js"></script>
+<link rel="stylesheet" type="text/css" href="/css/fancybox/jquery.fancybox.css" />
+<link rel="stylesheet" type="text/css" href="/css/admin/jqueryui/jquery.dataTables_themeroller.css" />
+<h1><a href="/admin/news/create">Trang tạo tin, help...</a></h1>
+
+<br>
+<table style="overflow: scroll;" cellpadding="0" cellspacing="0" border="0" class="display"
+	id="faq_data_grid_news">
+	<thead>
+		<tr>
+			<th class="id" width="5%">Deactive</th>
+			<th class="id" width="5%">ID</th>
+			<th class="title" width="15%">Tiêu đề</th>
+			<th class="content" width="18%">Nội dung</th>
+			<th class="status" width="5%">Trạng thái</th>
+			<th class="type" width="5%">Loại</th>
+			<th class="type" width="5%">ma trang thai</th>
+
+		</tr>
+	</thead>
+	<tbody>
+
+	</tbody>
+	<tfoot>
+
+	</tfoot>
+</table>
+
+<style>
+table{
+	overflow: scroll;
+/* 	width: 1000px; */
+}
+th,td{
+	white-space:nowrap;
+	overflow: hidden;
+}
+.dataTables_scroll{
+	overflow: scroll;
+}
+table.dataTable td.right {
+text-align: right;
+}
+table.dataTable td.left {
+text-align: left;
+}
+</style>
+<script type="text/javascript">
+
+$(document).ready(function() {
+    $('#faq_data_grid_news').dataTable( {
+        	"sScrollX": "100%",
+            "sScrollXInner": "300%",
+            "bScrollCollapse": true,
+    		"iDisplayLength":10,
+    		 "bJQueryUI": true,
+		    "bInfo":true,
+		    "bPaginate":true,
+		    "bLengthChange":true,
+			"sPaginationType":'full_numbers',
+			"bProcessing": true,
+			"bServerSide": true,
+			"sServerMethod": "GET",
+			"bStateSave": true,
+            "sAjaxSource": '/admin/news/manager',
+            "aoColumns":[
+                           { 'bVisible':    true,'sClass': 'left','sWidth':'5%','fnRender': function (oObj) {
+                               var statusDelete='Deactive';
+                               if(oObj.aData[6]==0){
+                            	   statusDelete='Active';
+                               }
+                          	  var btn_delete='<button status="'+oObj.aData[6]+'" class="faq_btn_delete_news btn btn-danger btn-xs" news="'+oObj.aData[1]+'" type="button" >'+statusDelete+'</button>';
+                            	  return btn_delete;
+			    			} },
+                           { 'bVisible':    true,'sClass': 'left','sWidth':'5%'},
+                           { 'bVisible':    true,'sClass': 'left','sWidth':'15%','fnRender': function (oObj) {
+				    			var title=oObj.aData[3];
+				    			var url='<a class="fancybox fancybox.iframe" href="/admin/news/detail/'+oObj.aData[1]+'">'+title+'</a>';
+				    			return url;
+			    			} },
+                           { 'bVisible':    true,'sClass': 'left','sWidth':'17%'},
+                           { 'bVisible':    true,'sClass': 'left','sWidth':'5%'},
+                           { 'bVisible':    true,'sClass': 'left','sWidth':'5%'},
+                           { 'bVisible':    true,'sClass': 'left','sWidth':'5%'}
+
+                         ]
+    } );//end datatable
+
+
+    //delete news
+    $(document).on('click','.faq_btn_delete_news',function(){
+        var context=this;
+        if($(context).attr('status')!='0'){
+    	bootbox.confirm("Admin ơi! có thực sự muốn Deactive không?", function(result) {
+    		  if(result){
+    			  $(context).text("Đang Deactive...");
+    			  var newsID=$(context).attr('news');
+    		  $.ajax({
+    		         url: basePath+"/admin/news/delete",
+    		         type: "POST",
+    		         dataType:"json",
+    		         data: {news:newsID},
+    		         success: function(data){
+        		         console.log(data.status);
+    		        	 if(data.status==true){
+    		        		 $(context).text("Active");
+    		        		 $(context).attr('status','0');
+    		        		 console.log("sucess delete news");
+    		        		 bootbox.alert('Deactive thành công!');
+    		        	 }
+
+    		         },
+    		         error:function(){
+    		        	 bootbox.alert('Không Deactive được =((');
+    		        	 $(context).text("Deactive?");
+    		             console.log("AJAX request was a failure");
+    		         }
+    		       });
+    		  }
+
+
+    		});
+        }else{
+        	bootbox.confirm("Admin ơi! có thực sự muốn active không?", function(result) {
+        		  if(result){
+        			  $(context).text("Đang active...");
+        			  var newsID=$(context).attr('news');
+        		  $.ajax({
+        		         url: basePath+"/admin/news/reopen",
+        		         type: "POST",
+        		         dataType:"json",
+        		         data: {news:newsID},
+        		         success: function(data){
+            		         console.log(data.status);
+        		        	 if(data.status==true){
+        		        		 $(context).text("Deactive");
+        		        		 $(context).attr('status','1');
+        		        		 console.log("sucess active news");
+        		        		 bootbox.alert('active thành công!');
+        		        	 }
+
+        		         },
+        		         error:function(){
+        		        	 bootbox.alert('Không active được =((');
+        		        	 $(context).text("active?");
+        		             console.log("AJAX request was a failure");
+        		         }
+        		       });
+        		  }
+
+
+        		});
+    	}
+    });
+
+
+
+
+
+} );// end document ready
+
+
+</script>

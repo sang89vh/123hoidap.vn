@@ -1,0 +1,118 @@
+<?php
+use FAQ\FAQCommon\Util;
+use FAQ\FAQCommon\Authcfg;
+?>
+<nav class="navbar navbar-inverse" role="navigation">
+	<div class="container-fluid">
+		<ul class="nav navbar-nav navbar-left visible-lg visible-md">
+	        <li class="dropdown">
+	          <a href="#" class="dropdown-toggle" data-toggle="dropdown"><span class="glyphicon glyphicon-home"></span></a>
+	          <ul class="dropdown-menu">
+	            <li>
+	            <?php
+	            if($this->role==Authcfg::GUEST){
+                            echo $this->partial('/layout/left_container_guest.phtml');
+                  }else{
+						echo $this->partial('/layout/left_container_layout.phtml');
+					}
+
+                  ?>
+                   </li>
+	          </ul>
+	        </li>
+	      </ul>
+		<!-- Brand and toggle get grouped for better mobile display -->
+		<div class="navbar-header">
+			<button type="button" class="navbar-toggle" data-toggle="collapse"
+				data-target="#faq_main_nav">
+				<span class="sr-only">Toggle navigation</span> <span
+					class="icon-bar"></span> <span class="icon-bar"></span> <span
+					class="icon-bar"></span>
+			</button>
+			<a class="navbar-brand  visible-xs" href="/"><span
+				class="glyphicon glyphicon-home"></span></a>
+			<?php if($this->isAllowed){?>
+			<a class="navbar-brand  visible-xs" href="/answer/"><span
+				class="glyphicon glyphicon-info-sign"></span></a> <a
+				class="navbar-brand  visible-xs" href="/question/"><span
+				class="glyphicon glyphicon-question-sign"></span></a>
+			<?php }?>
+			<a class="navbar-brand  visible-xs" href="/subject/"><span
+				class="glyphicon glyphicon-th-list"></span></a>
+
+				<a
+				class="navbar-brand  visible-xs" href="/member/"><span
+				class="glyphicon glyphicon-user"></span></a>
+			<?php if(!$this->isAllowed){?>
+				<a
+				class="navbar-brand  visible-xs" href="/user/login/"><span
+				class="glyphicon glyphicon-log-in"></span></a>
+				<a
+				class="navbar-brand  visible-xs" href="/user/signup/"><span
+				class="glyphicon glyphicon-registration-mark"></span></a>
+			<?php }?>
+		</div>
+
+
+		<!-- Collect the nav links, forms, and other content for toggling -->
+		<div class="collapse navbar-collapse" id="faq_main_nav">
+
+			<ul class="nav navbar-nav">
+				<li class="dropdown visible-sm">
+				<a href="#" class="dropdown-toggle"
+							data-toggle="dropdown"><span
+								class="glyphicon glyphicon-align-justify"></span></a>
+							<ul class="dropdown-menu">
+								<li><a href="/"><span class="glyphicon glyphicon-home"></span>&nbsp;&nbsp;&nbsp;Trang chủ</a></li>
+								<?php if($this->isAllowed){?>
+								<li><a href="/answer/"><span class="glyphicon glyphicon-info-sign"></span>&nbsp;&nbsp;&nbsp;Câu trả lời</a></li>
+													<li><a href="/question/"><span
+															class="glyphicon glyphicon-question-sign"></span>&nbsp;&nbsp;&nbsp;Câu hỏi</a></li>
+								<?php }?>
+								<li><a href="/subject/"><span class="glyphicon glyphicon-th-list"></span>&nbsp;&nbsp;&nbsp;Chủ đề</a></li>
+													<li><a href="/member/"><span class="glyphicon glyphicon-user"></span>&nbsp;&nbsp;&nbsp;Thành viên</a></li>
+							</ul>
+				</li>
+<?php
+$k = 0;
+$totalSubject = count ( $this->allSubject );
+/* @var $subject /FAQ/FAQEntity/Subject */
+foreach ( $this->allSubject as $subject ) {
+	$k ++;
+	$subjectID = $subject->getId ();
+	$titleSubject = $subject->getTitle ();
+	if ($k < 15) {
+
+		?>
+            <li subject="<?php echo $subjectID;?>"><a
+					href='
+				<?php echo $this->basepath("/subject/detail/question/".$subjectID); ?>/<?php echo Util::convertUrlSeo($titleSubject);?>'><?php echo $titleSubject;?></a></li>
+
+                        <?php
+	} else {
+		if ($k == 15) {
+			?>
+<ul class="nav navbar-nav ">
+					<li class="dropdown"><a href="#" class="dropdown-toggle"
+						data-toggle="dropdown"> <span class="glyphicon glyphicon-th"></span></a>
+						<ul class="dropdown-menu">
+          <?php }?>
+            <li subject="<?php echo $subjectID;?>"><a
+								href="
+				<?php echo $this->basepath("/subject/detail/question/".$subjectID); ?>/<?php echo Util::convertUrlSeo($titleSubject);?>"><?php echo $titleSubject;?></a></li>
+
+            <?php if($k==$totalSubject){?>
+          </ul></li>
+				</ul>
+
+<?php
+		}
+	}
+}
+?>
+          </ul>
+		</div>
+		<!-- /.navbar-collapse -->
+	</div>
+	<!-- /.container-fluid -->
+</nav>

@@ -1,0 +1,37 @@
+<?php 
+use FAQ\FAQCommon\Util;
+use FAQ\FAQCommon\Usercfg;
+use FAQ\FAQCommon\ChromePhp;
+$user = $this->viewModel()->varUser;
+if($user){
+    $rankText = Util::getUserRankText($user);// $rankText = "Expert";
+    $user_rank = Util::getUserRank($user);
+    $user_rank_lov = array();
+    foreach ($user_rank as $rank){
+        $at_rank->name = $rank->getName();
+        $at_rank->time = $rank->getDateUpdated();
+        $user_rank_lov[] = $at_rank;
+    }
+    $sys_rank_lov = array(Usercfg::user_rank_new_text, Usercfg::user_rank_junior_text, Usercfg::user_rank_senior_text, Usercfg::user_rank_expert_text, Usercfg::user_rank_guru_text);
+        foreach($sys_rank_lov as $rankName){
+            $titleRank = false;
+            for($i=0;$i<count($user_rank_lov);$i++){
+                if($rankName==$user_rank_lov[$i]->name){
+                    $titleRank = $user_rank_lov[$i]->name.' - '. $user_rank_lov[$i]->time->format('d/m/y');
+                }
+            }
+?>
+            <div id="faq_rank_<?php echo strtolower($rankName);?>" class="faq_tooltip" data-toggle="tooltip"
+    			<?php if($titleRank){?>title="<?php echo $titleRank; ?>" <?php }?>>
+    		      <!-- make rank active with star -->
+    		      <?php 
+    		      if($rankText==$rankName){   
+    		          ?>
+    		          <img src="/images/icon/Star-icon.png"  style="margin-bottom:-26px;margin-right:-9px" />
+    		      <?php }else{?>
+    		          &nbsp;
+    		      <?php }?>	
+    		</div>
+<?php 
+        }
+    }?>

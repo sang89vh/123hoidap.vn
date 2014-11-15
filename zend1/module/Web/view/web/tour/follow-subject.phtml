@@ -1,0 +1,37 @@
+<?php
+// add titile
+$this->headtitle ( "Giới thiệu về 123hoidap.vn" );
+// setting meta description
+$this->placeholder ( 'description' )->append ( "Giới thiệu về 123hoidap.vn là gì? Mục đích, ý nghĩa của hệ thống hỏi đáp, chia sẻ bài viết hướng dẫn chuyên sâu" );
+
+?>
+
+<div id="faq_tour_nav" class="col-md-12  pull-left navbar   navbar-fixed-top bs-docs-nav"
+	role="banner">
+	<div class="col-md-2  pull-left">
+		<a role="button" type="button" class="btn btn-info btn-lg  pull-right " href="/tour/about">
+			<span class="glyphicon glyphicon-arrow-left"></span>
+		</a>
+	</div>
+	<div class="col-md-8  pull-left">
+		<center>
+			<h2>BƯỚC 2/5-CHỦ ĐỀ BẠN QUAN TÂM</h2>
+		</center>
+	</div>
+	<div class="col-md-2">
+		<a role="button" class="btn btn-info btn-lg pull-left" href="/tour/follow-member">
+			<span class="glyphicon glyphicon-arrow-right"></span>
+		</a>
+	</div>
+
+</div>
+<div id="faq_tour_about" class="col-md-12  pull-left">
+	<img alt="" src="/img/follow-subject.png" style="width: inherit;">
+</div>
+<div class="col-md-12 faq_wrap_content">
+	<div class="faq_content">
+<?php echo $this->partial('/web/subject/list-subject.phtml');?>
+</div>
+</div>
+
+

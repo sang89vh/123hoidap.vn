@@ -1,0 +1,84 @@
+<?php
+use FAQ\FAQCommon\Util;
+$this->headLink ()->prependStylesheet ( $this->basePath () . '/css/message/more.css' );
+$currentUser = Util::getCurrentUser ();
+$currentUserName = Util::getUserName ( $currentUser );
+// add titile
+$this->headtitle ( "Tin nhắn của " . $currentUserName . " | " . $currentUser->getDateCreated ()->getTimestamp () );
+// setting meta description
+$this->placeholder ( 'description' )->append ( "Tin nhắn từ thành viên 123hoidap.vn tới " . $currentUserName );
+?>
+<div class="faq_content">
+	<div id="faq_message_detail_header">
+		<ul class="nav nav-tabs" id="faq_message_index_nav">
+			<li class=""><a href="<?php echo $this->basepath("/message");?>">Thông
+					báo</a></li>
+			<li class="active"><a
+				href="<?php echo $this->basepath("/message/chat-box");?>">Tin nhắn</a></li>
+		</ul>
+	</div>
+	<div id="faq_content_notify">
+		<ul class="list-notify">
+<?php
+
+if (count ( $data ['notifies'] ) > 0) {
+	$offset = $data ['offset'];
+	$length = $data ['length'];
+	$notifies = $data ['notifies'];
+	// var_dump($data);
+	for($j = $length + $offset - 1; $j >= $offset; $j --) {
+		if ($j < 0) {
+			break;
+		}
+		$notify = $notifies [$j];
+		/* @var $notify \FAQ\FAQEntity\Notify */
+		$userCreateNotify = $notify->getUserCreateNotify ();
+		$timeUpdateNotify = $notify->getDateUpdated ()->getTimestamp () * 1000;
+		// var_dump($userCreateNotify);
+		$avatar = $userCreateNotify->getAvatar ();
+		$imageID = $avatar->getId ();
+		$userName = $userCreateNotify->getFirstName () . " " . $userCreateNotify->getLastName ();
+
+		$contentType = $avatar->getContentType ();
+
+		$extentionFile = Util::getTypeFile ( $contentType );
+		$titleFileSeo = Util::convertUrlFileName ( $userName, $extentionFile );
+
+
+			$type = "question";
+			$documentID = $notify->getQuestion ()->getId ();
+
+		?>
+
+
+	<li><a
+				href="<?php echo $this->basepath("/$type/detail/".$documentID);?>"
+				target="_blank">
+
+					<div class="pull-left">
+						<img class="img-rounded" id="faq_img_user_profile"
+							style="-webkit-user-select: none"
+							src="<?php echo $this->basepath("/media/get-image/images/$imageID/$titleFileSeo")?>">
+					</div>
+					<div class="pull-right faq_wrap_content_more_notify">
+						<span><b><?php echo  $userName;?></b></span> <span><?php echo $notify->getContent();?></span>
+						<br> <span class="text-muted  faq_post_time faq_time_notify"
+							post-time=<?php echo $timeUpdateNotify; ?>></span>
+					</div>
+			</a></li>
+
+
+
+
+<?php
+	}
+}
+?>
+
+</ul>
+	</div>
+	<script type="text/javascript">
+settimeUpdate();
+</script>
+
+</div>

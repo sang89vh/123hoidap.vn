@@ -1,0 +1,37 @@
+<div id="faq_content_email">
+	<ul>
+<?php
+$chatNotify = $this->chat_notify;
+$i = 0;
+foreach ( $chatNotify as $notify ) {
+	$i ++;
+	/* @var $notify \FAQ\FAQEntity\Notify */
+	?>
+	<li style="list-style: none"><a
+			href="/message/chat-box/<?php echo $notify->room_id; ?>"> <span
+				style="font-size: 15px"><?php echo $notify->room_name;?></span>&nbsp;&nbsp;
+				<span style="font-size: 11px"
+				class="<?php echo $i%2==0?'label label-success':'label label-info'?>">
+					<?php echo $notify->num_message;?>
+			</span>
+		</a></li>
+		<hr />
+<?php
+}
+?>
+</ul>
+	<div class="row">
+		<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+			<a href="<?php echo $this->basepath("/message/chat-box");?>"><button
+					class="btn btn-default btn-xs">Xem thêm</button></a>
+		</div>
+		<div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+			<a href="javascript:openChatBox()"><button class="btn btn-default btn-xs">Gửi
+					tin nhắn</button>
+				</button></a>
+		</div>
+	</div>
+	<script type="text/javascript">
+settimeUpdate();
+</script>
+</div>

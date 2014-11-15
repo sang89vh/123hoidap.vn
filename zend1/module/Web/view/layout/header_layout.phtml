@@ -1,0 +1,82 @@
+<?php
+use FAQ\FAQCommon\Util;
+$userLogin = Util::getCurrentUser ();
+$userLoginID = $userLogin->getId ();
+$userLoginName = $userLogin->getFirstName () . " " . $userLogin->getLastName ();
+$userUrlSeo = "bai-huong-dan-cua-" . Util::convertUrlSeo ( $userLoginName );
+?>
+<header role="banner">
+
+	<nav class="navbar navbar-default " role="navigation">
+		<div class="col-md-6 col-lg-6 col-sm-12 col-xs-12">
+		<div class="col-md-2 col-lg-2 col-sm-2 col-xs-2 visible-lg visible-md">
+			<a href="/" title="Hỏi đáp | Hướng dẫn | 123hoidap.vn"> <img
+				id="qapolo_logo_mini"
+				src="<?php echo $this->basePath('/img/qapolo_logo_mini.png');?>" />
+			</a>
+        </div>
+        <div class="col-md-10 col-lg-10 col-sm-12 col-xs-12">
+		<?php
+		echo $this->partial ( '/web/home/search-form.phtml' );
+		?>
+		</div>
+	   </div>
+		<div class="col-md-6 col-lg-6 col-sm-12 col-xs-12">
+			<div class="col-md-12 col-lg-12 col-sm-12 col-xs-12 pull-right">
+				<div class="col-md-2 col-lg-2 col-sm-3 col-xs-6" id="faq_notify_inbox" title="THÔNG BÁO">
+					<center>
+						<span class="glyphicon glyphicon-bell faq_icon_notify"></span>
+						<span class="label-danger badge" id="faq_notify_inbox_value"><?php echo $sumNotify;?></span>
+					</center>
+				</div>
+				<div class="col-md-2 col-lg-2 col-sm-3 col-xs-6" id="faq_email_inbox" title="TIN NHẮN">
+					<center>
+						<span class="glyphicon glyphicon-envelope faq_icon_notify"></span>
+						<span class="label-danger badge" id="faq_email_inbox_value"><?php echo $sumMessage;?></span>
+					</center>
+				</div>
+				<div class="btn-group col-md-4 col-lg-4 col-sm-5 col-xs-8">
+					<button type="button" class="btn btn-warning pull-left"
+						id="faq_btn_create_question">Đặt câu hỏi</button>
+
+				</div>
+
+				<div class="btn-group col-md-4 col-lg-4 col-sm-1 col-xs-4">
+					<button class="btn btn-link visible-md  visible-lg">
+						<small> <a
+							href="<?php echo $this->basepath("/member/question/".$userLoginID);?>/<?php echo $userUrlSeo;?>"><?php echo $userLoginName;?></a>
+
+						</small>
+					</button>
+					<button class="btn dropdown-toggle btn-link" data-toggle="dropdown">
+						<span class="glyphicon glyphicon-cog"></span>
+					</button>
+					<ul class="dropdown-menu faq_wrap_option_user" role="menu">
+						<li><a
+							href="<?php echo $this->basepath("/member/question/".$userLoginID);?>/<?php echo $userUrlSeo;?>"><span
+								class="glyphicon glyphicon-user faq_option_user"></span>Trang cá
+								nhân</a></li>
+						<li><a href="<?php echo $this->basepath("/user/about");?>"><span
+								class="glyphicon glyphicon-list faq_option_user"></span>Cài đặt</a></li>
+						<li><a href="<?php echo $this->basepath()?>/user/logout"><span
+								class="glyphicon glyphicon-log-out faq_option_user"></span>Thoát</a></li>
+					</ul>
+				</div>
+
+			</div>
+		</div>
+	</nav>
+	<div id="notify_tooltip_container" over_tooltip="no"></div>
+ 	<?php
+		echo $this->partial ( '/layout/faqnav.phtml' );
+		?>
+ <script>
+                 $('#notify_tooltip_container').mouseenter(function(){
+               	           $(this).attr('over_tooltip','yes');
+                 });
+                 $('#notify_tooltip_container').mouseleave(function(){
+               	           $(this).attr('over_tooltip','no');
+                 });
+
+ </script>
+</header>

@@ -1,0 +1,15 @@
+<?php
+use FAQ\FAQCommon\Util;
+?>
+
+<!-- <div id='cssmenu'> -->
+<div >
+<?php
+// <-- Add menu !!
+echo $this->navigation('navigation_guest')
+    ->menu()
+    ->setMinDepth(0)
+    ->setMaxDepth(0)
+    ->setUlClass('nav nav-pills nav-stacked')->setPartial('/partial/menu.phtml')->render();
+?>
+ </div>

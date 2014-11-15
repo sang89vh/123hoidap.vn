@@ -1,0 +1,138 @@
+<div id="faq_content_notify">
+	<ul class="list-notify">
+<?php
+use FAQ\FAQCommon\Util;
+$groupNotifies = array ();
+if (count ( $data ['notifies'] ) > 0) {
+	$offset = $data ['offset'];
+	$length = $data ['length'];
+	$notifies = $data ['notifies'];
+	// var_dump($data);
+	for($j = $length + $offset - 1; $j >= $offset; $j --) {
+		try {
+
+
+		if ($j < 0) {
+			break;
+		}
+		$notify = $notifies [$j];
+		if(!empty($notify)){
+		$document = $notify->getQuestion ();
+		if(!empty($document)){
+		$notifyContent = $notify->getContent ();
+		/* @var $notify \FAQ\FAQEntity\Notify */
+		$userCreateNotify = $notify->getUserCreateNotify ();
+		$timeUpdateNotify = $notify->getDateUpdated ()->getTimestamp () * 1000;
+		// var_dump($userCreateNotify->getId());
+		$avatar = $userCreateNotify->getAvatar ();
+		$imageID = $avatar->getId ();
+		$userName = $userCreateNotify->getFirstName () . " " . $userCreateNotify->getLastName ();
+
+		$contentType = $avatar->getContentType ();
+
+		$extentionFile = Util::getTypeFile ( $contentType );
+		$titleFileSeo = Util::convertUrlFileName ( $userName, $extentionFile );
+
+		$titleSeo = "";
+		$typeCode=$notify->getType ();
+
+			$type = "question";
+			$documentID = $document->getId ();
+			$titleSeo = Util::convertUrlSeo ( $document->getTitle () );
+
+		$documentID_typeCode = $documentID . "_" . $typeCode;
+		$isContain = isset ( $this->_elements [$documentID_typeCode] ) || array_key_exists ( $documentID_typeCode, $groupNotifies );
+		// group
+		if ($isContain == FALSE) {
+			$groupNotifies [$documentID_typeCode] = array (
+					"type" => $type,
+					"documentID" => $documentID,
+					"titleSeo" => $titleSeo,
+					"imageID" => $imageID,
+					"titleFileSeo" => $titleFileSeo,
+					"userName" => $userName,
+					"timeUpdateNotify" => $timeUpdateNotify,
+					"shortNotifyContent"=>$notifyContent,
+					"notifyContent" => $userName."> ".$notifyContent,
+					"total_user"=>1
+			);
+		} elseif ($isContain == TRUE) {
+          $newNotify=array();
+          $oldNotify=$groupNotifies [$documentID_typeCode];
+          $newNotifyTotalUser=$oldNotify['total_user']+1;
+          if($newNotifyTotalUser<4){
+          $oldNotifyUserName=$oldNotify["userName"];
+         $isContaintName= strpos($oldNotifyUserName, $userName)>-1;
+         if($isContaintName==false){
+          $newNotifyUserName=	$userName.", ".$oldNotifyUserName;
+         }
+          }
+          $newNotify=array (
+					"type" => $type,
+					"documentID" => $documentID,
+					"titleSeo" => $titleSeo,
+					"imageID" => $imageID,
+					"titleFileSeo" => $titleFileSeo,
+					"userName" => $newNotifyUserName,
+					"timeUpdateNotify" => $timeUpdateNotify,
+					"shortNotifyContent"=>$notifyContent,
+					"notifyContent" => $userName."> ".$notifyContent.", ".$oldNotify["notifyContent"],
+          		    "total_user"=>$newNotifyTotalUser
+			);
+
+          $groupNotifies [$documentID_typeCode]=$newNotify;
+		}
+		}
+		}
+		} catch (\Exception $e) {
+			Util::writeLog($e->getMessage());
+		}
+	}
+}
+// var_dump($groupNotifies);
+foreach ($groupNotifies as $key => $groupNotify) :
+$groupNotifyType=$groupNotify['type'];
+$groupNotifyDocumentID=$groupNotify['documentID'];
+$groupNotifyTitleSeo=$groupNotify['titleSeo'];
+$groupNotifyImageID=$groupNotify['imageID'];
+$groupNotifyTitleFileSeo=$groupNotify['titleFileSeo'];
+$groupNotifyUserName=$groupNotify['userName'];
+$groupNotifyTtotalUser=$groupNotify['total_user'];
+if($groupNotifyTtotalUser>3){
+$groupNotifyTtotalUserOther=$groupNotifyTtotalUser-3;
+$groupNotifyUserName=$groupNotifyUserName." và ".$groupNotifyTtotalUserOther." người khác";
+}
+$groupNotifyShortContent=mb_substr($groupNotify['shortNotifyContent'], 0,70 ,'UTF-8')."...";
+$groupNotifyContent=$groupNotify['notifyContent'];
+$groupNotifyTimeUpdateNotify=$groupNotify['timeUpdateNotify'];
+    ?>
+
+
+	<li><a
+			href="<?php echo $this->basepath("/$groupNotifyType/detail/$groupNotifyDocumentID/$groupNotifyTitleSeo");?>">
+
+				<div class="pull-left">
+					<img class="img-rounded" id="faq_img_user_profile"
+						style="-webkit-user-select: none"
+						src="<?php echo $this->basepath("/media/get-image/images/$groupNotifyImageID/$groupNotifyTitleFileSeo")?>">
+				</div>
+				<div class="pull-right faq_wrap_content_notify" title="<?php echo $groupNotifyContent;?>">
+					<span><b><?php echo  $groupNotifyUserName;?></b></span> <span><?php echo $groupNotifyShortContent;?></span>
+					<br>
+					<span class="text-muted  faq_post_time faq_time_notify"  post-time=<?php echo $groupNotifyTimeUpdateNotify; ?>></span>
+				</div>
+		</a></li>
+
+
+
+
+<?php
+endforeach;
+?>
+
+</ul>
+<center><a href="<?php echo $this->basepath("/message");?>">Xem thêm</a></center>
+</div>
+<script type="text/javascript">
+settimeUpdate();
+</script>

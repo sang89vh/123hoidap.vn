@@ -1,0 +1,26 @@
+<div class="bs-example">
+	<div class="row">
+<?php
+$listSubDir = $this->listSubDir;
+for ($i = 0; $i < count($listSubDir); $i ++) {
+    ?>
+       <div id="<?php echo $listSubDir[$i]->id;?>" class="col-sm-6 col-md-2" context="edit">
+			<a href="/media/<?php echo $listSubDir[$i]->id;?>"
+				class="thumbnail"> <img alt="<?php echo $listSubDir[$i]->name;?>"
+				src="/images/folder_128x128.png"
+				style="height: 128px; width: 128px; display: block;">
+				<div class="col-sm-12 col-md-12">
+        					<div class="faq_title_media_file"><?php echo $listSubDir[$i]->name;?>
+        					</div>
+					</div>
+			</a> <img src="/images/edit_24x24.png" class="edit-icon"
+				class="pull-right" style="position: absolute; top: -5px;"
+				item_id="<?php echo $listSubDir[$i]->id; ?>"
+				item_name="<?php echo $listSubDir[$i]->name;?>"
+				item_content_type="<?php echo $listSubDir[$i]->contentType;?>"
+				item_type="<?php echo $listSubDir[$i]->type;?>"></img>
+		</div>
+<?php }?>
+
+      </div>
+</div>

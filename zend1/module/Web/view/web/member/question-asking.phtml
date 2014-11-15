@@ -1,0 +1,53 @@
+<?php
+use FAQ\FAQCommon\Appcfg;
+use FAQ\FAQCommon\Util;
+$this->headScript()
+->prependFile($this->basePath() . '/js/member/question.js')
+->prependFile($this->basePath() . '/js/question/common_question.js')
+->prependFile($this->basePath() . '/js/question/list_question.js')
+    ->appendFile($this->basePath() . '/js/bsa.js')
+    ->appendFile($this->basePath() . '/js/bsa_script.js');
+ $this->headLink()
+->prependStylesheet($this->basePath() . '/css/question/index.css');
+
+ $this->headtitle('Câu hỏi đang mở của '.Util::getUserName($user)." | ".$user->getDateCreated()->getTimestamp());
+ // setting meta description
+ $this->placeholder('description')
+ ->append("Danh sách tất cả các câu hỏi đang mở của ".Util::getUserName($user));
+?>
+<script type="text/javascript">
+
+var faq_url_paging="<?php echo $this->basepath("/member/question-asking"); ?>";
+var totalLoad=0;
+var step= <?php echo Appcfg::$question_paging_size; ?>;
+var faq_from_paging=totalLoad*step;
+var faq_to_paging=(totalLoad+1)*step;
+var totalRow=<?php echo $totalDocument?>;
+var subject_select=null;
+var user="<?php echo $user->getId();?>";
+
+var faq_data_paging={
+		from:faq_from_paging,
+		to:faq_to_paging,
+		subject:subject_select,
+		user:user
+		};
+var type_search=0;
+</script>
+<div  class="faq_wrap_content">
+<?php
+
+       echo $this->partial("/web/member/nav.phtml");
+?>
+<div style="clear:both;"></div>
+
+<div id="faq_postswrapper">
+    <?php echo  $this->partial('/web/question/question-list.phtml');?>
+</div>
+<div id="faq_loadmoreajaxloader" style="display: none;">
+	<div class='faq_container'>
+		<center><img
+			src='<?php echo $this->basePath("/images/ajax-loader.gif")?>'>
+	</div>
+</div>
+</div>

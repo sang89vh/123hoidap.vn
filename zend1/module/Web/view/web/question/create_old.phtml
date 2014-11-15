@@ -1,0 +1,68 @@
+ <?php
+use FAQ\FAQCommon\Util;
+ $this->headLink()
+    ->prependStylesheet($this->basePath() . '/css/question/create_question.css')
+    ->prependStylesheet($this->basePath() . '/css/fuelux.css')
+    ->prependStylesheet($this->basePath() . '/css/fuelux-responsive.css');
+?>
+<!-- Scripts -->
+<?php
+ $this->headScript()
+    ->prependFile($this->basePath() . '/js/wizard.js')
+    ->prependFile($this->basePath() . '/js/question/create_question.js')
+    ->appendFile($this->basePath() . '/js/tinymce/tinymce.min.js')
+    ->appendFile($this->basePath() . '/js/tinymce/jquery.tinymce.min.js')
+;
+
+?>
+<script type="text/javascript">
+var subject = "<?php echo $subject;?>";
+var tags = "<?php echo $tags;?>";
+var title="<?php echo $title;?>";
+var contentQuestion=null;
+
+</script>
+<div class="fuelux">
+	<div id="faq_create_question_wizard" class="wizard faq_train">
+		<ul class="steps">
+			<li data-target="#faq_step_select_subject" class="active"><span
+				class="badge badge-info">1</span>Chọn
+				chủ đề<span class="chevron"></span></li>
+			<li data-target="#faq_step_content_question"><span class="badge">2</span>Nội
+				dung câu hỏi<span class="chevron"></span></li>
+			<li data-target="#faq_step_finish_question"><span class="badge">3</span>Hoàn
+				thành<span class="chevron"></span></li>
+		</ul>
+		<div class="actions">
+			<button type="button" class="btn  btn-prev">
+				<i class="icon-arrow-left"></i>Trở lại
+			</button>
+			<button type="button" class="btn btn-info btn-next"
+				data-last="Đăng câu hỏi" id="faq_btn_next" data-loading-text="Đang lưu...">
+				Tiếp tục<i class="icon-arrow-right"></i>
+			</button>
+		</div>
+	</div>
+	<div class="step-content">
+		<div class="step-pane active faq_content" id="faq_step_select_subject">
+			<div class='container'>
+				<center><img  src='<?php echo $this->basePath("/images/ajax-loader.gif")?>'>
+			</div>
+		</div>
+		<div class="step-pane faq_content" id="faq_step_content_question">
+
+			<div class='container'>
+				<center><img  src='<?php echo $this->basePath("/images/ajax-loader.gif")?>'>
+			</div>
+		</div>
+		<div class="step-pane faq_content" id="faq_step_finish_question">
+
+			<div class='container'>
+				<center><img  src='<?php echo $this->basePath("/images/ajax-loader.gif")?>'>
+			</div>
+		</div>
+	</div>
+
+
+
+</div>

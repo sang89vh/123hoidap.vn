@@ -1,0 +1,15 @@
+
+#faq_user_about_content{
+	background-color:white;
+}
+/**
+ * invalid css (validateit)
+ */
+.notice_error_text{
+color:red;
+font-style:italic;
+font-size:12px;
+}
+.ui-state-error{
+	border-color:red !important;
+}

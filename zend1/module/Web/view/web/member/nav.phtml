@@ -1,0 +1,188 @@
+<?php
+use FAQ\FAQCommon\Util;
+$act = 'profile';
+$act_sub = $this->action;
+if (strpos ( $act_sub, 'question' ) !== false) {
+	$act = 'question';
+}
+if (strpos ( $act_sub, 'answer' ) !== false)
+	$act = 'answer';
+
+$userNameSeo = Util::getUserNameSeo ( $user );
+$userId = $user->getId ();
+$userUrlSeoQuestion = "cau-hoi-cua-" . $userNameSeo;
+$userUrlSeoQuestionOpen = "cau-hoi-dang-mo-cua-" . $userNameSeo;
+$userUrlSeoQuestionClose = "cau-hoi-da-dong-cua-" . $userNameSeo;
+$userUrlSeoQuestionSpam = "cau-hoi-vi-pham-cua-" . $userNameSeo;
+
+$userUrlSeoAnswer = "cau-tra-loi-cua-" . $userNameSeo;
+$userUrlSeoAnswerLike = "cau-tra-loi-hay-cua-" . $userNameSeo;
+$userUrlSeoAnswerDislike = "cau-tra-loi-khong-hay-cua-" . $userNameSeo;
+$userUrlSeoAnswerBest = "cau-tra-loi-tot-nhat-cua-" . $userNameSeo;
+?>
+<style>
+#member-nav-second {
+	height: 50px;
+}
+
+#member-nav-top {
+	height: 55px;
+	border-bottom: 1px #269abc solid;
+}
+
+#faq_wrap_member_nav_second {
+	border-bottom: 1px #269abc solid;
+}
+
+#member-nav-top li,#member-nav-second li {
+	height: 32px;
+	padding-top: 4px;
+}
+
+.menu li {
+	list-style: none;
+	float: left;
+	margin-right: 35px;
+	font-weight: bold;
+}
+
+#member-nav-top li.active {
+	border-bottom: 2px #269abc solid;
+}
+
+#member-nav-second li.active {
+	border-bottom: 2px #269abc solid;
+}
+
+li a:hover {
+	text-decoration: none;
+}
+
+#faq_wrap_member_nav_second {
+	background-color: #f6f7f8;
+}
+
+.faq_icon_active_title {
+	color: #dddddd;
+	margin-right: 10px;
+}
+</style>
+<div id="member-nav-top"
+	class="menu col-lg-12 col-md-12 col-sm-12 col-sm-12">
+
+	<ul>
+
+		<li act="question" class="<?php echo "question"==$act?"active":""?>"><a
+			href="/member/question/<?php echo $userId;?>/<?php echo $userUrlSeoQuestion;?>">Câu
+				Hỏi</a></li>
+		<li act="answer" class="<?php echo "answer"==$act?"active":""?>"><a
+			href="/member/answer/<?php echo $userId;?>/<?php echo $userUrlSeoAnswer;?>">Câu
+				Trả Lời</a></li>
+		<li act="profile" class="<?php echo "profile"==$act?"active":""?>"><a
+			href="/member/profile/<?php echo $userId;?>/<?php echo $userNameSeo;?>">Thông
+				Tin Cá Nhân</a></li>
+	</ul>
+
+</div>
+
+<div id="faq_wrap_member_nav_second"
+	class="col-lg-12 col-md-12 col-sm-12 col-sm-12">
+	<div class="col-lg-12 col-md-12 col-sm-12 col-sm-12 pull-left">
+		<h3
+			class="faq_icon_active_title pull-left glyphicon glyphicon-folder-open"></h3>
+		<?php if("question"==$act){?>
+		<h3 id="faq_active_title" class="pull-left">Câu hỏi</h3>
+		<?php }elseif ("answer"==$act){?>
+		<h3 id="faq_active_title" class="pull-left">Câu trả lời</h3>
+		<?php }elseif ("profile"==$act){?>
+		<h3 id="faq_active_title" class="pull-left">Thông tin cá nhân</h3>
+
+		<?php }?>
+	</div>
+
+<?php if($act=="question"){?>
+<div id="member-nav-second"
+		class="col-lg-12 col-md-12 col-sm-12 col-sm-12 pull-left">
+		<div class=" pull-left">
+			<ul class="nav nav-pills">
+				<li act="question"
+					class="<?php echo $act_sub=="question"?"active":""?>"><a
+					href="/member/question/<?php echo $userId;?>/<?php echo $userUrlSeoQuestion;?>">Tổng
+						Quan</a></li>
+				<li act="question-asking"
+					class="<?php echo $act_sub=="question-asking"?"active":""?>"><a
+					href="/member/question-asking/<?php echo $userId;?>/<?php echo $userUrlSeoQuestionOpen;?>">Đang
+						Hỏi</a></li>
+				<li act="question-closed"
+					class="<?php echo $act_sub=="question-closed"?"active":""?>"><a
+					href="/member/question-closed/<?php echo $userId;?>/<?php echo $userUrlSeoQuestionClose;?>">Đã
+						Đóng</a></li>
+				<li act="question-spam"
+					class="<?php echo $act_sub=="question-spam"?"active":""?>"><a
+					href="/member/question-spam/<?php echo $userId;?>/<?php echo $userUrlSeoQuestionSpam;?>">Vi
+						Phạm</a></li>
+			</ul>
+		</div>
+		<div class="dropdown pull-right" id="faq_wrap_home_detail_option">
+			<a id="dLabel" role="button" data-toggle="dropdown" data-target="#"
+				href="#"> Chọn chủ đề <span class="caret"></span>
+			</a>
+			<ul id="faq_question_index_options" class="dropdown-menu" role="menu"
+				aria-labelledby="dLabel">
+
+				<li value='-1'><a href="#">Tất cả các chủ đề</a></li>
+                    <?php foreach ($list_subject as $sub):?>
+                <li value='<?php echo $sub['_id']->__toString(); ?>'><a
+					href='# <?php echo $sub['title']; ?>'><?php echo $sub['title']; ?></a></li>
+                    <?php endforeach;?>
+          </ul>
+		</div>
+	</div>
+
+<?php }elseif($act=='answer'){ ?>
+<div id="member-nav-second"
+		class="col-lg-12 col-md-12 col-sm-12 col-sm-12 pull-left">
+		<div class=" pull-left">
+			<ul class="nav nav-pills">
+				<li act="answer" class="<?php echo $act_sub=="answer"?"active":""?>"><a
+					href="/member/answer/<?php echo $userId;?>/<?php echo $userUrlSeoAnswer;?>">Tổng
+						Quan</a></li>
+				<li act="answer-like"
+					class="<?php echo $act_sub=="answer-like"?"active":""?>"><a
+					href="/member/answer-like/<?php echo $userId;?>/<?php echo $userUrlSeoAnswerLike;?>">Hay</a></li>
+				<li act="answer-dislike"
+					class="<?php echo $act_sub=="answer-dislike"?"active":""?>"><a
+					href="/member/answer-dislike/<?php echo $userId;?>/<?php echo $userUrlSeoAnswerDislike;?>">Không
+						Hay</a></li>
+				<li act="answer-best"
+					class="<?php echo $act_sub=="answer-best"?"active":""?>"><a
+					href="/member/answer-best/<?php echo $userId;?>/<?php echo $userUrlSeoAnswerBest;?>">Tốt
+						Nhất</a></li>
+			</ul>
+		</div>
+		<div class="dropdown pull-right" id="faq_wrap_home_detail_option">
+			<a id="dLabel" role="button" data-toggle="dropdown" data-target="#"
+				href="#"> Chọn chủ đề <span class="caret"></span>
+			</a>
+			<ul id="faq_question_index_options" class="dropdown-menu" role="menu"
+				aria-labelledby="dLabel">
+
+				<li value='-1'><a href="#">Tất cả các chủ đề</a></li>
+                    <?php foreach ($list_subject as $sub):?>
+                <li value='<?php echo $sub['_id']->__toString(); ?>'><a
+					href='# <?php echo $sub['title']; ?>'><?php echo $sub['title']; ?></a></li>
+                    <?php endforeach;?>
+          </ul>
+		</div>
+	</div>
+<?php }?>
+
+</div>
+
+<script>
+$(document).ready(function(){
+    settimeUpdate();
+	showPreview();
+});
+
+</script>

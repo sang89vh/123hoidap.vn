@@ -1,0 +1,83 @@
+<?php use FAQ\FAQEntity\User;
+echo $this->doctype();
+ ?>
+<html lang="vi_VN">
+<head><meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<?php
+        echo $this->headMeta('description', $this->placeholder('description').$this->headMetaDesc)
+//                  ->appendHttpEquiv('Content-Type',
+//                                    'text/html; charset=UTF-8')
+                 ->appendHttpEquiv('Content-Language', 'vi-VN');
+            // 1633
+
+            echo $this->headLink(array(
+            'rel' => 'shortcut icon',
+            'type' => 'image/vnd.microsoft.icon',
+            'href' => $this->basePath() . '/img/qapolo_logo_mini.ico'
+        ))
+//             ->prependStylesheet($this->basePath() . '/css/bootstrap-responsive.min.css')
+            ->prependStylesheet($this->basePath() . '/css/style.css')
+            ->prependStylesheet($this->basePath() . '/css/bootstrap.css')
+            ->prependStylesheet($this->basePath() . '/css/footer.css')
+            ;
+            ?>
+
+        <!-- Scripts -->
+        <?php
+
+            echo $this->headScript()
+            ->prependFile($this->basePath() . '/js/html5.js', 'text/javascript', array(
+            'conditional' => 'lt IE 9'
+        ))
+
+            ->prependFile($this->basePath() . '/js/bootstrap.js')
+            ->prependFile($this->basePath() . '/js/jquery-2.0.3.js')
+			->appendFile($this->basePath() . '/js/fixto.min.js')
+		    ->appendFile($this->basePath() . '/js/page.js')
+			->appendFile($this->basePath() . '/js/login.js')
+
+            ?>
+ <script type="text/javascript">
+
+            var basePath='<?php echo $this->basePath();?>';
+
+    </script>
+
+    </head>
+
+
+<body>
+
+	<!-- Part 1: Wrap all page content here -->
+
+		<div class="container">
+	<div class="bs-docs-section">
+
+			<div class="row">
+    <div class="faq_white_content">
+			<?php echo $this->content; ?>
+
+				</div>
+
+			</div>
+		</div>
+		<div class="bs-docs-section">
+
+			<div class="row">
+				<div id="footer">
+
+					   <?php
+								echo $this->partial ( '/layout/footer_layout.phtml' );
+								// outputs as unordered list with pretty indentation
+								?>
+
+
+		</div>
+			</div>
+		</div>
+		<div id="avatar_tooltip_container"></div>
+	</div>
+
+</body>
+</html>

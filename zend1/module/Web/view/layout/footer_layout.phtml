@@ -1,0 +1,189 @@
+<?php
+use FAQ\FAQCommon\Authcfg;
+?>
+<div class="footer-container">
+	<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+		<div class="col-lg-3 col-md-6 col-sm-6 col-xs-12">
+			<ul class="list-unstyled">
+				<li><h4>Hỗ trợ</h4></li>
+
+						<li><a href="#">Version &alpha; 2.0</a> </li>
+						<li>
+						<a href="<?php echo $this->basepath("support/contact");?>"
+							>Liên hệ</a>
+						</li>
+						<li><a href="<?php echo $this->basepath("about");?>">Giới thiệu</a>
+						</li>
+						<li>
+							<a href="<?php echo $this->basepath("support/help");?>"
+							>Trợ giúp</a>
+						</li>
+						<li><a
+							href="<?php echo $this->basepath("support/community-guideline");?>">Nguyên
+								tắc cộng đồng</a>
+						</li>
+						<li><a href="<?php echo $this->basepath("support/term");?>">Điều
+								khoản</a></li>
+						<li><a
+							href="<?php echo $this->basepath("support/scoring-system");?>">Điểm
+								số&Cấp bậc</a></li>
+
+			</ul>
+
+
+
+		</div>
+		<div class="col-lg-3 col-md-6 col-sm-6 col-xs-12">
+		<ul class="list-unstyled">
+				<li><h4>Kết nối với chúng tôi</h4></li>
+
+						<li><a href="https://www.facebook.com/pages/K%E1%BA%BFt-n%E1%BB%91i-%C4%91am-m%C3%AA-Chia-s%E1%BA%BB-tri-th%E1%BB%A9c/389510794515662?ref=hl">Facebook</a> </li>
+						<li>
+						<a href="#">Google +</a>
+						</li>
+						<li>
+						<a href="#">Twitter</a>
+						</li>
+						<li>
+						<a href="#">Linkhay.com</a>
+						</li>
+			</ul>
+
+
+		</div>
+		<div class="col-lg-3 col-md-6 col-sm-6 col-xs-12">
+		<ul class="list-unstyled">
+				<li><h4>Liên kết & hợp tác</h4></li>
+
+						<li><a href="https://qapolo.com">https://qapolo.com</a> </li>
+						<li>
+						<a href="https://qapolo.com">https://ebook.qapolo.com</a>
+						</li>
+			</ul>
+
+		</div>
+		<div class="col-lg-3 col-md-6 col-sm-6 col-xs-12">
+		<ul class="list-unstyled">
+				<li><h4>Chủ đề nóng</h4></li>
+
+						<li><a href="#">Java</a> </li>
+						<li>
+						<a href="#">PHP</a>
+						</li>
+						<li>
+						<a href="#">Andorid</a>
+						</li>
+						<li>
+						<a href="#">.Net</a>
+						</li>
+			</ul>
+		</div>
+	</div>
+	<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+
+
+
+
+		<div id="fb-root" class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+			<!-- // bo face like
+	<div class="fb-like" data-href="https://www.facebook.com/pages/K%E1%BA%BFt-n%E1%BB%91i-%C4%91am-m%C3%AA-Chia-s%E1%BA%BB-tri-th%E1%BB%A9c/389510794515662" data-width="" data-height="" data-colorscheme="light" data-layout="button_count" data-action="like" data-show-faces="true" data-send="false"></div>
+ -->
+		</div>
+		<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+			<!-- Place this tag where you want the +1 button to render. -->
+			<div class="g-plusone" data-size="medium"></div>
+		</div>
+		<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+			<span class="text-primary">(Hệ thống <a
+				href="http://123hoidap.vn/">123hoidap.vn</a> đang
+				chạy thử nghiệm, mọi ý kiến đóng góp vui lòng liên hệ
+			</span><a
+				href="mailto:support@123hoidap.vn?subject=Thư%20góp%20ý"
+				target="_top">support@123hoidap.vn</a>)
+		</div>
+		<script type="text/javascript">
+//google+
+window.___gcfg = {lang: 'vi'};
+
+(function() {
+  var po = document.createElement('script'); po.type = 'text/javascript'; po.async = true;
+  po.src = 'https://apis.google.com/js/plusone.js';
+  var s = document.getElementsByTagName('script')[0]; s.parentNode.insertBefore(po, s);
+})();
+//facebook like
+  window.fbAsyncInit = function() {
+    // init the FB JS SDK
+    FB.init({
+      appId      : '<?php echo Authcfg::$facebook_app_id?>',                        // App ID from the app dashboard
+      channelUrl : '//123hoidap.vn/media', // Channel file for x-domain comms
+      status     : true,                                 // Check Facebook Login status
+      xfbml      : true                                  // Look for social plugins on the page
+    });
+
+    // Additional initialization code such as adding Event Listeners goes here
+  };
+
+  // Load the SDK asynchronously
+  (function(d, s, id){
+     var js, fjs = d.getElementsByTagName(s)[0];
+     if (d.getElementById(id)) {return;}
+     js = d.createElement(s); js.id = id;
+     js.src = "//connect.facebook.net/en_US/all.js";
+     fjs.parentNode.insertBefore(js, fjs);
+   }(document, 'script', 'facebook-jssdk'));
+
+
+(function(d, s, id) {
+  var js, fjs = d.getElementsByTagName(s)[0];
+  if (d.getElementById(id)) return;
+  js = d.createElement(s); js.id = id;
+  js.src = "//connect.facebook.net/en_GB/all.js#xfbml=1&appId=<?php echo Authcfg::$facebook_app_id?>";
+  fjs.parentNode.insertBefore(js, fjs);
+}(document, 'script', 'facebook-jssdk'));
+
+
+// Load the SDK Asynchronously
+(function(d){
+    var js, id = 'facebook-jssdk', ref = d.getElementsByTagName('script')[0];
+    if (d.getElementById(id)) {return;}
+    js = d.createElement('script'); js.id = id; js.async = true;
+    js.src = "//connect.facebook.net/en_US/all.js";
+    ref.parentNode.insertBefore(js, ref);
+}(document));
+
+function invite() {
+    FB.ui({
+        method: "apprequests",
+        message: "Hệ thống giải đáp mọi thắc mắc của lập trình viên Việt"
+    }, inviteCallback);
+}
+
+function inviteCallback(response) {
+    console.log(response);
+}
+// gooogle analystics
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+
+  ga('create', 'UA-50171827-1', '123hoidap.vn');
+  ga('send', 'pageview');
+
+</script>
+
+		<div id="faq_inline_basic_login">
+			<center>
+				<img src='/images/ajax-loader.gif' id="faq_img_ajax_basic_login">
+			</center>
+		</div>
+		<a id="faq_link_login_fancy" href="#faq_inline_basic_login">Đăng nhập</a>
+	</div>
+	<div class="col-md-12">
+		<center>© <span>Copyright 2013 123hoidap.vn,</span> All rights
+			reserved
+		</center>
+	</div>
+</div>
+
+

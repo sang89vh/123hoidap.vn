@@ -1,0 +1,90 @@
+<?php
+$this->headLink ()->prependStylesheet ( $this->basePath () . '/css/login.css' );
+?>
+
+<meta charset="utf-8" />
+<?php  echo $this->headTitle('Đăng nhập 123hoidap.vn')?>
+
+<script type="text/javascript">
+var login_back_url='/';
+var login_first_url='/tour/about';
+</script>
+<div class="col-lg-8 col-md-8 visible-lg visible-md">
+	<div class="col-lg-12 col-md-12">
+		<iframe width="640" height="360"
+			src="//www.youtube.com/embed/mWRsgZuwf_8?autohide=1&showinfo=0" frameborder="0"
+			allowfullscreen></iframe>
+	</div>
+	<div class="col-lg-12 col-md-12">
+		<p>Với mong muốn kết nối cộng đồng "Lập trình viên" Việt Nam,
+		chúng tôi xây dựng hệ thống 123hoidap.vn mong muốn mang đến một nơi mà mọi
+		người có thể chia sẻ những kiến thức, khó khăn trong quá trình làm việc của mình.</p>
+		<p>Với khẩu hiệu <b>"Mọi câu hỏi đều có câu trả lời"</b> chúng tôi mong muốn mọi thắc mắc của tất
+		cả mọi người đều được trả lời một cách tốt nhất. Mong rằng đội ngũ "Lập trình viên" tại Việt Nam
+		ngày càng lớn mạnh hơn, chuyên nghiệp hơn.</p>
+
+	</div>
+</div>
+<div id="faq_form_login"
+	class="col-lg-4 col-md-4 col-sm-12 col-xs-12 faq_padding_left_none faq_padding_right_none">
+	<div
+		class="col-lg-12 col-md-12 col-sm-12 col-xs-12 faq_block_login_bottom"
+		id="faq_logo">
+		<center>
+			<a href="/"><img src="/images/logo/logo_qapolo.png"></a>
+		</center>
+		<center>
+			<a href="/"><h4 class="logo">123hoidap.vn - Mọi câu hỏi đều có câu
+					trả lời.</h4></a>
+		</center>
+	</div>
+	<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+		<form id="faq_login" class="form-inline" role="form">
+			<div class="form-group">
+				<div>
+					<input type="email" class="form-control" name='email'
+						class="form-control" valid_type="require email"
+						valid_label="Địa chỉ Email" placeholder="Địa chỉ email">
+				</div>
+			</div>
+			<div class="form-group">
+				<div>
+					<input type="password" name='password' type="password"
+						valid_type="require" valid_label="Mật khẩu" class="form-control"
+						placeholder="Mật khẩu">
+				</div>
+			</div>
+		</form>
+		<div class="form-group">
+			<div>
+				<button id="faq_btn_login" class="btn btn-warning"
+					data-loading-text="Đang đăng nhập...">Đăng nhập</button>
+			</div>
+		</div>
+	</div>
+	<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 faq_block_login pull-left">
+		<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+			<center>
+				<h4>Đăng nhập thông qua Facebook</h4>
+			</center>
+		</div>
+		<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12">
+			<a href="<?php echo $this->facebook_login_url;?>"
+				title="Đăng nhập bằng tài khoản Facebook"><img
+				class=" faq-img-openid"
+				src="/images/logo/logo_facebook.png" /></a>
+		</div>
+
+	</div>
+	<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 faq_block_login pull-left">
+		<h4>Bạn chưa có tài khoản?</h4>
+		<a href="/user/signup">Click</a><span class="text-muted">&nbsp;để đăng
+			ký!</span>
+	</div>
+	<div class="col-lg-12 col-md-12 col-sm-12 col-xs-12 faq_block_login pull-left">
+		<h4>Bạn quên mật khẩu?</h4>
+		<a href="/user/forget-password">Click</a><span class="text-muted">&nbsp;để
+			lấy lại mật khẩu!</span>
+
+	</div>
+</div>

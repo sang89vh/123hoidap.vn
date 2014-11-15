@@ -1,0 +1,242 @@
+<?php
+use FAQ\FAQCommon\FAQParaConfig;
+use FAQ\FAQCommon\Util;
+use FAQ\FAQCommon\Appcfg;
+$this->headScript ()->prependFile ( $this->basePath () . '/js/home/question.js' )->prependFile ( $this->basePath () . '/js/question/common_question.js' )->prependFile ( $this->basePath () . '/js/question/list_question.js' )->appendFile ( $this->basePath () . '/js/bsa.js' )->appendFile ( $this->basePath () . '/js/bsa_script.js' );
+$this->headLink ()->prependStylesheet ( $this->basePath () . '/css/question/index.css' )->prependStylesheet ( $this->basePath () . '/css/home/index.css' );
+;
+//add titile
+$this->headtitle("Tìm kiếm | Thành viên | Chủ đề");
+// setting meta description
+$this->placeholder('description')->append("tìm kiếm tất cả mọi thứ, thành viên, chủ đề, bài viết, câu hỏi, hướng dẫn");
+?>
+<script type="text/javascript">
+var subject_select=null;
+var faq_url_paging="<?php echo $this->basepath("/home/search/?q=$queryString");?>";
+var totalLoad=0;
+var step= <?php echo Appcfg::$question_paging_size; ?>;
+var faq_from_paging=totalLoad*step;
+var faq_to_paging=(totalLoad+1)*step;
+var faq_data_paging={from:faq_from_paging,
+		            to:faq_to_paging};
+
+var totalRow=<?php echo $totalDocument?>;
+var subject_select=null;
+var type_search=0;
+var user=null;
+</script>
+<style>
+.faq_nav_search{
+	margin-bottom: 10px!important;
+}
+.faq_img_search_member, .faq_img_subject_search {
+	height: 130px !important;
+	width: 130px !important;
+}
+
+.faq_list_search_user, .faq_list_search_subject{
+	font-size: small;
+}
+
+.faq_thumbnail_member_search , .faq_thumbnail_subject_search{
+	height: auto;
+	min-height: 165px;
+	float: left;
+}
+</style>
+<div class="faq_content">
+
+	<div class="col-lg-9 col-md-9 col-sm-12 col-xs-12 faq_padding_left_none faq_padding_right_none">
+	<!-- Nav tabs -->
+<ul class="nav nav-tabs faq_nav_search">
+  <li class="active"><a href="#123hoidap" data-toggle="tab">Kết quả tìm kiếm</a></li>
+  <li><a href="#google" data-toggle="tab">sử dụng google search</a></li>
+</ul>
+
+<!-- Tab panes -->
+<div class="tab-content">
+  <div class="tab-pane active" id="123hoidap">
+
+  <?php echo $this->partial("/web/question/question-list.phtml");?>
+
+  </div>
+  <div class="tab-pane" id="google">
+
+ <script>
+  (function() {
+    var cx = '003571295888424162328:ctkr5a5zu_o';
+    var gcse = document.createElement('script');
+    gcse.type = 'text/javascript';
+    gcse.async = true;
+    gcse.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') +
+        '//www.google.com/cse/cse.js?cx=' + cx;
+    var s = document.getElementsByTagName('script')[0];
+    s.parentNode.insertBefore(gcse, s);
+  })();
+</script>
+<gcse:searchresults-only></gcse:searchresults-only>
+
+  </div>
+</div>
+
+
+	</div>
+	<div class="col-lg-3 col-md-3 col-sm-12 col-xs-12">
+
+
+<h4><a href="<?php echo $this->basepath("/member")?>" title="click để xem thêm">Danh sách thành viên<small>...</small></a></h4>
+<div id="faq_list_user" class="faq_list_search_user">
+				<div class="row">
+    <?php
+
+    foreach ($list_member as $member) {
+        /* @var $member \FAQ\FAQEntity\User */
+        $memberID = $member->getId();
+        $nameMember = Util::getUserName($member);
+
+        $avatar = $member->getAvatar();
+
+        $imageID = $avatar->getId();
+
+        $contentType = $avatar->getContentType();
+
+        $extentionFile = Util::getTypeFile($contentType);
+        $titleFileSeo = Util::convertUrlFileName($nameMember,$extentionFile);
+
+        $rankName =  Util::getUserRankText($member);
+        $appellation = Util::getUserAppellationText($member);
+
+        $totalUserFollow = $member->getTotalUserFollow();
+        $statusFollowCode = 1;
+        $currentStatusFollow = FAQParaConfig::statusUnfollow;
+        /* @var $memberFollows \Doctrine\Common\Collections\ArrayCollection */
+        $memberFollows = $member->getFollowMe();
+
+        if ($memberFollows->contains(Util::getCurrentUser())) {
+            $statusFollowCode = 2;
+        }
+        if ($statusFollowCode == 1) {
+            $statusAction = FAQParaConfig::actionFollow;
+        } else {
+            $statusAction = FAQParaConfig::actionUnfollow;
+            $currentStatusFollow = FAQParaConfig::statusFollow;
+        }
+
+        ?>
+            <div class="col-sm-12 col-md-12">
+						<div class="thumbnail faq_thumbnail_member_search">
+							<a
+								href="<?php echo $this->basepath("/member/profile/".$memberID); ?>/<?php echo Util::getUserNameSeo($member);?>">
+								<img class="faq_img_search_member"
+								title="Click để xem chi tiết thông tin thành viên"
+								style="-webkit-user-select: none"
+								src="<?php echo $this->basepath("/media/get-image/images/$imageID/$titleFileSeo")?>">
+							</a>
+
+							<div class="caption col-sm-12 col-md-8 pull-left">
+								<div class="faq_info_overview">
+									<span><?php echo $appellation;?></span>
+								</div>
+								<div class="faq_info_overview">
+									<span>Cấp bậc: <?php echo $rankName;?></span>
+								</div>
+								<div class="faq_info_overview">
+									<i><?php echo $totalUserFollow;?> theo dõi</i>
+								</div>
+								<h3 class="faq_fullname_member"><?php echo $nameMember;?></h3>
+
+
+								<div class="dropdown faq_member_action">
+									<a
+										class="dropdown-toggle btn <?php if($statusFollowCode==2){ echo "btn-success";}else{echo "btn-info";}?>"
+										id="dLabel" role="button" data-toggle="dropdown"
+										data-target="#" ><?php echo $currentStatusFollow;?><b
+										class="caret"></b> </a>
+									<ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
+										<li role="presentation"
+											class="<?php echo $memberID==Util::getIDCurrentUser()?"disabled":"";?>"><a
+											role="menuitem" tabindex="-1" user="<?php echo $memberID;?>"
+											action=<?php echo $statusFollowCode;?>><?php echo $statusAction;?></a></li>
+									</ul>
+								</div>
+
+							</div>
+
+						</div>
+					</div>
+
+     <?php
+    }
+    ?>
+   </div>
+			</div>
+
+		<div class="col-md-12">
+
+<h4><a href="<?php echo $this->basepath("/subject")?>" title="click để xem thêm">Danh sách chủ đề<small>...</small></a></h4>
+			<div id="faq_list_subject" class="faq_list_search_subject">
+				<div class="row">
+    <?php
+
+    foreach ($subjects as $subject) {
+        $subjectID = $subject->getId();
+        $titleSubject = $subject->getTitle();
+        $totalThread = $subject->getTotalQuestion();
+        $totalUserFollow = $subject->getTotalUserFollow();
+        $avatar = $subject->getAvatar();
+        $imageID = $avatar->getId();
+
+
+        $contentType = $avatar->getContentType();
+
+        $extentionFile = Util::getTypeFile($contentType);
+        $titleSubjectFileSeo = Util::convertUrlFileName($titleSubject,$extentionFile);
+
+        $statusFollowCode = 1;
+        $currentStatusFollow = FAQParaConfig::statusUnfollow;
+        /* @var $userFollows \Doctrine\Common\Collections\ArrayCollection */
+        $userFollows = $subject->getUserFollow();
+
+        if ($userFollows->contains(Util::getCurrentUser())) {
+            $statusFollowCode = 2;
+        }
+        if ($statusFollowCode == 1) {
+            $statusAction = FAQParaConfig::actionFollow;
+        } else {
+            $statusAction = FAQParaConfig::actionUnfollow;
+            $currentStatusFollow = FAQParaConfig::statusFollow;
+        }
+        ?>
+            <div class="col-sm-12 col-md-12">
+						<div class="thumbnail faq_thumbnail_subject_search">
+						<a href="<?php echo $this->basepath("/subject/detail/question/$subjectID");?>/<?php echo Util::convertUrlSeo($titleSubject);?>">
+							<img class="faq_img_subject_search pull-right" subject="<?php echo $subjectID;?>"
+								title="Click để chọn chủ đề" alt="<?php echo $titleSubject;?>"
+								src="<?php echo $this->basepath("/media/get-image/images/$imageID/$titleSubjectFileSeo")?>" />
+						</a>
+
+							<div class="caption col-sm-12 col-md-8 pull-left">
+
+								<p><?php echo $totalThread." câu hỏi";?></p>
+								<p><?php echo $totalUserFollow." người quan tâm";?></p>
+								<h4><a href="<?php echo $this->basepath("/subject/detail/question/$subjectID")?>/<?php echo Util::convertUrlSeo($titleSubject);?>"><?php echo $titleSubject;?></a></h4>
+								<p>
+
+
+								<div class="dropdown faq_subject_action">
+									<button  title='Click để "<?php echo $statusAction;?>"' type="button" class="faq_btn_follow_subject btn btn-xs <?php if($statusFollowCode==2){ echo "btn-warning";}else{echo "btn-default";}?>"
+							subject="<?php echo $subjectID?>"
+							action=<?php echo $statusFollowCode;?>
+						><?php echo $currentStatusFollow;?>
+						</button>
+								</div>
+								</p>
+							</div>
+						</div>
+					</div>
+
+     <?php }?>
+   </div>
+			</div>
+		</div>
+	</div>

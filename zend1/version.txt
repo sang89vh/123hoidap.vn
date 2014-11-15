@@ -1,0 +1,11 @@
+#truoc khi deploy
+1. config bo test module
+2. config error report level :error_reporting(E_ERROR);
+3. config cache on/off
+4. Appcfg-> domain
+5. Authcfg->$facebook_redirect_url, $twitter_url_callback
+- alpha 1.6
+- alpha 1.7 (07/12/2013->)
+	+ thay doi update reference
+	+ updaterefence function -> blank function
+	+ 
