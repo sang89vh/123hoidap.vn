@@ -1,11 +1,12 @@
 123hoidap.vn
 =======================
 
-Introduction
+Giới thiệu
 ------------
-This is a simple application using the ZF2 MVC layer and module
-systems. This application is meant to be used as a starting place for those
-looking to get their feet wet with ZF2.
+Project hướng đến mô hình hỏi đáp, với mong muồn kết nồi người có tri thức và người cần tri thức một cách nhanh nhất.
+Demo tại: http://123hoidap.vn/
+          http://qapolo.com/
+Project sử dụng các công nghệ sau:
 
 Zend2 framework: http://framework.zend.com/downloads
 
@@ -23,6 +24,6 @@ SailsJS: http://sailsjs.org/
 
 
 
-Installation
+Cài đặt
 ------------
 
