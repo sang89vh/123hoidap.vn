@@ -26,7 +26,10 @@ Node.js: http://nodejs.org/
 SailsJS: http://sailsjs.org/
 
 
-
+Tài liệu thiết kế
+https://drive.google.com/file/d/0B6p3UbKahu0XNDZNN29TZlU2MkE/view
 Cài đặt
 ------------
+Tài liệu hướng dẫn
+https://drive.google.com/file/d/0B6p3UbKahu0XT2JSVWoxVHVYREk/view
 
